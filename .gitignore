@@ -1,0 +1,8 @@
+/.quarto/
+/_site/
+/.Rproj.user/
+*.rds
+*.docx
+_quarto_internal_scss_error.scss
+.Rhistory
+.RData

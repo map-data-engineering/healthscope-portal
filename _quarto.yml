@@ -1,0 +1,70 @@
+project:
+  type: website
+  output-dir: docs
+  resources:
+    - images/
+
+website:
+  title: "HealthScope"
+  site-url: https://map.ox.ac.uk/healthscope
+  back-to-top-navigation: true
+
+  page-footer:
+    left: |
+      &copy; 2026 HealthScope &mdash; Malaria Atlas Project, East Africa Node
+
+      Open health facility intelligence for Sub-Saharan Africa
+    right: |
+      [GitHub](https://github.com/map-east-africa){target="_blank"} |
+      [Malaria Atlas Project](https://map.ox.ac.uk){target="_blank"}
+    background: "#3d3d3d"
+    foreground: light
+    border: false
+
+  navbar:
+    pinned: true
+    search: true
+    title: "HealthScope"
+    logo-href: /index.html
+    background: "#3d3d3d"
+
+    left:
+      - text: "Home"
+        href: index.qmd
+      - text: "Registry Explorer"
+        href: registry.qmd
+      - text: "Find Facility"
+        href: find-facility.qmd
+      - text: "Service Intelligence"
+        href: services.qmd
+      - text: "Equity Dashboard"
+        href: equity.qmd
+      - text: "About"
+        href: about.qmd
+      - text: "Help"
+        href: help.qmd
+
+    right:
+      - icon: github
+        href: https://github.com/map-east-africa
+        aria-label: "GitHub Repository"
+      - icon: globe
+        href: https://map.ox.ac.uk
+        aria-label: "Malaria Atlas Project"
+
+format:
+  html:
+    theme:
+      light: [cosmo, style-base.scss, style-light.scss]
+      dark: [darkly, style-base.scss, style-dark.scss]
+    toc: false
+    link-external-icon: true
+    link-external-newwindow: true
+    smooth-scroll: true
+    grid:
+      body-width: 1400px
+      sidebar-width: 0px
+      margin-width: 0px
+
+execute:
+  freeze: auto

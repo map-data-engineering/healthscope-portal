@@ -1,0 +1,133 @@
+---
+title: ""
+toc: true
+toc-depth: 2
+---
+
+```{=html}
+<div class="country-hero">
+  <h1>🇰🇪 Kenya</h1>
+  <p class="hero-sub">Republic of Kenya — Health Facility Dataset v1.1</p>
+</div>
+
+<div class="stats-row">
+  <div class="stat-card"><div class="stat-value">12 700</div><div class="stat-label">Total facilities</div></div>
+  <div class="stat-card"><div class="stat-value">91 %</div><div class="stat-label">With GPS coordinates</div></div>
+  <div class="stat-card"><div class="stat-value">47 Counties</div><div class="stat-label">Admin coverage</div></div>
+  <div class="stat-card"><div class="stat-value">2016–2024</div><div class="stat-label">Temporal coverage</div></div>
+  <div class="stat-card"><div class="stat-value">v1.1</div><div class="stat-label">Current version</div></div>
+</div>
+```
+
+## Overview
+
+Kenya operates one of the most comprehensive open health facility registries in sub-Saharan Africa — the **Kenya Master Health Facility List (KMHFL)**. The Portal dataset is derived from KMHFL quarterly extracts, supplemented with DHIS2 codes and coordinate cross-validation across all 47 counties.
+
+---
+
+## Facility Breakdown
+
+```{=html}
+<div class="data-section">
+  <h3>By Facility Type</h3>
+  <table class="table table-sm">
+    <thead><tr><th>Type</th><th>Count</th><th>%</th></tr></thead>
+    <tbody>
+      <tr><td>Dispensary / Pharmacy</td><td>5 850</td><td>46.1 %</td></tr>
+      <tr><td>Health Centre</td><td>2 940</td><td>23.1 %</td></tr>
+      <tr><td>Clinic (Private)</td><td>2 210</td><td>17.4 %</td></tr>
+      <tr><td>District Hospital</td><td>1 180</td><td>9.3 %</td></tr>
+      <tr><td>County / National Referral</td><td>520</td><td>4.1 %</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="data-section">
+  <h3>By Ownership</h3>
+  <table class="table table-sm">
+    <thead><tr><th>Ownership</th><th>Count</th><th>%</th></tr></thead>
+    <tbody>
+      <tr><td>Government (MoH Kenya)</td><td>6 350</td><td>50.0 %</td></tr>
+      <tr><td>Private for Profit</td><td>3 810</td><td>30.0 %</td></tr>
+      <tr><td>Faith-Based Organisation</td><td>1 780</td><td>14.0 %</td></tr>
+      <tr><td>NGO / Other</td><td>760</td><td>6.0 %</td></tr>
+    </tbody>
+  </table>
+</div>
+```
+
+---
+
+## Data Quality
+
+```{=html}
+<div class="data-section">
+  <h3>Quality Scores — v1.1</h3>
+  <table class="table table-sm">
+    <thead><tr><th>Dimension</th><th>Score</th></tr></thead>
+    <tbody>
+      <tr><td>Coordinate validity</td><td>91 / 100</td></tr>
+      <tr><td>Attribute completeness</td><td>84 / 100</td></tr>
+      <tr><td>Duplicate rate (post-dedup)</td><td>&lt; 0.3 %</td></tr>
+      <tr><td>Admin code consistency</td><td>97 / 100</td></tr>
+      <tr><td>Temporal coverage</td><td>2016–2024</td></tr>
+    </tbody>
+  </table>
+</div>
+```
+
+---
+
+## Available Fields
+
+```{=html}
+<p>
+  <span class="data-tag">facility_id</span><span class="data-tag">source_id (KMHFL)</span>
+  <span class="data-tag">name</span><span class="data-tag">facility_type</span>
+  <span class="data-tag">ownership</span><span class="data-tag">admin1 (County)</span>
+  <span class="data-tag">admin2 (Sub-County)</span><span class="data-tag">admin3 (Ward)</span>
+  <span class="data-tag">longitude</span><span class="data-tag">latitude</span>
+  <span class="data-tag">coord_source</span><span class="data-tag">keph_level</span>
+  <span class="data-tag">operational</span><span class="data-tag">year</span><span class="data-tag">version</span>
+</p>
+```
+
+---
+
+## Download
+
+::: {.callout-note}
+Data are released under **CC BY 4.0**. Please cite the Zenodo record in publications.
+:::
+
+| Format | Link |
+|---|---|
+| CSV (all facilities) | *Coming soon* |
+| GeoPackage (.gpkg) | *Coming soon* |
+| R package `{hfportal}` | *Coming soon* |
+| Quality report PDF | *Coming soon* |
+
+**Zenodo DOI:** `10.5281/zenodo.XXXXXX`
+
+---
+
+## Code Example
+
+```r
+library(hfportal)
+
+ken <- get_facilities(country = "KEN", version = "1.1")
+
+library(dplyr)
+ken |>
+  count(admin1, facility_type) |>
+  ggplot(aes(x = reorder(admin1, n), y = n, fill = facility_type)) +
+  geom_col() + coord_flip() + theme_minimal() +
+  labs(title = "Kenya: Facilities by County & Type", x = NULL)
+```
+
+*Dataset last updated: August 2024 | Source: KMHFL (Kenya MoH)*
+
+```{=html}
+<a href="../index.html" class="btn-hf-primary" style="margin-top:1rem;display:inline-block;">← All Countries</a>
+```

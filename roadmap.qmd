@@ -1,0 +1,109 @@
+---
+title: ""
+toc: false
+---
+
+```{=html}
+<div class="page-banner">
+  <h1>Roadmap</h1>
+  <p>Planned features, country expansions, and data releases</p>
+</div>
+```
+
+The roadmap below reflects the Portal team's current priorities.
+Have a suggestion? [Open an issue on GitHub.](https://github.com/myalla-christina/hf-data-portal/issues)
+
+---
+
+<!-- ## 2024 — Foundations -->
+
+<!-- ```{=html} -->
+<!-- <div class="timeline"> -->
+<!--   <div class="timeline-item completed"> -->
+<!--     <div class="tl-quarter">Q1 2024</div> -->
+<!--     <h4>Tanzania v1.0 Release <span class="badge-done">Done</span></h4> -->
+<!--     <p>Full national facility list with GPS coordinates, admin hierarchy, facility -->
+<!--     type and ownership. Quality report published on Zenodo.</p> -->
+<!--   </div> -->
+<!--   <div class="timeline-item completed"> -->
+<!--     <div class="tl-quarter">Q2 2024</div> -->
+<!--     <h4>Kenya v1.0 Release <span class="badge-done">Done</span></h4> -->
+<!--     <p>KMHFL-sourced dataset harmonised to the Portal schema, including private -->
+<!--     facilities and faith-based health units.</p> -->
+<!--   </div> -->
+<!--   <div class="timeline-item completed"> -->
+<!--     <div class="tl-quarter">Q3 2024</div> -->
+<!--     <h4>Uganda v1.0 Release <span class="badge-done">Done</span></h4> -->
+<!--     <p>MoH Uganda HMIS export cleaned, deduplicated, and georeferenced. -->
+<!--     Admin level-4 (parish) codes included where available.</p> -->
+<!--   </div> -->
+<!--   <div class="timeline-item completed"> -->
+<!--     <div class="tl-quarter">Q4 2024</div> -->
+<!--     <h4>Portal Website v1 <span class="badge-done">Done</span></h4> -->
+<!--     <p>Public-facing website with country pages, methodology documentation, -->
+<!--     and download links launched.</p> -->
+<!--   </div> -->
+<!-- </div> -->
+<!-- ``` -->
+
+<!-- --- -->
+
+<!-- ## 2025 — Enrichment & Expansion -->
+
+<!-- ```{=html} -->
+<!-- <div class="timeline"> -->
+<!--   <div class="timeline-item in-progress"> -->
+<!--     <div class="tl-quarter">Q1 2025</div> -->
+<!--     <h4>Travel-Time Surfaces <span class="badge-progress">In Progress</span></h4> -->
+<!--     <p>Friction-surface-based travel time to the nearest facility at 1 km² -->
+<!--     resolution for all three countries.</p> -->
+<!--   </div> -->
+<!--   <div class="timeline-item in-progress"> -->
+<!--     <div class="tl-quarter">Q2 2025</div> -->
+<!--     <h4>Malawi Pilot Dataset <span class="badge-progress">In Progress</span></h4> -->
+<!--     <p>Scoping and source negotiation for Malawi national MFL underway. -->
+<!--     Target release Q3 2025.</p> -->
+<!--   </div> -->
+<!--   <div class="timeline-item"> -->
+<!--     <div class="tl-quarter">Q3 2025</div> -->
+<!--     <h4>Annual Updates — TZA, KEN, UGA <span class="badge-planned">Planned</span></h4> -->
+<!--     <p>Refresh all three core country datasets with 2024 source extracts, -->
+<!--     version bump to v2.0.</p> -->
+<!--   </div> -->
+<!--   <div class="timeline-item"> -->
+<!--     <div class="tl-quarter">Q4 2025</div> -->
+<!--     <h4>Interactive Map Explorer <span class="badge-planned">Planned</span></h4> -->
+<!--     <p>In-browser map to filter, visualise, and download subsets of facility -->
+<!--     data without any coding required.</p> -->
+<!--   </div> -->
+<!-- </div> -->
+<!-- ``` -->
+
+<!-- --- -->
+
+<!-- ## 2026 — Scale -->
+
+<!-- ```{=html} -->
+<!-- <div class="timeline"> -->
+<!--   <div class="timeline-item"> -->
+<!--     <div class="tl-quarter">Q1 2026</div> -->
+<!--     <h4>Mozambique &amp; Zambia Datasets <span class="badge-planned">Planned</span></h4> -->
+<!--     <p>Two additional high-burden malaria countries added, bringing total coverage -->
+<!--     to five countries.</p> -->
+<!--   </div> -->
+<!--   <div class="timeline-item"> -->
+<!--     <div class="tl-quarter">Q2 2026</div> -->
+<!--     <h4>API Access <span class="badge-planned">Planned</span></h4> -->
+<!--     <p>RESTful API endpoint for programmatic data access, enabling direct -->
+<!--     integration into modelling pipelines without manual downloads.</p> -->
+<!--   </div> -->
+<!--   <div class="timeline-item"> -->
+<!--     <div class="tl-quarter">Q3–Q4 2026</div> -->
+<!--     <h4>Service Availability Linkage <span class="badge-planned">Planned</span></h4> -->
+<!--     <p>Link facility records to SARA and DHIS2 indicators, enabling -->
+<!--     facility-level readiness scores for outpatient malaria care.</p> -->
+<!--   </div> -->
+<!-- </div> -->
+<!-- ``` -->
+
+<!-- *Last updated: January 2025. Timelines are indicative and subject to change.* -->

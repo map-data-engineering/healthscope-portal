@@ -1,0 +1,117 @@
+---
+title: ""
+toc: true
+toc-depth: 3
+---
+
+```{=html}
+<div class="page-banner">
+  <h1>Methodology</h1>
+  <p>How we source, clean, harmonise, and quality-assess health facility data</p>
+</div>
+```
+
+## Overview
+
+This page describes the end-to-end pipeline used to produce each country dataset.
+The pipeline runs through four stages: **source collation → harmonization →
+quality assessment → versioned release**. All pipeline code is open-source and
+available in the [GitHub repository](https://github.com/myalla-christina/hf-data-portal).
+
+---
+
+## 1. Source Collation
+
+### Primary Sources
+
+| Country | Primary Source | Update Frequency |
+|---|---|---|
+| Tanzania | MOH Tanzania | Annual |
+| Uganda | MoH Uganda HMIS | Annual |
+
+### Secondary Sources
+
+Where the MFL has coverage gaps we supplement with DHIS2 organisation unit exports,
+WHO SARA surveys, OpenStreetMap for coordinate cross-validation, and HDX historical
+snapshots.
+
+---
+
+## 2. Harmonization
+
+### Common Schema
+
+All datasets are transformed to a shared flat schema before analysis:
+
+```
+facility_id     character   Portal-assigned unique ID (ISO2_NNNNN)
+source_id       character   Identifier in the original source
+name            character   Facility name (original language)
+facility_type   character   Hospital / Health Centre / Dispensary / Clinic / Other
+ownership       character   Public / Private-for-profit / Faith-based / NGO
+admin1          character   Province / Region
+admin2          character   District / County
+admin3          character   Division / Sub-county (if available)
+admin4          character   Ward / Parish (if available)
+longitude       numeric     WGS84 decimal degrees
+latitude        numeric     WGS84 decimal degrees
+coord_source    character   GPS / Geocoded / Centroid / Unknown
+operational     logical     Operational at time of data extraction
+year            integer     Reference year of the record
+version         character   Portal dataset version
+```
+
+
+
+
+## 3. Quality Assessment
+
+```{=html}
+<div class="method-card">
+  <h3>📍 Coordinate Validity</h3>
+  <p>Proportion of records with non-missing GPS coordinates falling within the
+  country boundary. Centroid-imputed coordinates are flagged separately.</p>
+</div>
+
+<div class="method-card">
+  <h3>🗂 Attribute Completeness</h3>
+  <p>Proportion of non-missing values per schema field, reported individually and
+  as an overall completeness score (0–100).</p>
+</div>
+
+<div class="method-card">
+  <h3>🔁 Duplicate Rate</h3>
+  <p>Estimated proportion of duplicate records before and after deduplication
+  using the name × coordinate matching procedure.</p>
+</div>
+
+<div class="method-card">
+  <h3>📅 Temporal Coverage</h3>
+  <p>Year range spanned by records, and the proportion of facilities with a
+  recorded update date within the past 24 months.</p>
+</div>
+
+<div class="method-card">
+  <h3>🏛 Administrative Consistency</h3>
+  <p>Proportion of records whose admin1–admin2 codes are consistent with
+  official GADM v4.1 administrative boundary files.</p>
+</div>
+```
+
+---
+
+## 4. Versioned Release
+
+Datasets follow **semantic versioning** (`MAJOR.MINOR.PATCH`):
+
+- `MAJOR` — schema-breaking changes
+- `MINOR` — new facilities or additional fields (backward-compatible)
+- `PATCH` — coordinate corrections or name fixes
+
+---
+
+
+```{=html}
+<a href="about.html" class="btn-hf-primary" style="margin-top:1.2rem;display:inline-block;">About the Project</a>
+<a href="roadmap.html" class="btn-hf-outline" style="margin-top:1.2rem;display:inline-block;">Roadmap</a>
+```

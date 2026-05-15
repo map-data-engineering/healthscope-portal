@@ -1,0 +1,89 @@
+---
+title: ""
+runtime: 
+toc: false
+---
+
+```{r}
+#| include: false
+knitr::opts_chunk$set(
+  echo = FALSE, #hide code
+  message = FALSE, #hide package messages
+  warning = FALSE #hide warnings
+)
+
+```
+
+::: country-hero-text
+<h1 class="country-title">
+
+</h1>
+
+<h2>Botswana Health Facilities</h2>
+
+<p>Standardized, geolocated facility information to strengthen modelling, planning, and decision-making</p>
+:::
+
+<!-- ===================== -->
+
+<!-- Map + Section Navigation -->
+
+<!-- ===================== -->
+
+::::: {.columns .country-main}
+::: {.column width="70%"}
+## Health Facilities Map
+
+```{r}
+library(sf) 
+library(leaflet)
+library(shiny)
+library(dplyr)
+
+# Example: load pre processed sf object
+hf_sf <- read.csv("../data/Botswana/botswana_standardized.csv") |>
+  dplyr::mutate(
+    latitude = as.numeric(latitude),
+    longitude = as.numeric(longitude)
+  ) |>
+  dplyr::filter(
+    !is.na(latitude) & !is.na(longitude),
+    latitude >= -26 & latitude <= -17,
+    longitude >= 20 & longitude <= 30
+  ) |>
+  sf::st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+
+leaflet(hf_sf) |>
+  addTiles() |>
+  addCircleMarkers(radius = 3, stroke = FALSE, fillOpacity = 0.7)
+```
+:::
+
+::: {.column .toc-panel width="30%"}
+### On this page
+
+-   [Overview](#overview)
+-   [Demographics](#demographics)
+-   [Services](#services)
+-   [Data Download](#data-download)
+:::
+:::::
+
+## Overview {#overview}
+
+Botswana has one of the more developed health systems in sub-Saharan Africa, supported by the country's relative economic prosperity from diamond revenues. The country has around 1,000 health facilities including clinics, primary hospitals, district hospitals, and referral hospitals. The government provides largely free primary health care to citizens, and the country has achieved remarkable success in its HIV response.
+
+## Demographics {#demographics}
+
+With a population of approximately 2.5 million and a relatively low population density, Botswana's health facilities serve both urban centres and widely dispersed rural communities. The country has a higher physician density than most African peers, at around 3–4 per 10,000 population. Mobile health facilities and outreach teams support populations in remote districts such as the Central Kalahari.
+
+## Services {#services}
+
+Botswana's facilities offer comprehensive primary care, one of Africa's most successful HIV/ART programmes (with over 85% of eligible patients on treatment), TB services, maternal and child health, immunization, malaria diagnosis and treatment (primarily in the northern districts bordering Zimbabwe and Zambia), mental health services, and management of NCDs including diabetes and hypertension.
+## Data Download {#data-download}
+
+Download facilities dtaset here:
+
+-   [CSV](../data/Botswana/botswana_standardized.csv)\
+<!--   [JSON](../data/tanzania/hf_demographics.json)-->
+-   [RDS](../data/Botswana/Botswana_standardized.rds)

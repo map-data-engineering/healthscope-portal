@@ -1,0 +1,160 @@
+---
+title: ""
+page-layout: full
+toc: true
+toc-depth: 2
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{=html}
+<!-- PAGE HERO -->
+<section class="page-banner">
+  <div style="max-width: 1200px; margin: 0 auto;">
+    <h1>Country Health Facilities Data</h1>
+    <p>Select a country below to explore and download facility datasets</p>
+  </div>
+</section>
+
+<!-- COUNTRY SELECTOR -->
+<section style="max-width: 1200px; margin: 2rem auto; padding: 0 2rem;">
+  <div class="card-modern" style="border-top: 4px solid var(--map-red, #c9a227);">
+    <h3 style="margin-top: 0;">Select a Country</h3>
+    <div style="display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: end;">
+      <div>
+        <label for="country-select" style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Choose a country:</label>
+        <select id="country-select" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem;">
+          <option value="">-- Select a Country --</option>
+          <option value="kenya">🇰🇪 Kenya</option>
+          <option value="tanzania">🇹🇿 Tanzania</option>
+          <option value="uganda">🇺🇬 Uganda</option>
+          <option value="zambia">🇿🇲 Zambia</option>
+          <option value="malawi">🇲🇼 Malawi</option>
+          <option value="nigeria">🇳🇬 Nigeria</option>
+          <option value="benin">🇧🇯 Benin</option>
+        </select>
+      </div>
+      <button id="load-map-btn" class="btn-primary" style="margin: 0;">Load Map & Data</button>
+    </div>
+  </div>
+</section>
+```
+
+## Interactive Facility Map
+
+```{r}
+library(leaflet)
+library(jsonlite)
+
+# Sample health facilities data for Kenya (demo)
+sample_facilities <- data.frame(
+  id = 1:8,
+  name = c(
+    "Kenyatta National Hospital", "Nairobi Regional Blood Transfusion Centre",
+    "Thika Level 5 Hospital", "Muranga County Hospital",
+    "Nyeri Provincial General Hospital", "Nanyuki District Hospital",
+    "Karatina Community Health Centre", "Murang'a South CHC"
+  ),
+  lat = c(-1.2921, -1.2865, -1.3340, -0.6711, -0.4206, 0.0024, -0.3297, -0.8147),
+  lon = c(36.8219, 36.8061, 37.0833, 37.0660, 36.9550, 37.0753, 37.2578, 37.4658),
+  type = c("Teaching Hospital", "Blood Bank", "Level 5", "Level 4", "Level 4", "Level 4", "CHC", "CHC"),
+  ownership = c("Public", "Public", "Public", "Public", "Public", "Public", "Public", "Public"),
+  beds = c(1000, 150, 400, 200, 300, 150, 50, 75)
+)
+
+# Create Leaflet map
+leaflet(sample_facilities) %>%
+  addProviderTiles(providers$CartoDB.Positron) %>%
+  setView(lng = 34.5, lat = -2, zoom = 5) %>%
+  addCircleMarkers(
+    ~lon, ~lat,
+    radius = 6,
+    color = "#c9a227",
+    stroke = TRUE,
+    weight = 2,
+    opacity = 0.8,
+    fillColor = "#c9a227",
+    fillOpacity = 0.7,
+    popup = ~paste0(
+      "<strong>", name, "</strong><br/>",
+      "Type: ", type, "<br/>",
+      "Ownership: ", ownership, "<br/>",
+      "Beds: ", beds, "<br/>",
+      "Coordinates: ", round(lat, 4), ", ", round(lon, 4)
+    ),
+    label = ~name,
+    labelOptions = labelOptions(noHide = FALSE)
+  ) %>%
+  addScaleBar(position = "bottomright") %>%
+  addMiniMap(position = "bottomleft")
+```
+
+```{=html}
+<div style="margin: 2rem 0; padding: 2rem; background: #f0f4f8; border-radius: 8px; border-left: 4px solid var(--map-red, #c9a227);">
+  <p style="margin: 0; font-size: 0.95rem; color: #555;">
+    <strong>Note:</strong> This is demo data for example purposes. Click markers for facility details. Use the layer control (top right) to toggle facility types.
+  </p>
+</div>
+```
+```
+
+## Download Data
+
+```{=html}
+<section style="max-width: 1200px; margin: 3rem auto; padding: 0 2rem;">
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+    
+    <div class="card-modern" style="border-top: 4px solid var(--map-red, #c9a227);">
+      <h3 style="margin-top: 0; color: var(--map-red, #c9a227);">📥 Download CSV</h3>
+      <p style="color: #666;">Get all health facility data in CSV format. Includes facility ID, name, type, ownership, coordinates, beds, and service status.</p>
+      <button class="btn-cta" style="width: 100%;">Download Kenya Facilities (CSV)</button>
+      <p style="font-size: 0.85rem; color: #999; margin-top: 1rem;">Last updated: 2026-05-01 | Format: CSV</p>
+    </div>
+
+    <div class="card-modern" style="border-top: 4px solid var(--map-red, #c9a227);">
+      <h3 style="margin-top: 0; color: var(--map-red, #c9a227);">🗺️ Download GeoJSON</h3>
+      <p style="color: #666;">Get facility data in GeoJSON format with full geographic properties. Ideal for web mapping and GIS analysis.</p>
+      <button class="btn-cta" style="width: 100%;">Download Kenya Facilities (GeoJSON)</button>
+      <p style="font-size: 0.85rem; color: #999; margin-top: 1rem;">Last updated: 2026-05-01 | Format: GeoJSON</p>
+    </div>
+
+  </div>
+
+  <div style="margin-top: 2rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(201, 162, 39, 0.05) 0%, rgba(201, 162, 39, 0.02) 100%); border-radius: 8px; border: 1px solid rgba(201, 162, 39, 0.2);">
+    <p style="margin: 0; font-size: 0.9rem; color: #666;">
+      <strong>License:</strong> All data released under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" style="color: var(--map-red, #c9a227); text-decoration: none;">CC BY 4.0</a> license. 
+      You are free to use, share, and adapt with attribution. <strong>Version 1.2.1</strong> • Dataset ID: <code style="background: white; padding: 2px 6px; border-radius: 3px;">KEN-HF-2026-01</code>
+    </p>
+  </div>
+
+</section>
+```
+
+## Facilities Summary Table
+
+```{r}
+library(DT)
+library(dplyr)
+
+datatable(
+  sample_facilities %>% select(name, type, ownership, lat, lon, beds),
+  options = list(
+    pageLength = 10,
+    dom = 'frtip',
+    columnDefs = list(
+      list(targets = c(3, 4), render = JS("function(data, type, row) { return parseFloat(data).toFixed(4); }"))
+    )
+  ),
+  colnames = c("Facility Name", "Type", "Ownership", "Latitude", "Longitude", "Hospital Beds"),
+  filter = "top"
+)
+```
+
+```{=html}
+<div style="margin-top: 3rem; padding: 2rem; background: #f9f9f9; border-radius: 8px; text-align: center;">
+  <h3>Need help?</h3>
+  <p>Visit our <a href="help.html" style="color: var(--map-red, #c9a227); text-decoration: none; font-weight: 600;">Help & Support</a> page for common questions about data formats, coverage, and licensing.</p>
+</div>
+```

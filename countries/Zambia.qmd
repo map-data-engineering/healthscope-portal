@@ -1,0 +1,87 @@
+---
+title: ""
+runtime: 
+toc: false
+---
+
+```{r}
+#| include: false
+knitr::opts_chunk$set(
+  echo = FALSE, #hide code
+  message = FALSE, #hide package messages
+  warning = FALSE #hide warnings
+)
+
+```
+
+::: country-hero-text
+<h1 class="country-title">
+
+</h1>
+
+<h2>Zambia Health facilities</h2>
+
+<p>Standardized, geolocated facility information to strengthen modelling, planning, and decision-making</p>
+:::
+
+<!-- ===================== -->
+
+<!-- Map + Section Navigation -->
+
+<!-- ===================== -->
+
+::::: {.columns .country-main}
+::: {.column width="70%"}
+## Health Facilities Map
+
+```{r}
+library(sf) 
+library(leaflet)
+library(shiny)
+library(dplyr)
+
+# Example: load pre processed sf object
+
+hf_sf <- readRDS("../data/Zambia/Zambia_standardized.rds") |>
+  dplyr::filter(
+    !is.na(latitude) & !is.na(longitude),
+    latitude >= -18 & latitude <= -8,
+    longitude >= 22 & longitude <= 34
+  ) |>
+  sf::st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+
+leaflet(hf_sf) |>
+  addTiles() |>
+  addCircleMarkers(radius = 3, stroke = FALSE, fillOpacity = 0.7)
+```
+:::
+
+::: {.column .toc-panel width="30%"}
+### On this page
+
+-   [Overview](#overview)
+-   [Demographics](#demographics)
+-   [Services](#services)
+-   [Data Download](#data-download)
+:::
+:::::
+
+## Overview {#overview}
+
+Zambia has approximately 3,000 health facilities across its ten provinces, governed by the Ministry of Health through district health offices. The country has undergone significant health system reforms, including the rollout of community health workers and the integration of HIV and malaria services. Urban–rural disparities remain a key challenge, with Lusaka province having significantly better facility density than rural provinces like Western and North-Western.
+
+## Demographics {#demographics}
+
+Zambia's population of around 20 million is served by a tiered system of health posts, health centres, district hospitals, and tertiary facilities. Health posts are designed to serve approximately 500–1,000 households in rural areas. The country has a physician density of approximately 1.2 per 10,000 population, with nurses and midwives forming the majority of the health workforce.
+
+## Services {#services}
+
+Zambian health facilities provide malaria diagnosis and treatment (including ACT and IPTp for pregnant women), HIV testing and ART, PMTCT, maternal and child health, immunization, family planning, TB services, and management of non-communicable diseases (NCDs) at higher-level facilities. Malaria transmission is perennial in most provinces, with higher intensity in the rainy season (November–April).
+
+## Data Download {#data-download}
+
+Download facilities dataset here:
+
+-   [CSV](../data/Zambia/Zambia_standardized.csv)\
+<!--   [JSON](../data/tanzania/hf_demographics.json)-->
+-   [RDS](../data/Zambia/Zambia_standardized.rds)

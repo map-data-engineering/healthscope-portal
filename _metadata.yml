@@ -1,0 +1,4 @@
+# Country pages inherit the website theme from _quarto.yml
+# Do NOT set theme here — it will be ignored and produce warnings
+toc: true
+toc-depth: 2

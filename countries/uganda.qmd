@@ -1,0 +1,87 @@
+---
+title: ""
+runtime: 
+toc: false
+---
+
+```{r}
+#| include: false
+knitr::opts_chunk$set(
+  echo = FALSE, #hide code
+  message = FALSE, #hide package messages
+  warning = FALSE #hide warnings
+)
+
+```
+
+::: country-hero-text
+<h1 class="country-title">
+
+</h1>
+
+<h2>Uganda Health Facilities</h2>
+
+<p>Standardized, geolocated facility information to strengthen modelling, planning, and decision-making</p>
+:::
+
+<!-- ===================== -->
+
+<!-- Map + Section Navigation -->
+
+<!-- ===================== -->
+
+::::: {.columns .country-main}
+::: {.column width="70%"}
+## Health Facilities Map
+
+```{r}
+library(sf) 
+library(leaflet)
+library(shiny)
+library(dplyr)
+
+# Example: load pre processed sf object
+
+hf_sf <- readRDS("../data/Uganda/Uganda_standardized.rds") |>
+  dplyr::filter(
+    !is.na(latitude) & !is.na(longitude),
+    latitude >= -2 & latitude <= 4.5,
+    longitude >= 29.5 & longitude <= 35
+  ) |>
+  sf::st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+
+leaflet(hf_sf) |>
+  addTiles() |>
+  addCircleMarkers(radius = 3, stroke = FALSE, fillOpacity = 0.7)
+```
+:::
+
+::: {.column .toc-panel width="30%"}
+### On this page
+
+-   [Overview](#overview)
+-   [Demographics](#demographics)
+-   [Services](#services)
+-   [Data Download](#data-download)
+:::
+:::::
+
+## Overview {#overview}
+
+Uganda's health system comprises approximately 6,000 government and private facilities, structured into a six-tier system from Village Health Teams (VHTs) at the community level to national referral hospitals. The Ministry of Health has made significant efforts to decentralize health services, though inequities persist between urban and rural areas, particularly in the northern regions.
+
+## Demographics {#demographics}
+
+With a population of around 47 million — one of the fastest-growing in the world — Uganda's health facilities face significant demand pressure. Health centre IIs and IIIs form the backbone of primary care, each serving populations of approximately 5,000 and 20,000 respectively. Uganda has a physician density of roughly 0.5 per 10,000 population, and relies heavily on nurses, midwives, and community health workers to deliver frontline care.
+
+## Services {#services}
+
+Ugandan facilities offer outpatient and inpatient care, malaria diagnosis (RDT and microscopy) and treatment, PMTCT (prevention of mother-to-child transmission of HIV), ART, immunization, reproductive and maternal health services, nutrition support, and TB management. Malaria is the leading cause of morbidity and mortality, accounting for a large share of all outpatient visits, especially in children under five.
+
+## Data Download {#data-download}
+
+Download the facilities data here:
+
+-   [CSV](../data/Uganda/uganda_standardized.csv)\
+<!--   [JSON](../data/tanzania/hf_demographics.json)-->
+-   [RDS](../data/Uganda/Uganda_standardized.rds)

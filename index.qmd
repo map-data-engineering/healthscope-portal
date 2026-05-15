@@ -1,0 +1,216 @@
+---
+title: ""
+page-layout: full
+toc: false
+---
+
+```{=html}
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="hero-section">
+  <div class="hero-grid-bg"></div>
+
+  <!-- Animated orbs -->
+  <div style="position:absolute;inset:0;z-index:1;overflow:hidden;pointer-events:none;">
+    <div style="position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(201,162,39,0.12),transparent 70%);top:8%;left:3%;animation:float 8s ease-in-out infinite;"></div>
+    <div style="position:absolute;width:250px;height:250px;border-radius:50%;background:radial-gradient(circle,rgba(37,99,235,0.1),transparent 70%);bottom:12%;right:8%;animation:float 6s ease-in-out infinite 1s;"></div>
+    <div style="position:absolute;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(6,182,212,0.08),transparent 70%);top:55%;left:55%;animation:float 7s ease-in-out infinite 2s;"></div>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-badge">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+      Malaria Atlas Project &mdash; East Africa Node
+    </div>
+
+    <h1>
+      <span class="hero-accent">HealthScope</span>
+    </h1>
+    <p style="font-size:1.5rem;color:rgba(255,255,255,0.85);margin-bottom:0.5rem;font-weight:500;">Health Facility Intelligence Portal</p>
+    <p>Beyond static inventories. Demand-driven health access analytics across Sub-Saharan Africa &mdash; revealing not just where facilities exist, but whether populations can realistically access them.</p>
+
+    <div class="hero-buttons">
+      <a href="registry.html" class="btn-primary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        Explore Registry
+      </a>
+      <a href="find-facility.html" class="btn-secondary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+        Find Nearby Facility
+      </a>
+    </div>
+  </div>
+
+  <div style="position:absolute;bottom:30px;left:50%;transform:translateX(-50%);z-index:3;animation:float 3s ease-in-out infinite;">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+</section>
+
+<!-- ═══════════════ LIVE STATS ═══════════════ -->
+<section class="stats-bar">
+  <div class="stat-item">
+    <span class="stat-number">78,346</span>
+    <span class="stat-label">Facilities in Registry</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-number">6</span>
+    <span class="stat-label">Countries Live</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-number">18</span>
+    <span class="stat-label">Service Categories Tracked</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-number">MoH-Sourced</span>
+    <span class="stat-label">Direct from Ministries of Health</span>
+  </div>
+</section>
+
+<!-- ═══════════════ THE PROBLEM ═══════════════ -->
+<section style="padding:4rem 2rem;background:var(--map-bg,#fff);">
+  <div style="max-width:900px;margin:0 auto;text-align:center;">
+    <p style="font-size:0.85rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--map-red,#c9a227);font-weight:600;margin-bottom:0.5rem;">The Problem</p>
+    <h2 style="font-family:'Space Grotesk',sans-serif;font-size:2rem;margin-bottom:1.25rem;color:var(--map-navy,#1a2332);">Existing portals show <em>where</em> facilities are. Not whether anyone can reach them.</h2>
+    <p style="color:var(--map-text-muted,#64748b);line-height:1.8;font-size:1.05rem;">
+      WHO AFRO and HDX document facility locations but offer no population-demand modelling, temporal tracking, service-level intelligence, or equity analysis. A dispensary 15&nbsp;km from the nearest road and one on a highway appear identically as map pins. HealthScope fills all four gaps simultaneously.
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════ FIVE INTELLIGENCE LAYERS ═══════════════ -->
+<section class="features-section">
+  <div style="max-width:1200px;margin:0 auto;padding:0 2rem;">
+    <div class="section-header">
+      <h2>Five Intelligence Layers</h2>
+      <p>Each layer transforms raw registry data into actionable health system intelligence</p>
+    </div>
+
+    <div class="feature-cards" style="grid-template-columns:repeat(auto-fit,minmax(320px,1fr));">
+
+      <!-- Layer 1: Registry -->
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(201,162,39,0.08);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c9a227" stroke-width="2"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/></svg>
+        </div>
+        <h3>Facility Registry Lake</h3>
+        <p>Standardized facility data from MoH sources across 6 SSA countries. Multi-country harmonized schema with 78,000+ facilities &mdash; directly from Ministries, not aggregators.</p>
+        <a href="registry.html">Explore Registry &rarr;</a>
+      </div>
+
+      <!-- Layer 2: Temporal -->
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(37,99,235,0.08);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h3>Temporal Tracking</h3>
+        <p>Animated timeline of facility openings, service expansions, and closures. No existing open platform tracks how health infrastructure has evolved over time.</p>
+        <span style="display:inline-flex;align-items:center;gap:0.35rem;color:var(--map-text-muted);font-size:0.85rem;font-weight:500;margin-top:1rem;padding:0.3rem 0.75rem;background:var(--map-bg-section,#f1f5f9);border-radius:100px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          Phase 2 &mdash; Data enrichment underway
+        </span>
+      </div>
+
+      <!-- Layer 3: Access -->
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(5,150,105,0.08);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <h3>Demand-Side Access</h3>
+        <p>Find the nearest facility offering the service you need. Travel-time isochrones and population catchment zones &mdash; showing not just location, but reachability.</p>
+        <a href="find-facility.html">Find Nearest Facility &rarr;</a>
+      </div>
+
+      <!-- Layer 4: Service Gaps -->
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(245,158,11,0.08);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+        </div>
+        <h3>Service Gap Intelligence</h3>
+        <p>Which services exist where? Identify malaria service deserts, lab coverage gaps, and emergency preparedness blind spots at the facility level.</p>
+        <a href="services.html">View Service Analysis &rarr;</a>
+      </div>
+
+      <!-- Layer 5: Equity -->
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(6,182,212,0.08);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3>Equity &amp; Vulnerability Lens</h3>
+        <p>Population-weighted access scores. Facility density by region, ownership distribution, and type coverage &mdash; exposing inequities masked by aggregate counts.</p>
+        <a href="equity.html">View Equity Dashboard &rarr;</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ DATA PIPELINE ═══════════════ -->
+<section style="padding:5rem 2rem;background:var(--map-bg,#fff);">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;">
+
+      <div>
+        <p style="font-size:0.85rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--map-red,#c9a227);font-weight:600;margin-bottom:0.5rem;">ETL Pipeline v2</p>
+        <h2 style="font-family:'Space Grotesk',sans-serif;font-size:1.8rem;margin-bottom:1rem;color:var(--map-navy,#1a2332);">MoH Data &rarr; Standardized Intelligence</h2>
+        <p style="color:var(--map-text-muted,#64748b);line-height:1.8;">
+          Raw facility data from Ministry of Health registries is processed through a validated 7-step ETL pipeline: extraction, column standardization, coordinate cleaning, date parsing, schema enforcement, quality flagging, and versioned export.
+        </p>
+        <div style="display:flex;gap:0.75rem;margin-top:1.5rem;flex-wrap:wrap;">
+          <a href="about.html" class="btn-hf-primary">Architecture &amp; Methods</a>
+          <a href="data-sources.html" class="btn-hf-outline" style="color:var(--map-red)!important;border-color:var(--map-red);">Data Sources</a>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+        <div class="about-stat">
+          <div>
+            <div class="about-stat-value">13,075</div>
+            <div class="about-stat-label">Tanzania</div>
+          </div>
+        </div>
+        <div class="about-stat">
+          <div>
+            <div class="about-stat-value">51,023</div>
+            <div class="about-stat-label">Nigeria</div>
+          </div>
+        </div>
+        <div class="about-stat">
+          <div>
+            <div class="about-stat-value">8,512</div>
+            <div class="about-stat-label">Uganda</div>
+          </div>
+        </div>
+        <div class="about-stat">
+          <div>
+            <div class="about-stat-value">3,731</div>
+            <div class="about-stat-label">Zambia</div>
+          </div>
+        </div>
+        <div class="about-stat">
+          <div>
+            <div class="about-stat-value">1,929</div>
+            <div class="about-stat-label">Malawi</div>
+          </div>
+        </div>
+        <div class="about-stat">
+          <div>
+            <div class="about-stat-value">1,076</div>
+            <div class="about-stat-label">Botswana</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ CTA ═══════════════ -->
+<section class="countries-banner">
+  <h2>Start Exploring</h2>
+  <p>Choose a country or tool to begin working with HealthScope data</p>
+  <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:0.5rem;">
+    <a href="registry.html" class="btn-primary">Registry Explorer</a>
+    <a href="find-facility.html" class="btn-secondary">Find Nearby Facility</a>
+    <a href="equity.html" class="btn-secondary">Equity Dashboard</a>
+  </div>
+</section>
+```

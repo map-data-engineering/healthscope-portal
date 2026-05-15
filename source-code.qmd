@@ -1,0 +1,129 @@
+---
+title: ""
+page-layout: full
+toc: false
+---
+
+```{=html}
+<!-- PAGE HERO -->
+<section class="page-banner">
+  <div style="max-width: 1200px; margin: 0 auto;">
+    <h1 style="font-size: 2.5rem; margin: 0 0 0.5rem 0;">Source Code & Repositories</h1>
+    <p style="font-size: 1.1rem; opacity: 0.9; margin: 0;">Open-source code for the data portal and analytical workflows</p>
+  </div>
+</section>
+
+<!-- GITHUB BANNER -->
+<section style="max-width: 1200px; margin: 2rem auto; padding: 0 2rem;">
+  <div class="card-dark" style="padding: 3rem; text-align: center; border: 2px solid rgba(201, 162, 39, 0.3);">
+    <svg width="60" height="60" viewBox="0 0 24 24" fill="currentColor" style="display: inline-block; margin-bottom: 1rem; color: var(--map-red, #c9a227);">
+      <path d="M12 .296c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.261.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.12-.303-.54-1.523.12-3.176 0 0 1.01-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.66 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.605-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.296c0-6.627-5.373-12-12-12"/>
+    </svg>
+    <h2 style="margin: 1rem 0; color: white;">HealthScope – GitHub Organization</h2>
+    <p style="font-size: 1.05rem; opacity: 0.9; margin-bottom: 1.5rem;">All code is publicly available under open-source licenses. Contributions welcome!</p>
+    <a href="https://github.com/map-east-africa" target="_blank" class="btn-primary">Visit GitHub Organization</a>
+  </div>
+</section>
+
+<!-- REPOSITORY CARDS -->
+<section style="max-width: 1200px; margin: 3rem auto; padding: 0 2rem;">
+  <h2 style="text-align: center; margin-bottom: 0.5rem;">Repository Guides</h2>
+  <p style="text-align: center; color: #666; margin-bottom: 2rem;">Key projects and their purposes</p>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem;">
+
+    <!-- Portal Code -->
+    <div class="card-modern" style="border-top: 4px solid var(--map-red, #c9a227); display: flex; flex-direction: column;">
+      <h3 style="margin-top: 0; color: var(--map-red, #c9a227);">Portal Code</h3>
+      <p style="color: #666; flex: 1;">
+        Quarto-based website code for the health facilities data portal. Includes HTML templates, R Shiny components, 
+        styling, and deployment configuration.
+      </p>
+      <div style="margin: 1rem 0; padding-top: 1rem; border-top: 1px solid #eee;">
+        <p style="margin: 0; font-size: 0.9rem;"><strong>Language:</strong> R, Quarto, HTML/CSS</p>
+        <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem;"><strong>License:</strong> MIT</p>
+      </div>
+      <a href="https://github.com/map-east-africa/hf-data-portal" target="_blank" class="btn-secondary" style="text-align: center; text-decoration: none; margin-top: 1rem;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="display: inline; margin-right: 0.5rem; vertical-align: -2px;">
+          <path d="M12 .296c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.261.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.12-.303-.54-1.523.12-3.176 0 0 1.01-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.66 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.605-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.296c0-6.627-5.373-12-12-12"/>
+        </svg>
+        View on GitHub
+      </a>
+    </div>
+
+    <!-- Data Processing -->
+    <div class="card-modern" style="border-top: 4px solid var(--map-red, #c9a227); display: flex; flex-direction: column;">
+      <h3 style="margin-top: 0; color: var(--map-red, #c9a227);">Data Processing Scripts</h3>
+      <p style="color: #666; flex: 1;">
+        R and Python scripts for downloading, cleaning, harmonizing, and quality-assessing health facility datasets. 
+        Reproducible workflows for data integration from multiple sources.
+      </p>
+      <div style="margin: 1rem 0; padding-top: 1rem; border-top: 1px solid #eee;">
+        <p style="margin: 0; font-size: 0.9rem;"><strong>Language:</strong> R, Python</p>
+        <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem;"><strong>License:</strong> MIT</p>
+      </div>
+      <a href="https://github.com/map-east-africa/hf-data-processing" target="_blank" class="btn-secondary" style="text-align: center; text-decoration: none; margin-top: 1rem;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="display: inline; margin-right: 0.5rem; vertical-align: -2px;">
+          <path d="M12 .296c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.261.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.12-.303-.54-1.523.12-3.176 0 0 1.01-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.66 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.605-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.296c0-6.627-5.373-12-12-12"/>
+        </svg>
+        View on GitHub
+      </a>
+    </div>
+
+    <!-- Analytical Workflows -->
+    <div class="card-modern" style="border-top: 4px solid var(--map-red, #c9a227); display: flex; flex-direction: column;">
+      <h3 style="margin-top: 0; color: var(--map-red, #c9a227);">Analytical Workflows</h3>
+      <p style="color: #666; flex: 1;">
+        Example analyses and workflows demonstrating how to use health facility datasets for research. Covers access mapping, 
+        coverage analysis, and facility clustering studies.
+      </p>
+      <div style="margin: 1rem 0; padding-top: 1rem; border-top: 1px solid #eee;">
+        <p style="margin: 0; font-size: 0.9rem;"><strong>Language:</strong> R Markdown, Python Jupyter</p>
+        <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem;"><strong>License:</strong> MIT</p>
+      </div>
+      <a href="https://github.com/map-east-africa/hf-workflows" target="_blank" class="btn-secondary" style="text-align: center; text-decoration: none; margin-top: 1rem;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="display: inline; margin-right: 0.5rem; vertical-align: -2px;">
+          <path d="M12 .296c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.261.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.12-.303-.54-1.523.12-3.176 0 0 1.01-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.66 1.653.24 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.605-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.296c0-6.627-5.373-12-12-12"/>
+        </svg>
+        View on GitHub
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTRIBUTION GUIDELINES -->
+<section style="max-width: 1200px; margin: 3rem auto; padding: 2rem; background: linear-gradient(135deg, rgba(201, 162, 39, 0.05) 0%, rgba(201, 162, 39, 0.02) 100%); border: 1px solid rgba(201, 162, 39, 0.2); border-radius: 10px;">
+  <h3 style="color: var(--color-navy); margin-top: 0;">Contributing</h3>
+  <p style="color: #666; margin-bottom: 1rem;">We welcome contributions from the research community! To contribute:</p>
+  <ol style="color: #666; line-height: 1.8;">
+    <li>Fork the relevant repository and create a feature branch</li>
+    <li>Follow our coding standards (documented in each repo)</li>
+    <li>Submit a pull request with a clear description of your changes</li>
+    <li>Wait for code review and feedback from maintainers</li>
+    <li>Once approved, your changes will be merged and deployed</li>
+  </ol>
+  <p style="color: #666; margin-top: 1rem;"><strong>Questions?</strong> Open an issue in the relevant repository or contact us at <a href="mailto:map-eastafrica@example.org" style="color: var(--map-red, #c9a227); text-decoration: none;">map-eastafrica@example.org</a></p>
+</section>
+
+<!-- BADGES -->
+<section style="max-width: 1200px; margin: 3rem auto; padding: 0 2rem; text-align: center;">
+  <h3 style="margin-bottom: 1.5rem;">Repository Status & Badges</h3>
+  <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+    <img src="https://img.shields.io/github/stars/map-east-africa/hf-data-portal?style=flat-square&logo=github" alt="GitHub Stars" />
+    <img src="https://img.shields.io/badge/license-MIT-brightgreen?style=flat-square" alt="License: MIT" />
+    <img src="https://img.shields.io/badge/version-1.2.1-blue?style=flat-square" alt="Version 1.2.1" />
+    <img src="https://img.shields.io/badge/status-Active-success?style=flat-square" alt="Status: Active" />
+    <img src="https://img.shields.io/badge/last--updated-2026--05-orange?style=flat-square" alt="Last Updated: 2026-05" />
+  </div>
+</section>
+
+<!-- CTA SECTION -->
+<section style="max-width: 1200px; margin: 3rem auto; padding: 2rem; background: linear-gradient(135deg, var(--map-red, #c9a227) 0%, #00d9f7 100%); border-radius: 10px; text-align: center; color: var(--color-navy);">
+  <h3 style="margin-top: 0; font-size: 1.5rem;">Ready to Get Started?</h3>
+  <p style="margin-bottom: 1.5rem;">Explore our repositories and start using health facility data in your research.</p>
+  <a href="https://github.com/map-east-africa" target="_blank" style="display: inline-block; background: var(--color-navy); color: white; padding: 0.75rem 2rem; border-radius: 6px; text-decoration: none; font-weight: 600; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.2)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+    Browse All Repositories →
+  </a>
+</section>
+```

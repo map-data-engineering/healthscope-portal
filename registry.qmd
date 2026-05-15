@@ -1,0 +1,333 @@
+---
+title: ""
+page-layout: full
+toc: false
+---
+
+```{=html}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
+
+<style>
+  .reg-hero{background:var(--map-navy,#3d3d3d);color:#fff;padding:2.5rem 2rem;}
+  .reg-hero h1{font-family:'Space Grotesk',sans-serif;font-size:2.2rem;margin:0 0 .4rem;}
+  .reg-hero p{opacity:.7;margin:0;font-size:1rem;}
+  .reg-wrap{max-width:1400px;margin:0 auto;padding:1.5rem 1.5rem 3rem;}
+  .reg-controls{display:flex;gap:.75rem;flex-wrap:wrap;align-items:end;padding:1.25rem;background:#fff;border-radius:10px;border:1px solid var(--map-border,#e2e8f0);box-shadow:var(--map-shadow);margin-bottom:1rem;}
+  .reg-controls .ctrl{display:flex;flex-direction:column;gap:.3rem;}
+  .reg-controls label{font-size:.8rem;font-weight:600;color:var(--map-text-muted,#64748b);}
+  .reg-controls select{padding:.55rem .75rem;border:1px solid var(--map-border,#e2e8f0);border-radius:6px;font-size:.9rem;min-width:160px;background:#fff;}
+  .reg-controls select:focus{outline:none;border-color:var(--map-red,#c9a227);box-shadow:0 0 0 2px rgba(201,162,39,.1);}
+  .reg-pill{display:inline-flex;align-items:center;gap:.35rem;padding:.45rem .85rem;border-radius:100px;font-size:.82rem;font-weight:600;border:none;cursor:pointer;transition:all .15s;}
+  .reg-pill.active{background:var(--map-red,#c9a227);color:#fff;}
+  .reg-pill:not(.active){background:var(--map-bg-section,#f1f5f9);color:var(--map-text-muted,#64748b);}
+  .reg-pill:hover:not(.active){background:#e2e8f0;}
+  #reg-map{width:100%;height:600px;border-radius:10px;border:1px solid var(--map-border,#e2e8f0);box-shadow:var(--map-shadow);z-index:1;}
+  .reg-status{padding:.75rem 1rem;border-radius:8px;font-size:.88rem;margin-bottom:1rem;background:rgba(201,162,39,.05);border-left:4px solid var(--map-red,#c9a227);}
+  .reg-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.75rem;margin:1rem 0;}
+  .reg-scard{background:#fff;border:1px solid var(--map-border,#e2e8f0);border-radius:8px;padding:1rem;text-align:center;box-shadow:var(--map-shadow);}
+  .reg-scard .val{font-family:'Space Grotesk',sans-serif;font-size:1.5rem;font-weight:700;color:var(--map-red,#c9a227);}
+  .reg-scard .lbl{font-size:.75rem;color:var(--map-text-muted,#64748b);margin-top:.2rem;}
+  .reg-table-wrap{margin-top:1.5rem;overflow-x:auto;}
+  #reg-table{width:100%;border-collapse:collapse;font-size:.85rem;}
+  #reg-table thead{background:var(--map-navy,#3d3d3d);color:#fff;position:sticky;top:0;}
+  #reg-table th{padding:.65rem .75rem;text-align:left;font-weight:600;cursor:pointer;user-select:none;}
+  #reg-table th:hover{background:rgba(255,255,255,.1);}
+  #reg-table td{padding:.55rem .75rem;border-bottom:1px solid var(--map-border,#e2e8f0);}
+  #reg-table tbody tr:hover{background:rgba(201,162,39,.03);}
+  .reg-table-container{max-height:400px;overflow-y:auto;border:1px solid var(--map-border,#e2e8f0);border-radius:8px;}
+  .search-input{padding:.55rem .75rem;border:1px solid var(--map-border,#e2e8f0);border-radius:6px;font-size:.9rem;min-width:220px;}
+  .search-input:focus{outline:none;border-color:var(--map-red,#c9a227);box-shadow:0 0 0 2px rgba(201,162,39,.1);}
+  .dl-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1rem;background:var(--map-red,#c9a227);color:#fff;border:none;border-radius:6px;font-size:.85rem;font-weight:600;cursor:pointer;text-decoration:none;transition:all .15s;}
+  .dl-btn:hover{background:#a8871e;transform:translateY(-1px);}
+  @media(max-width:768px){
+    #reg-map{height:400px;}
+    .reg-controls{flex-direction:column;}
+    .reg-controls select,.search-input{width:100%;min-width:unset;}
+  }
+</style>
+
+<section class="reg-hero">
+  <div style="max-width:1400px;margin:0 auto;">
+    <h1>Facility Registry Explorer</h1>
+    <p>78,346 health facilities across 6 Sub-Saharan African countries &mdash; standardized, quality-assessed, and open</p>
+  </div>
+</section>
+
+<div class="reg-wrap">
+
+  <!-- Controls -->
+  <div class="reg-controls">
+    <div class="ctrl">
+      <label>Country</label>
+      <select id="f-country">
+        <option value="all">All Countries</option>
+        <option value="tanzania" selected>Tanzania (13,075)</option>
+        <option value="nigeria">Nigeria (51,023)</option>
+        <option value="uganda">Uganda (8,512)</option>
+        <option value="zambia">Zambia (3,731)</option>
+        <option value="malawi">Malawi (1,929)</option>
+        <option value="botswana">Botswana (1,076)</option>
+      </select>
+    </div>
+    <div class="ctrl">
+      <label>Facility Type</label>
+      <select id="f-type">
+        <option value="all">All Types</option>
+      </select>
+    </div>
+    <div class="ctrl">
+      <label>Ownership</label>
+      <select id="f-ownership">
+        <option value="all">All Ownership</option>
+      </select>
+    </div>
+    <div class="ctrl">
+      <label>Search</label>
+      <input type="text" id="f-search" class="search-input" placeholder="Search facility name..."/>
+    </div>
+    <div class="ctrl" style="margin-left:auto;">
+      <label>&nbsp;</label>
+      <button class="dl-btn" id="dl-btn" onclick="downloadFiltered()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download CSV
+      </button>
+    </div>
+  </div>
+
+  <!-- Status -->
+  <div class="reg-status" id="reg-status">Loading facility data from 6 countries...</div>
+
+  <!-- Summary cards -->
+  <div class="reg-summary" id="reg-summary"></div>
+
+  <!-- Map -->
+  <div id="reg-map"></div>
+
+  <!-- Table -->
+  <div class="reg-table-wrap">
+    <div class="reg-table-container">
+      <table id="reg-table">
+        <thead>
+          <tr>
+            <th onclick="sortTable(0)">Facility Name</th>
+            <th onclick="sortTable(1)">Type</th>
+            <th onclick="sortTable(2)">Ownership</th>
+            <th onclick="sortTable(3)">Region</th>
+            <th onclick="sortTable(4)">Country</th>
+            <th onclick="sortTable(5)">Status</th>
+          </tr>
+        </thead>
+        <tbody id="reg-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var COUNTRIES = {
+    tanzania: {file:'data/tanzania/tanzania_standardized.csv', label:'Tanzania', color:'#c9a227', bounds:[-11.8,-1.0,29.2,40.6]},
+    nigeria:  {file:'data/Nigeria/nigeria_standardized.csv',   label:'Nigeria',  color:'#2563eb', bounds:[4,14,2.7,14.7]},
+    uganda:   {file:'data/Uganda/uganda_standardized.csv',     label:'Uganda',   color:'#059669', bounds:[-1.5,4.3,29.5,35.1]},
+    zambia:   {file:'data/Zambia/zambia_standardized.csv',     label:'Zambia',   color:'#f59e0b', bounds:[-18.1,-8.2,21.9,33.7]},
+    malawi:   {file:'data/Malawi/malawi_standardized.csv',     label:'Malawi',   color:'#8b5cf6', bounds:[-17.2,-9.3,32.6,36]},
+    botswana: {file:'data/Botswana/botswana_standardized.csv', label:'Botswana', color:'#06b6d4', bounds:[-27,-17.7,19.9,29.4]}
+  };
+
+  var allFacilities = [];
+  var filtered = [];
+  var map, clusterGroup;
+  var typesSet = new Set(), ownershipSet = new Set();
+  var loadedCount = 0, failedCount = 0, totalCountries = Object.keys(COUNTRIES).length;
+
+  map = L.map('reg-map').setView([-2, 28], 4);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
+    attribution:'&copy; OpenStreetMap &copy; CARTO', maxZoom:18
+  }).addTo(map);
+  clusterGroup = L.markerClusterGroup({maxClusterRadius:50, spiderfyOnMaxZoom:true, showCoverageOnHover:false});
+  map.addLayer(clusterGroup);
+
+  function countryDone(key, success){
+    if(success) loadedCount++; else failedCount++;
+    document.getElementById('reg-status').innerHTML = 'Loaded ' + (loadedCount) + '/' + totalCountries + ' countries...';
+    if(loadedCount + failedCount >= totalCountries) onAllLoaded();
+  }
+
+  Object.keys(COUNTRIES).forEach(function(key){
+    Papa.parse(COUNTRIES[key].file,{
+      download:true, header:true, skipEmptyLines:true,
+      complete:function(res){
+        res.data.forEach(function(r){
+          if(!r.facility_name || r.facility_name === 'facility_name') return;
+          var lat=parseFloat(r.latitude), lon=parseFloat(r.longitude);
+          // Validate coords within country bounding box
+          var b = COUNTRIES[key].bounds;
+          if(!isNaN(lat) && !isNaN(lon) && (lat < b[0] || lat > b[1] || lon < b[2] || lon > b[3])) { lat=NaN; lon=NaN; }
+          r._country = key;
+          r._countryLabel = COUNTRIES[key].label;
+          r._color = COUNTRIES[key].color;
+          r._lat = isNaN(lat)?null:lat;
+          r._lon = isNaN(lon)?null:lon;
+          r.admin1 = r.admin1 || r.admin2 || '';
+          allFacilities.push(r);
+          if(r.facility_type && r.facility_type!=='facility_type') typesSet.add(r.facility_type);
+          if(r.facility_ownership && r.facility_ownership!=='facility_ownership') ownershipSet.add(r.facility_ownership);
+        });
+        countryDone(key, true);
+      },
+      error:function(){ countryDone(key, false); }
+    });
+  });
+
+  function onAllLoaded(){
+    // Populate filter dropdowns
+    var typeSelect = document.getElementById('f-type');
+    Array.from(typesSet).sort().forEach(function(t){
+      var o=document.createElement('option'); o.value=t; o.textContent=t; typeSelect.appendChild(o);
+    });
+    var ownSelect = document.getElementById('f-ownership');
+    Array.from(ownershipSet).sort().forEach(function(t){
+      var o=document.createElement('option'); o.value=t; o.textContent=t; ownSelect.appendChild(o);
+    });
+    applyFilters();
+  }
+
+  function applyFilters(){
+    var country = document.getElementById('f-country').value;
+    var type = document.getElementById('f-type').value;
+    var own = document.getElementById('f-ownership').value;
+    var search = document.getElementById('f-search').value.toLowerCase().trim();
+
+    filtered = allFacilities.filter(function(f){
+      if(country!=='all' && f._country!==country) return false;
+      if(type!=='all' && f.facility_type!==type) return false;
+      if(own!=='all' && f.facility_ownership!==own) return false;
+      if(search && f.facility_name.toLowerCase().indexOf(search)===-1) return false;
+      return true;
+    });
+
+    updateStatus();
+    updateSummary();
+    updateMap();
+    updateTable();
+  }
+
+  function updateStatus(){
+    var withCoords = filtered.filter(function(f){return f._lat!==null;}).length;
+    document.getElementById('reg-status').innerHTML =
+      '<strong>' + filtered.length.toLocaleString() + '</strong> facilities matched &mdash; ' +
+      '<strong>' + withCoords.toLocaleString() + '</strong> with valid coordinates shown on map';
+  }
+
+  function updateSummary(){
+    var countries={}, types={}, public_count=0, operating=0;
+    filtered.forEach(function(f){
+      countries[f._countryLabel]=(countries[f._countryLabel]||0)+1;
+      types[f.facility_type]=(types[f.facility_type]||0)+1;
+      if(f.facility_ownership && (f.facility_ownership.toLowerCase().indexOf('public')>-1 || f.facility_ownership.toLowerCase().indexOf('gov')>-1 || f.facility_ownership==='MOH')) public_count++;
+      if(f.status && (f.status==='Operating'||f.status==='Functional'||f.status==='OPERATIONAL')) operating++;
+    });
+    var html = '<div class="reg-scard"><div class="val">'+filtered.length.toLocaleString()+'</div><div class="lbl">Total Facilities</div></div>';
+    html += '<div class="reg-scard"><div class="val">'+Object.keys(countries).length+'</div><div class="lbl">Countries</div></div>';
+    html += '<div class="reg-scard"><div class="val">'+Object.keys(types).length+'</div><div class="lbl">Facility Types</div></div>';
+    html += '<div class="reg-scard"><div class="val">'+(filtered.length>0?Math.round(public_count/filtered.length*100):0)+'%</div><div class="lbl">Public Ownership</div></div>';
+    html += '<div class="reg-scard"><div class="val">'+(filtered.length>0?Math.round(operating/filtered.length*100):0)+'%</div><div class="lbl">Operational</div></div>';
+    document.getElementById('reg-summary').innerHTML = html;
+  }
+
+  function updateMap(){
+    clusterGroup.clearLayers();
+    var mapped = filtered.filter(function(f){return f._lat!==null && f._lon!==null;});
+
+    mapped.forEach(function(f){
+      var m = L.circleMarker([f._lat, f._lon],{
+        radius:6, color:f._color, weight:1.5, opacity:0.9,
+        fillColor:f._color, fillOpacity:0.6
+      });
+      m.bindPopup(
+        '<div style="min-width:200px;">'+
+        '<strong>'+f.facility_name+'</strong><br/>'+
+        '<span style="color:#6b6b6b;">Type:</span> '+(f.facility_type||'N/A')+'<br/>'+
+        '<span style="color:#6b6b6b;">Ownership:</span> '+(f.facility_ownership||'N/A')+'<br/>'+
+        '<span style="color:#6b6b6b;">Region:</span> '+(f.admin1||'N/A')+'<br/>'+
+        '<span style="color:#6b6b6b;">Country:</span> '+f._countryLabel+'<br/>'+
+        '<span style="color:#6b6b6b;">Status:</span> '+(f.status||'N/A')+
+        '</div>'
+      );
+      clusterGroup.addLayer(m);
+    });
+
+    if(mapped.length > 0){
+      map.fitBounds(clusterGroup.getBounds(), {padding:[40,40]});
+    }
+  }
+
+  function updateTable(){
+    var tbody = document.getElementById('reg-tbody');
+    var rows = filtered.slice(0, 500); // Limit table rows
+    var html = '';
+    rows.forEach(function(f){
+      html += '<tr>'+
+        '<td><strong>'+f.facility_name+'</strong></td>'+
+        '<td>'+(f.facility_type||'&mdash;')+'</td>'+
+        '<td>'+(f.facility_ownership||'&mdash;')+'</td>'+
+        '<td>'+(f.admin1||f.admin2||'&mdash;')+'</td>'+
+        '<td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:'+f._color+';margin-right:6px;"></span>'+f._countryLabel+'</td>'+
+        '<td>'+(f.status||'&mdash;')+'</td>'+
+      '</tr>';
+    });
+    if(filtered.length > 500){
+      html += '<tr><td colspan="6" style="text-align:center;color:var(--map-text-muted);padding:1rem;">Showing 500 of '+filtered.length.toLocaleString()+' &mdash; use filters or search to narrow results, or download full CSV</td></tr>';
+    }
+    tbody.innerHTML = html;
+  }
+
+  var sortCol = -1, sortAsc = true;
+  window.sortTable = function(col){
+    if(sortCol === col) sortAsc = !sortAsc; else { sortCol = col; sortAsc = true; }
+    var keys = ['facility_name','facility_type','facility_ownership','admin1','_countryLabel','status'];
+    var key = keys[col];
+    filtered.sort(function(a,b){
+      var va = (a[key]||'').toLowerCase(), vb = (b[key]||'').toLowerCase();
+      return sortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
+    });
+    updateTable();
+  };
+
+  window.downloadFiltered = function(){
+    var csv = 'facility_name,facility_code,facility_type,facility_ownership,latitude,longitude,admin1,status,country\n';
+    filtered.forEach(function(f){
+      csv += '"'+(f.facility_name||'').replace(/"/g,'""')+'",'+
+        '"'+(f.facility_code||'')+'",'+
+        '"'+(f.facility_type||'')+'",'+
+        '"'+(f.facility_ownership||'')+'",'+
+        (f.latitude||'')+','+(f.longitude||'')+','+
+        '"'+(f.admin1||f.admin2||'')+'",'+
+        '"'+(f.status||'')+'",'+
+        '"'+f._countryLabel+'"\n';
+    });
+    var blob = new Blob([csv],{type:'text/csv'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'healthscope_facilities_export.csv';
+    a.click();
+  };
+
+  // Wire up filters
+  ['f-country','f-type','f-ownership'].forEach(function(id){
+    document.getElementById(id).addEventListener('change', applyFilters);
+  });
+  var searchTimeout;
+  document.getElementById('f-search').addEventListener('input',function(){
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(applyFilters, 300);
+  });
+})();
+</script>
+```

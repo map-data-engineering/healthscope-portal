@@ -1,0 +1,46 @@
+---
+title: ""
+page-layout: full
+toc: false
+---
+
+```{=html}
+<section class="page-banner">
+  <div style="max-width:1400px;margin:0 auto;">
+    <h1>The Team</h1>
+    <p>The people behind HealthScope</p>
+  </div>
+</section>
+
+<section style="max-width:900px;margin:3rem auto;padding:0 2rem 3rem;">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:1.5rem;">
+
+    <div class="card-modern" style="text-align:center;padding:2.5rem 2rem;">
+      <div style="width:80px;height:80px;border-radius:50%;background:var(--map-red,#c9a227);color:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;font-family:'Space Grotesk',sans-serif;font-size:1.8rem;font-weight:700;">CM</div>
+      <h3 style="margin:0 0 0.25rem;color:var(--map-navy,#3d3d3d);">Christina Mallya</h3>
+      <p style="color:var(--map-red,#c9a227);font-weight:600;margin:0 0 1rem;font-size:0.95rem;">Lead Researcher &amp; Data Scientist</p>
+      <p style="color:var(--map-text-muted,#6b6b6b);font-size:0.9rem;line-height:1.7;margin:0;">
+        Leads the research design, data extraction pipeline, and analytical framework for HealthScope. Specializes in health facility data harmonization, geospatial analysis, and malaria epidemiology across Sub-Saharan Africa.
+      </p>
+    </div>
+
+    <div class="card-modern" style="text-align:center;padding:2.5rem 2rem;">
+      <div style="width:80px;height:80px;border-radius:50%;background:var(--map-navy,#3d3d3d);color:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;font-family:'Space Grotesk',sans-serif;font-size:1.8rem;font-weight:700;">KC</div>
+      <h3 style="margin:0 0 0.25rem;color:var(--map-navy,#3d3d3d);">Kasim Chambulilo</h3>
+      <p style="color:var(--map-red,#c9a227);font-weight:600;margin:0 0 1rem;font-size:0.95rem;">Software Engineer &amp; Data Engineer</p>
+      <p style="color:var(--map-text-muted,#6b6b6b);font-size:0.9rem;line-height:1.7;margin:0;">
+        Builds and maintains the HealthScope portal, ETL pipelines, and interactive data visualizations. Develops the open-source infrastructure for data processing, quality assessment, and web-based facility mapping.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<section style="max-width:900px;margin:0 auto 3rem;padding:0 2rem;">
+  <div style="padding:2rem;background:linear-gradient(135deg,rgba(201,162,39,0.05) 0%,rgba(61,61,61,0.03) 100%);border:1px solid var(--map-border,#e0ddd6);border-radius:12px;text-align:center;">
+    <h3 style="margin-top:0;color:var(--map-navy,#3d3d3d);">Want to Connect?</h3>
+    <p style="color:var(--map-text-muted,#6b6b6b);margin-bottom:1.25rem;">Get in touch for collaborations, data partnerships, or general inquiries.</p>
+    <a href="help.html" class="btn-hf-primary">Contact Us</a>
+  </div>
+</section>
+```

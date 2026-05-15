@@ -1,0 +1,90 @@
+---
+title: ""
+runtime: 
+toc: false
+---
+
+```{r}
+#| include: false
+knitr::opts_chunk$set(
+  echo = FALSE, #hide code
+  message = FALSE, #hide package messages
+  warning = FALSE #hide warnings
+)
+
+```
+
+::: country-hero-text
+<h1 class="country-title">
+
+</h1>
+
+<h2>Geocoded Health Facilities for Malaria Modelling</h2>
+
+<p>Standardized, geolocated facility information to strengthen modelling, planning, and decision-making</p>
+:::
+
+<!-- ===================== -->
+
+<!-- Map + Section Navigation -->
+
+<!-- ===================== -->
+
+::::: {.columns .country-main}
+::: {.column width="70%"}
+## Health Facilities Map
+
+```{r}
+library(sf) 
+library(leaflet)
+library(shiny)
+library(dplyr)
+
+# Example: load pre processed sf object
+
+hf_sf <- read.csv("../data/Nigeria/nigeria_standardized.csv") |>
+  dplyr::mutate(
+    latitude = as.numeric(latitude),
+    longitude = as.numeric(longitude)
+  ) |>
+  dplyr::filter(
+    !is.na(latitude) & !is.na(longitude),
+    latitude >= 4 & latitude <= 14,
+    longitude >= 3 & longitude <= 15
+  ) |>
+  sf::st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+
+leaflet(hf_sf) |>
+  addTiles() |>
+  addCircleMarkers(radius = 3, stroke = FALSE, fillOpacity = 0.7)
+```
+:::
+
+::: {.column .toc-panel width="30%"}
+### On this page
+
+-   [Overview](#overview)
+-   [Demographics](#demographics)
+-   [Services](#services)
+-   [Data Download](#data-download)
+:::
+:::::
+
+## Overview {#overview}
+
+Nigeria has the largest health facility network in Africa, with over 40,000 facilities ranging from primary health care centres (PHCs) to federal tertiary hospitals. The health system is decentralized across federal, state, and local government levels, which creates significant variability in service quality and availability across the country's 36 states and FCT. Northern states generally have lower facility density and worse health outcomes compared to southern states.
+
+## Demographics {#demographics}
+
+With a population exceeding 220 million, Nigeria faces enormous demand on its health system. Primary health centres — the most numerous facility type — are designed to serve communities of approximately 5,000 people, though many are under-resourced or non-functional. Nigeria has a physician density of approximately 3.8 per 10,000 population, though distribution is highly skewed toward urban centres. Brain drain of health workers remains a significant systemic challenge.
+## Services {#services}
+
+Nigerian health facilities deliver a broad range of services including outpatient and inpatient care, malaria diagnosis and treatment (Nigeria bears the highest global malaria burden, accounting for ~27% of global cases), HIV/AIDS services, maternal and child health (ANC, skilled delivery, postnatal care), immunization under the National Programme on Immunization, TB services, and nutrition support. The private sector plays a large role in service delivery, particularly in urban areas.
+
+## Data Download {#data-download}
+
+Download the facilities datset here:
+
+-   [CSV](../data/Nigeria/nigeria_standardized.csv)\
+<!--   [JSON](../data/tanzania/hf_demographics.json)-->
+-   [RDS](../data/Nigeria/Nigeria_standardized.rds)

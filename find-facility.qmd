@@ -1,0 +1,736 @@
+---
+title: ""
+page-layout: full
+toc: false
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{=html}
+<!-- Leaflet CSS & JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- PapaParse for CSV -->
+<script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
+
+<style>
+  .finder-hero {
+    background: var(--map-navy, #1a2332);
+    color: white;
+    padding: 3rem 2rem;
+    margin-bottom: 2rem;
+  }
+  .finder-hero h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2.5rem;
+    margin: 0 0 0.5rem 0;
+  }
+  .finder-hero p {
+    font-size: 1.1rem;
+    opacity: 0.75;
+    margin: 0;
+  }
+  .finder-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem 3rem;
+  }
+  .finder-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 1rem;
+    align-items: end;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 12px;
+    border-top: 4px solid var(--map-red, #c9a227);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 1.5rem;
+  }
+  .finder-controls label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+  }
+  .finder-controls select, .finder-controls input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    background: white;
+  }
+  .finder-controls select:focus, .finder-controls input:focus {
+    outline: none;
+    border-color: var(--map-red, #c9a227);
+    box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.12);
+  }
+  .finder-btn {
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #c9a227, #a8871e);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+  }
+  .finder-btn:hover {
+    background: linear-gradient(135deg, #a8871e, #8a7518);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(201, 162, 39, 0.3);
+  }
+  .finder-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+  .finder-status {
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+    display: none;
+  }
+  .finder-status.info {
+    display: block;
+    background: rgba(201, 162, 39, 0.05);
+    border-left: 4px solid var(--map-red, #c9a227);
+    color: #0a1628;
+  }
+  .finder-status.error {
+    display: block;
+    background: rgba(220, 53, 69, 0.08);
+    border-left: 4px solid #dc3545;
+    color: #721c24;
+  }
+  .finder-status.success {
+    display: block;
+    background: rgba(40, 167, 69, 0.08);
+    border-left: 4px solid #28a745;
+    color: #155724;
+  }
+  #finder-map {
+    width: 100%;
+    height: 500px;
+    border-radius: 12px;
+    border: 1px solid #e8ecf1;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 1.5rem;
+    z-index: 1;
+  }
+  .results-section {
+    margin-top: 1.5rem;
+  }
+  .results-section h3 {
+    margin: 0 0 1rem 0;
+    color: #0a1628;
+    font-size: 1.3rem;
+  }
+  .result-card {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: white;
+    border-radius: 8px;
+    border-left: 4px solid var(--map-red, #c9a227);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    margin-bottom: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .result-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    transform: translateX(4px);
+  }
+  .result-rank {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #c9a227, #a8871e);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+  .result-info h4 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1rem;
+    color: #0a1628;
+  }
+  .result-meta {
+    font-size: 0.85rem;
+    color: #666;
+    margin: 0;
+  }
+  .result-meta span {
+    margin-right: 1rem;
+  }
+  .result-distance {
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .result-distance .dist-value {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--map-red, #c9a227);
+  }
+  .result-distance .dist-unit {
+    font-size: 0.8rem;
+    color: #999;
+  }
+  .services-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 0.35rem;
+  }
+  .service-tag {
+    padding: 2px 8px;
+    background: rgba(201, 162, 39, 0.08);
+    color: #a8871e;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  .locate-btn {
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .locate-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+  }
+  .locate-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+  .how-it-works {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .step-card {
+    text-align: center;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .step-number {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #c9a227, #a8871e);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    margin: 0 auto 0.75rem;
+  }
+  .step-card h4 {
+    margin: 0 0 0.5rem 0;
+    color: #0a1628;
+  }
+  .step-card p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #666;
+  }
+  .max-results-control {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .max-results-control select {
+    width: auto;
+    padding: 0.75rem;
+  }
+  @media (max-width: 768px) {
+    .finder-controls {
+      grid-template-columns: 1fr;
+    }
+    .how-it-works {
+      grid-template-columns: 1fr;
+    }
+    .result-card {
+      grid-template-columns: auto 1fr;
+    }
+    .result-distance {
+      grid-column: 1 / -1;
+      text-align: left;
+    }
+    #finder-map {
+      height: 350px;
+    }
+  }
+</style>
+
+<!-- HERO SECTION -->
+<section class="finder-hero">
+  <div style="max-width: 1200px; margin: 0 auto;">
+    <h1>Find Nearby Health Facility</h1>
+    <p>Select a service you need and we'll show you the closest facilities that provide it</p>
+  </div>
+</section>
+
+<div class="finder-container">
+
+  <!-- HOW IT WORKS -->
+  <div class="how-it-works">
+    <div class="step-card">
+      <div class="step-number">1</div>
+      <h4>Share Your Location</h4>
+      <p>Allow your browser to detect your current location or enter coordinates manually</p>
+    </div>
+    <div class="step-card">
+      <div class="step-number">2</div>
+      <h4>Select a Service</h4>
+      <p>Choose the type of health service you are looking for from the dropdown</p>
+    </div>
+    <div class="step-card">
+      <div class="step-number">3</div>
+      <h4>View Results</h4>
+      <p>See the nearest facilities on the map with distance and service details</p>
+    </div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="finder-controls">
+    <div>
+      <label for="service-select">Service Type</label>
+      <select id="service-select">
+        <option value="">-- Select a Service --</option>
+        <option value="general_services">General Clinical Services</option>
+        <option value="malaria_diagnosis">Malaria Diagnosis & Treatment</option>
+        <option value="hiv_prevention">HIV/AIDS Prevention</option>
+        <option value="hiv_caretreatment">HIV/AIDS Care & Treatment</option>
+        <option value="therapeutics">Therapeutics / Pharmacy</option>
+        <option value="health_promotion">Health Promotion & Disease Prevention</option>
+        <option value="growth_nutrition">Growth Monitoring / Nutrition / Vaccination</option>
+        <option value="diagnostic_services">Diagnostic Services</option>
+        <option value="support_services">Support Services</option>
+        <option value="ent_services">ENT Services</option>
+        <option value="radiology">Radiology</option>
+        <option value="emergency">Emergency Preparedness</option>
+        <option value="lab_serology">Lab - Serology</option>
+        <option value="lab_parasitology">Lab - Parasitology</option>
+        <option value="lab_clinicalchemistry">Lab - Clinical Chemistry</option>
+      </select>
+    </div>
+    <div class="max-results-control">
+      <div style="width:100%">
+        <label for="max-results">Show nearest</label>
+        <select id="max-results">
+          <option value="5">5 facilities</option>
+          <option value="10" selected>10 facilities</option>
+          <option value="20">20 facilities</option>
+          <option value="50">50 facilities</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:flex; gap:0.5rem; align-items:end;">
+      <button class="locate-btn" id="locate-btn" onclick="getLocation()">Detect My Location</button>
+      <button class="finder-btn" id="search-btn" onclick="searchFacilities()" disabled>Search</button>
+    </div>
+  </div>
+
+  <!-- MANUAL COORDS (hidden by default, shown if geolocation fails) -->
+  <div id="manual-coords" style="display:none; margin-bottom:1.5rem;">
+    <div class="finder-controls" style="grid-template-columns: 1fr 1fr auto;">
+      <div>
+        <label for="manual-lat">Latitude</label>
+        <input type="number" id="manual-lat" placeholder="e.g. -6.7924" step="any" />
+      </div>
+      <div>
+        <label for="manual-lon">Longitude</label>
+        <input type="number" id="manual-lon" placeholder="e.g. 39.2083" step="any" />
+      </div>
+      <button class="finder-btn" onclick="useManualCoords()">Use These Coordinates</button>
+    </div>
+  </div>
+
+  <!-- STATUS MESSAGE -->
+  <div id="status-msg" class="finder-status"></div>
+
+  <!-- MAP -->
+  <div id="finder-map"></div>
+
+  <!-- RESULTS LIST -->
+  <div class="results-section" id="results-section" style="display:none;">
+    <h3 id="results-title">Nearest Facilities</h3>
+    <div id="results-list"></div>
+  </div>
+
+  <!-- FOOTER NOTE -->
+  <div style="margin-top: 2rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(0, 180, 216, 0.05) 0%, rgba(0, 180, 216, 0.02) 100%); border-radius: 8px; border: 1px solid rgba(201, 162, 39, 0.15);">
+    <p style="margin: 0; font-size: 0.9rem; color: #666;">
+      <strong>Data Coverage:</strong> Currently showing health facilities in <strong>Tanzania</strong> with service availability data.
+      Distances are calculated as straight-line (not road distance). Facility data sourced from the
+      <a href="https://hfrportal.moh.go.tz/" target="_blank" style="color: var(--map-red, #c9a227); text-decoration: none;">Tanzania Health Facility Registry</a>.
+    </p>
+  </div>
+</div>
+
+<script>
+(function() {
+  // ─── State ───
+  let userLat = null;
+  let userLon = null;
+  let facilities = [];
+  // svcByCode: { facility_code: { category: [detail1, detail2, ...], ... } }
+  let svcByCode = {};
+  let map = null;
+  let userMarker = null;
+  let facilityMarkers = [];
+  let routeLines = [];
+  let dataLoaded = false;
+
+  // ─── Initialize map ───
+  map = L.map('finder-map').setView([-6.5, 35], 6);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+    maxZoom: 19
+  }).addTo(map);
+
+  // ─── Load CSV data ───
+  function showStatus(msg, type) {
+    var el = document.getElementById('status-msg');
+    el.className = 'finder-status ' + type;
+    el.innerHTML = msg;
+  }
+
+  function loadData() {
+    showStatus('Loading facility data...', 'info');
+
+    var facilitiesLoaded = false;
+    var servicesLoaded = false;
+
+    Papa.parse('data/tanzania/tanzania_standardized.csv', {
+      download: true,
+      header: true,
+      skipEmptyLines: true,
+      complete: function(results) {
+        facilities = results.data.filter(function(r) {
+          if(!r.facility_name || r.facility_name === 'facility_name') return false;
+          if(!r.latitude || !r.longitude || r.status !== 'Operating') return false;
+          var la = parseFloat(r.latitude), lo = parseFloat(r.longitude);
+          if(isNaN(la) || isNaN(lo) || la < -12 || la > -1 || lo < 29 || lo > 41) return false;
+          return true;
+        });
+        console.log('HealthScope: Loaded ' + facilities.length + ' operating facilities');
+        facilitiesLoaded = true;
+        showStatus('Facilities loaded (' + facilities.length + '). Loading service records (208K+ rows)...', 'info');
+        if (servicesLoaded) onDataReady();
+      },
+      error: function() {
+        showStatus('Failed to load facility data. Please refresh the page.', 'error');
+      }
+    });
+
+    // Long-format: one row per service-detail per facility
+    Papa.parse('data/tanzania/hf_services.csv', {
+      download: true,
+      header: true,
+      skipEmptyLines: true,
+      complete: function(results) {
+        var count = 0;
+        results.data.forEach(function(row) {
+          if (!row.facility_code || !row.service_category) return;
+          // Skip header-as-data rows
+          if (row.facility_code === 'facility_code') return;
+          if (!svcByCode[row.facility_code]) svcByCode[row.facility_code] = {};
+          if (!svcByCode[row.facility_code][row.service_category]) {
+            svcByCode[row.facility_code][row.service_category] = [];
+          }
+          svcByCode[row.facility_code][row.service_category].push(row.service_detail || row.service_group || '');
+          count++;
+        });
+        console.log('HealthScope: Parsed ' + count + ' service records for ' + Object.keys(svcByCode).length + ' facilities');
+        servicesLoaded = true;
+        if (facilitiesLoaded) onDataReady();
+      },
+      error: function(err) {
+        console.error('HealthScope: Service CSV error', err);
+        showStatus('Failed to load services data. Please refresh the page.', 'error');
+      }
+    });
+  }
+
+  function onDataReady() {
+    dataLoaded = true;
+    var svcCount = Object.keys(svcByCode).length;
+    showStatus('Loaded <strong>' + facilities.length + '</strong> operating facilities, <strong>' + svcCount.toLocaleString() + '</strong> with service data. Detect your location and select a service to begin.', 'success');
+    checkReady();
+  }
+
+  // ─── Geolocation ───
+  window.getLocation = function() {
+    var btn = document.getElementById('locate-btn');
+    btn.disabled = true;
+    btn.textContent = 'Detecting...';
+
+    if (!navigator.geolocation) {
+      showStatus('Geolocation is not supported by your browser. Please enter coordinates manually.', 'error');
+      document.getElementById('manual-coords').style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Detect My Location';
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      function(pos) {
+        userLat = pos.coords.latitude;
+        userLon = pos.coords.longitude;
+        btn.textContent = 'Location Set';
+        btn.style.background = 'linear-gradient(135deg, #20c997, #28a745)';
+        placeUserMarker();
+        showStatus('Location detected: <strong>' + userLat.toFixed(4) + ', ' + userLon.toFixed(4) + '</strong>. Now select a service and click Search.', 'success');
+        checkReady();
+      },
+      function(err) {
+        btn.disabled = false;
+        btn.textContent = 'Detect My Location';
+        document.getElementById('manual-coords').style.display = 'block';
+        var msg = 'Could not detect your location. ';
+        if (err.code === 1) msg += 'Permission denied. ';
+        else if (err.code === 2) msg += 'Position unavailable. ';
+        else msg += 'Request timed out. ';
+        msg += 'You can enter your coordinates manually below.';
+        showStatus(msg, 'error');
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+    );
+  };
+
+  window.useManualCoords = function() {
+    var lat = parseFloat(document.getElementById('manual-lat').value);
+    var lon = parseFloat(document.getElementById('manual-lon').value);
+    if (isNaN(lat) || isNaN(lon) || lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+      showStatus('Please enter valid coordinates (Latitude: -90 to 90, Longitude: -180 to 180).', 'error');
+      return;
+    }
+    userLat = lat;
+    userLon = lon;
+    var btn = document.getElementById('locate-btn');
+    btn.textContent = 'Location Set';
+    btn.style.background = 'linear-gradient(135deg, #20c997, #28a745)';
+    placeUserMarker();
+    showStatus('Location set: <strong>' + userLat.toFixed(4) + ', ' + userLon.toFixed(4) + '</strong>. Now select a service and click Search.', 'success');
+    checkReady();
+  };
+
+  function placeUserMarker() {
+    if (userMarker) map.removeLayer(userMarker);
+    var userIcon = L.divIcon({
+      html: '<div style="width:18px;height:18px;background:#dc3545;border:3px solid white;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,0.4);"></div>',
+      className: '',
+      iconSize: [18, 18],
+      iconAnchor: [9, 9]
+    });
+    userMarker = L.marker([userLat, userLon], { icon: userIcon, zIndexOffset: 1000 })
+      .addTo(map)
+      .bindPopup('<strong>Your Location</strong><br/>' + userLat.toFixed(4) + ', ' + userLon.toFixed(4));
+    map.setView([userLat, userLon], 10);
+  }
+
+  function checkReady() {
+    var serviceVal = document.getElementById('service-select').value;
+    document.getElementById('search-btn').disabled = !(dataLoaded && userLat !== null && serviceVal);
+  }
+
+  document.getElementById('service-select').addEventListener('change', checkReady);
+
+  // ─── Haversine distance (km) ───
+  function haversine(lat1, lon1, lat2, lon2) {
+    var R = 6371;
+    var dLat = (lat2 - lat1) * Math.PI / 180;
+    var dLon = (lon2 - lon1) * Math.PI / 180;
+    var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon/2) * Math.sin(dLon/2);
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  }
+
+  // ─── Friendly service column names ───
+  var serviceLabels = {
+    general_services: 'General Clinical Services',
+    malaria_diagnosis: 'Malaria Diagnosis & Treatment',
+    hiv_prevention: 'HIV/AIDS Prevention',
+    hiv_caretreatment: 'HIV/AIDS Care & Treatment',
+    therapeutics: 'Therapeutics / Pharmacy',
+    health_promotion: 'Health Promotion',
+    growth_nutrition: 'Growth / Nutrition / Vaccination',
+    diagnostic_services: 'Diagnostic Services',
+    support_services: 'Support Services',
+    ent_services: 'ENT Services',
+    radiology: 'Radiology',
+    emergency: 'Emergency',
+    lab_serology: 'Lab Serology',
+    lab_parasitology: 'Lab Parasitology',
+    lab_clinicalchemistry: 'Lab Clinical Chemistry'
+  };
+
+  // ─── Search ───
+  window.searchFacilities = function() {
+    var serviceKey = document.getElementById('service-select').value;
+    var maxResults = parseInt(document.getElementById('max-results').value);
+
+    if (!serviceKey || userLat === null) return;
+
+    // Clear previous
+    facilityMarkers.forEach(function(m) { map.removeLayer(m); });
+    routeLines.forEach(function(l) { map.removeLayer(l); });
+    facilityMarkers = [];
+    routeLines = [];
+
+    // Filter: facility must have the selected service category in long-format data
+    var matched = [];
+    facilities.forEach(function(f) {
+      var svc = svcByCode[f.facility_code];
+      if (svc && svc[serviceKey] && svc[serviceKey].length > 0) {
+        var lat = parseFloat(f.latitude);
+        var lon = parseFloat(f.longitude);
+        if (!isNaN(lat) && !isNaN(lon)) {
+          var dist = haversine(userLat, userLon, lat, lon);
+          matched.push({
+            name: f.facility_name,
+            code: f.facility_code,
+            type: f.facility_type,
+            ownership: f.facility_ownership,
+            region: f.admin1,
+            lat: lat,
+            lon: lon,
+            distance: dist,
+            serviceDetails: svc[serviceKey],  // array of service details
+            allCategories: svc                 // { category: [details...] }
+          });
+        }
+      }
+    });
+
+    matched.sort(function(a, b) { return a.distance - b.distance; });
+    var nearest = matched.slice(0, maxResults);
+
+    if (nearest.length === 0) {
+      showStatus('No facilities found offering <strong>' + serviceLabels[serviceKey] + '</strong>. Try a different service.', 'error');
+      document.getElementById('results-section').style.display = 'none';
+      return;
+    }
+
+    showStatus('Found <strong>' + matched.length.toLocaleString() + '</strong> facilities offering <strong>' + serviceLabels[serviceKey] + '</strong>. Showing the nearest <strong>' + nearest.length + '</strong>.', 'success');
+
+    var bounds = L.latLngBounds([[userLat, userLon]]);
+
+    nearest.forEach(function(f, i) {
+      bounds.extend([f.lat, f.lon]);
+
+      var line = L.polyline([[userLat, userLon], [f.lat, f.lon]], {
+        color: '#c9a227', weight: 1.5, opacity: 0.4, dashArray: '6 4'
+      }).addTo(map);
+      routeLines.push(line);
+
+      // Count available categories
+      var catCount = Object.keys(f.allCategories).length;
+
+      // Build service detail list for popup
+      var detailList = f.serviceDetails.slice(0,5).map(function(d){return '&bull; '+d;}).join('<br/>');
+      if(f.serviceDetails.length > 5) detailList += '<br/><em>+' + (f.serviceDetails.length-5) + ' more</em>';
+
+      var popupHtml = '<div style="min-width:220px;">' +
+        '<strong style="font-size:1.05rem;">' + f.name + '</strong><br/>' +
+        '<span style="color:#666;">Type: </span>' + f.type + '<br/>' +
+        '<span style="color:#666;">Ownership: </span>' + f.ownership + '<br/>' +
+        '<span style="color:#666;">Region: </span>' + f.region + '<br/>' +
+        '<span style="color:#666;">Distance: </span><strong style="color:#c9a227;">' + f.distance.toFixed(1) + ' km</strong><br/>' +
+        '<hr style="margin:0.5rem 0;border-color:#eee;"/>' +
+        '<span style="color:#666;font-size:0.82rem;"><strong>' + serviceLabels[serviceKey] + ':</strong></span><br/>' +
+        '<span style="font-size:0.82rem;">' + detailList + '</span><br/>' +
+        '<span style="color:#999;font-size:0.78rem;margin-top:4px;display:block;">' + catCount + ' service categories available</span>' +
+        '</div>';
+
+      var marker = L.circleMarker([f.lat, f.lon], {
+        radius: 8, color: '#a8871e', weight: 2, opacity: 0.9,
+        fillColor: '#c9a227', fillOpacity: 0.7
+      }).addTo(map).bindPopup(popupHtml);
+
+      var rankIcon = L.divIcon({
+        html: '<div style="width:22px;height:22px;background:#c9a227;color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.3);">' + (i+1) + '</div>',
+        className: '', iconSize: [22, 22], iconAnchor: [11, 11]
+      });
+      var rankMarker = L.marker([f.lat, f.lon], { icon: rankIcon, interactive: false }).addTo(map);
+
+      facilityMarkers.push(marker);
+      facilityMarkers.push(rankMarker);
+    });
+
+    map.fitBounds(bounds, { padding: [40, 40] });
+
+    // Render results list
+    var resultsHtml = '';
+    nearest.forEach(function(f, i) {
+      // Service category tags
+      var tags = [];
+      Object.keys(f.allCategories).forEach(function(cat) {
+        if (serviceLabels[cat]) tags.push(serviceLabels[cat]);
+      });
+      var tagsHtml = tags.slice(0, 5).map(function(t) { return '<span class="service-tag">' + t + '</span>'; }).join('');
+      if (tags.length > 5) tagsHtml += '<span class="service-tag">+' + (tags.length - 5) + ' more</span>';
+
+      var distStr = f.distance < 1 ? (f.distance * 1000).toFixed(0) : f.distance.toFixed(1);
+      var distUnit = f.distance < 1 ? 'm' : 'km';
+
+      resultsHtml += '<div class="result-card" onclick="panTo(' + f.lat + ',' + f.lon + ')">' +
+        '<div class="result-rank">' + (i+1) + '</div>' +
+        '<div class="result-info">' +
+          '<h4>' + f.name + '</h4>' +
+          '<p class="result-meta"><span>' + f.type + '</span><span>' + f.ownership + '</span><span>' + f.region + '</span></p>' +
+          '<div class="services-tags">' + tagsHtml + '</div>' +
+        '</div>' +
+        '<div class="result-distance">' +
+          '<div class="dist-value">' + distStr + '</div>' +
+          '<div class="dist-unit">' + distUnit + '</div>' +
+        '</div>' +
+      '</div>';
+    });
+
+    document.getElementById('results-title').textContent = 'Nearest ' + nearest.length + ' Facilities for ' + serviceLabels[serviceKey];
+    document.getElementById('results-list').innerHTML = resultsHtml;
+    document.getElementById('results-section').style.display = 'block';
+  };
+
+  window.panTo = function(lat, lon) {
+    map.setView([lat, lon], 14);
+    // Open the popup of the matching marker
+    facilityMarkers.forEach(function(m) {
+      if (m.getLatLng && m.getLatLng().lat === lat && m.getLatLng().lng === lon && m.openPopup) {
+        m.openPopup();
+      }
+    });
+  };
+
+  // ─── Init ───
+  loadData();
+})();
+</script>
+```

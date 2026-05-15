@@ -1,0 +1,8 @@
+date_opened,ownership,facility_name,facility_code,facility_type,ownership_type,ownership_subtype,latitude,longitude,geometry,
+1/1/1970,"private, faith based organization (fbo)",bupandagila - sda,100000-9,dispensary,private,fbo,-2.64496,34.01009,c(34.01009, -2.64496)
+7/1/1957,"public, lga",bupandwa,100001-7,dispensary,public,lga,-2.44682,32.1526,c(32.1526, -2.44682)
+1/1/2003,"public, lga",bupigi,100002-5,dispensary,public,lga,-3.55117,33.69935,c(33.69935, -3.55117)
+1/1/1970,"public, lga",bupigu,100003-3,dispensary,public,lga,-9.50139,33.3476,c(33.3476, -9.50139)
+6/1/1978,"public, lga",bupu,100004-1,dispensary,public,lga,-7.19919,39.0225,c(39.0225, -7.19919)
+8/5/1986,"private, faith based organization (fbo)",burere,100005-8,dispensary,private,fbo,-1.30831,33.964,c(33.964, -1.30831)
+10/14/2024,"private, faith based organization (fbo)",burhani chartable,100009-0,polyclinic,private,fbo,-5.07611,39.10071,c(39.10071, -5.07611)

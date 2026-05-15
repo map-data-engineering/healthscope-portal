@@ -1,0 +1,88 @@
+---
+title: ""
+runtime: 
+toc: false
+---
+
+```{r}
+#| include: false
+knitr::opts_chunk$set(
+  echo = FALSE, #hide code
+  message = FALSE, #hide package messages
+  warning = FALSE #hide warnings
+)
+
+```
+
+::: country-hero-text
+<h1 class="country-title">
+
+</h1>
+
+<h2>Malawi Health Facilities</h2>
+
+<p>Standardized, geolocated facility information to strengthen modelling, planning, and decision-making</p>
+:::
+
+<!-- ===================== -->
+
+<!-- Map + Section Navigation -->
+
+<!-- ===================== -->
+
+::::: {.columns .country-main}
+::: {.column width="70%"}
+## Health Facilities Map
+
+```{r}
+library(sf) 
+library(leaflet)
+library(shiny)
+library(dplyr)
+
+# Example: load pre processed sf object
+
+hf_sf <- readRDS("../data/Malawi/malawi_standardized.rds") |>
+  dplyr::filter(
+    !is.na(latitude) & !is.na(longitude),
+    latitude >= -18 & latitude <= -8,
+    longitude >= 22 & longitude <= 34
+  ) |>
+  sf::st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+
+leaflet(hf_sf) |>
+  addTiles() |>
+  addCircleMarkers(radius = 3, stroke = FALSE, fillOpacity = 0.7)
+```
+:::
+
+::: {.column .toc-panel width="30%"}
+### On this page
+
+-   [Overview](#overview)
+-   [Demographics](#demographics)
+-   [Services](#services)
+-   [Data Download](#data-download)
+:::
+:::::
+
+## Overview {#overview}
+
+Malawi operates a mixed health system with government facilities managed by the Ministry of Health and a significant proportion run by the Christian Health Association of Malawi (CHAM), which provides nearly 40% of health services. The country has around 1,000 health facilities across its 28 districts. Despite being a low-income country, Malawi has achieved notable gains in reducing child and maternal mortality over recent decades.
+
+## Demographics {#demographics}
+
+
+Malawi has a population of approximately 20 million, with over 80% living in rural areas. Most facilities are health centres and dispensaries serving rural communities. The country faces severe health workforce shortages, with one of the lowest doctor-to-population ratios in the world approximately 0.2 physicians per 10,000 people. Community health workers (Health Surveillance Assistants) play a critical role in bridging service gaps.
+
+## Services {#services}
+
+Malawian health facilities deliver outpatient care, malaria prevention (including insecticide-treated nets distribution), diagnosis and treatment, maternal and neonatal health, HIV/AIDS services including ART and PMTCT, TB treatment, immunization, and nutrition services. Malaria, respiratory infections, and diarrhoeal diseases are the most common reasons for facility visits.
+
+## Data Download {#data-download}
+
+Download facilities dataset here:
+
+-   [CSV](../data/Malawi/malawi_standardized.csv)\
+<!--   [JSON](../data/tanzania/hf_demographics.json)-->
+-   [RDS](../data/Malawi/malawi_standardized.rds)
