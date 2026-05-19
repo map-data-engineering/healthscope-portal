@@ -54,7 +54,7 @@ toc: false
 <section class="reg-hero">
   <div style="max-width:1400px;margin:0 auto;">
     <h1>Facility Registry Explorer</h1>
-    <p>78,346 health facilities across 6 Sub-Saharan African countries &mdash; standardized, quality-assessed, and open</p>
+    <p>88,799 health facilities across 7 Sub-Saharan African countries &mdash; standardized, quality-assessed, and open</p>
   </div>
 </section>
 
@@ -66,6 +66,7 @@ toc: false
       <label>Country</label>
       <select id="f-country">
         <option value="all">All Countries</option>
+        <option value="kenya">Kenya (10,453)</option>
         <option value="tanzania" selected>Tanzania (13,075)</option>
         <option value="nigeria">Nigeria (51,023)</option>
         <option value="uganda">Uganda (8,512)</option>
@@ -132,6 +133,7 @@ toc: false
 <script>
 (function(){
   var COUNTRIES = {
+    kenya:    {file:'data/Kenya/kenya_standardized.csv',       label:'Kenya',    color:'#e05930', bounds:[-4.7,5.5,33.9,41.9]},
     tanzania: {file:'data/tanzania/tanzania_standardized.csv', label:'Tanzania', color:'#c9a227', bounds:[-11.8,-1.0,29.2,40.6]},
     nigeria:  {file:'data/Nigeria/nigeria_standardized.csv',   label:'Nigeria',  color:'#2563eb', bounds:[4,14,2.7,14.7]},
     uganda:   {file:'data/Uganda/uganda_standardized.csv',     label:'Uganda',   color:'#059669', bounds:[-1.5,4.3,29.5,35.1]},
