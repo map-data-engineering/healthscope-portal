@@ -626,24 +626,16 @@ ul.task-list li input[type="checkbox"] {
   <!-- CONTROLS -->
   <div class="finder-controls">
     <div>
+      <label for="country-select">Country</label>
+      <select id="country-select">
+        <option value="tanzania" selected="">Tanzania</option>
+        <option value="kenya">Kenya</option>
+      </select>
+    </div>
+    <div>
       <label for="service-select">Service Type</label>
       <select id="service-select">
-        <option value="">-- Select a Service --</option>
-        <option value="general_services">General Clinical Services</option>
-        <option value="malaria_diagnosis">Malaria Diagnosis &amp; Treatment</option>
-        <option value="hiv_prevention">HIV/AIDS Prevention</option>
-        <option value="hiv_caretreatment">HIV/AIDS Care &amp; Treatment</option>
-        <option value="therapeutics">Therapeutics / Pharmacy</option>
-        <option value="health_promotion">Health Promotion &amp; Disease Prevention</option>
-        <option value="growth_nutrition">Growth Monitoring / Nutrition / Vaccination</option>
-        <option value="diagnostic_services">Diagnostic Services</option>
-        <option value="support_services">Support Services</option>
-        <option value="ent_services">ENT Services</option>
-        <option value="radiology">Radiology</option>
-        <option value="emergency">Emergency Preparedness</option>
-        <option value="lab_serology">Lab - Serology</option>
-        <option value="lab_parasitology">Lab - Parasitology</option>
-        <option value="lab_clinicalchemistry">Lab - Clinical Chemistry</option>
+        <option value="">-- Loading services... --</option>
       </select>
     </div>
     <div class="max-results-control">
@@ -693,104 +685,155 @@ ul.task-list li input[type="checkbox"] {
   <!-- FOOTER NOTE -->
   <div style="margin-top: 2rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(0, 180, 216, 0.05) 0%, rgba(0, 180, 216, 0.02) 100%); border-radius: 8px; border: 1px solid rgba(201, 162, 39, 0.15);">
     <p style="margin: 0; font-size: 0.9rem; color: #666;">
-      <strong>Data Coverage:</strong> Currently showing health facilities in <strong>Tanzania</strong> with service availability data.
-      Distances are calculated as straight-line (not road distance). Facility data sourced from the
-      <a href="https://hfrportal.moh.go.tz/" target="_blank" style="color: var(--map-red, #c9a227); text-decoration: none;">Tanzania Health Facility Registry</a>.
+      <strong>Data Coverage:</strong> Tanzania (13,075 facilities, 209K service records) and Kenya (17,353 facilities, 201K service records).
+      Distances are calculated as straight-line (not road distance). Sources: Tanzania HFR and Kenya KMHFR.
     </p>
   </div>
 </div>
 
 <script>
 (function() {
-  // ─── State ───
-  let userLat = null;
-  let userLon = null;
-  let facilities = [];
-  // svcByCode: { facility_code: { category: [detail1, detail2, ...], ... } }
-  let svcByCode = {};
-  let map = null;
-  let userMarker = null;
-  let facilityMarkers = [];
-  let routeLines = [];
-  let dataLoaded = false;
+  // ─── Country configs ───
+  var COUNTRIES = {
+    tanzania: {
+      facFile: 'data/tanzania/tanzania_standardized.csv',
+      svcFile: 'data/tanzania/hf_services.csv',
+      bounds: [-11.8, -1.0, 29.2, 40.6],
+      label: 'Tanzania',
+      statusFilter: 'Operating'
+    },
+    kenya: {
+      facFile: 'data/Kenya/kenya_standardized.csv',
+      svcFile: 'data/Kenya/kenya_services.csv',
+      bounds: [-4.7, 5.5, 33.9, 41.9],
+      label: 'Kenya',
+      statusFilter: 'Operating'
+    }
+  };
 
-  // ─── Initialize map ───
-  map = L.map('finder-map').setView([-6.5, 35], 6);
+  var currentCountry = 'tanzania';
+  var userLat = null;
+  var userLon = null;
+  var facilities = [];
+  var svcByCode = {};
+  var map = null;
+  var userMarker = null;
+  var facilityMarkers = [];
+  var routeLines = [];
+  var dataLoaded = false;
+  var cache = {};
+
+  map = L.map('finder-map').setView([-2, 36], 5);
   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
     attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
     maxZoom: 19
   }).addTo(map);
 
-  // ─── Load CSV data ───
   function showStatus(msg, type) {
     var el = document.getElementById('status-msg');
     el.className = 'finder-status ' + type;
     el.innerHTML = msg;
   }
 
-  function loadData() {
-    showStatus('Loading facility data...', 'info');
+  function loadCountry(key) {
+    currentCountry = key;
+    dataLoaded = false;
+    document.getElementById('search-btn').disabled = true;
 
-    var facilitiesLoaded = false;
-    var servicesLoaded = false;
+    // Clear previous results
+    facilityMarkers.forEach(function(m) { map.removeLayer(m); });
+    routeLines.forEach(function(l) { map.removeLayer(l); });
+    facilityMarkers = [];
+    routeLines = [];
+    document.getElementById('results-section').style.display = 'none';
 
-    Papa.parse('data/tanzania/tanzania_standardized.csv', {
-      download: true,
-      header: true,
-      skipEmptyLines: true,
+    if (cache[key]) {
+      facilities = cache[key].facilities;
+      svcByCode = cache[key].svcByCode;
+      onDataReady();
+      return;
+    }
+
+    var cfg = COUNTRIES[key];
+    facilities = [];
+    svcByCode = {};
+    var loaded = {fac: false, svc: false};
+
+    showStatus('Loading ' + cfg.label + ' facilities...', 'info');
+
+    Papa.parse(cfg.facFile, {
+      download: true, header: true, skipEmptyLines: true,
       complete: function(results) {
+        var b = cfg.bounds;
         facilities = results.data.filter(function(r) {
-          if(!r.facility_name || r.facility_name === 'facility_name') return false;
-          if(!r.latitude || !r.longitude || r.status !== 'Operating') return false;
+          if (!r.facility_name || r.facility_name === 'facility_name') return false;
+          if (!r.latitude || !r.longitude) return false;
+          if (r.status && r.status !== cfg.statusFilter && r.status !== 'Operational') return false;
           var la = parseFloat(r.latitude), lo = parseFloat(r.longitude);
-          if(isNaN(la) || isNaN(lo) || la < -12 || la > -1 || lo < 29 || lo > 41) return false;
+          if (isNaN(la) || isNaN(lo) || la < b[0] || la > b[1] || lo < b[2] || lo > b[3]) return false;
           return true;
         });
-        console.log('HealthScope: Loaded ' + facilities.length + ' operating facilities');
-        facilitiesLoaded = true;
-        showStatus('Facilities loaded (' + facilities.length + '). Loading service records (208K+ rows)...', 'info');
-        if (servicesLoaded) onDataReady();
+        loaded.fac = true;
+        showStatus(cfg.label + ': ' + facilities.length + ' facilities loaded. Loading services...', 'info');
+        if (loaded.svc) finishLoad(key);
       },
-      error: function() {
-        showStatus('Failed to load facility data. Please refresh the page.', 'error');
-      }
+      error: function() { showStatus('Failed to load facility data.', 'error'); }
     });
 
-    // Long-format: one row per service-detail per facility
-    Papa.parse('data/tanzania/hf_services.csv', {
-      download: true,
-      header: true,
-      skipEmptyLines: true,
+    Papa.parse(cfg.svcFile, {
+      download: true, header: true, skipEmptyLines: true,
       complete: function(results) {
-        var count = 0;
         results.data.forEach(function(row) {
-          if (!row.facility_code || !row.service_category) return;
-          // Skip header-as-data rows
-          if (row.facility_code === 'facility_code') return;
+          if (!row.facility_code || row.facility_code === 'facility_code') return;
+          var cat = row.service_category || row.service_group || '';
+          if (!cat) return;
           if (!svcByCode[row.facility_code]) svcByCode[row.facility_code] = {};
-          if (!svcByCode[row.facility_code][row.service_category]) {
-            svcByCode[row.facility_code][row.service_category] = [];
-          }
-          svcByCode[row.facility_code][row.service_category].push(row.service_detail || row.service_group || '');
-          count++;
+          if (!svcByCode[row.facility_code][cat]) svcByCode[row.facility_code][cat] = [];
+          svcByCode[row.facility_code][cat].push(row.service_detail || row.service_group || '');
         });
-        console.log('HealthScope: Parsed ' + count + ' service records for ' + Object.keys(svcByCode).length + ' facilities');
-        servicesLoaded = true;
-        if (facilitiesLoaded) onDataReady();
+        loaded.svc = true;
+        if (loaded.fac) finishLoad(key);
       },
-      error: function(err) {
-        console.error('HealthScope: Service CSV error', err);
-        showStatus('Failed to load services data. Please refresh the page.', 'error');
-      }
+      error: function() { showStatus('Failed to load service data.', 'error'); }
     });
+  }
+
+  function finishLoad(key) {
+    cache[key] = {facilities: facilities, svcByCode: svcByCode};
+    onDataReady();
   }
 
   function onDataReady() {
     dataLoaded = true;
     var svcCount = Object.keys(svcByCode).length;
-    showStatus('Loaded <strong>' + facilities.length + '</strong> operating facilities, <strong>' + svcCount.toLocaleString() + '</strong> with service data. Detect your location and select a service to begin.', 'success');
+
+    // Discover service categories and populate dropdown
+    var catSet = new Set();
+    Object.values(svcByCode).forEach(function(cats) {
+      Object.keys(cats).forEach(function(c) { catSet.add(c); });
+    });
+    var allCats = Array.from(catSet).sort();
+
+    var sel = document.getElementById('service-select');
+    sel.innerHTML = '<option value="">-- Select a Service (' + allCats.length + ' available) --</option>';
+    allCats.forEach(function(cat) {
+      var opt = document.createElement('option');
+      opt.value = cat;
+      opt.textContent = cat.length > 50 ? cat.substring(0, 50) + '...' : cat;
+      sel.appendChild(opt);
+    });
+
+    showStatus('<strong>' + COUNTRIES[currentCountry].label + ':</strong> ' +
+      facilities.length.toLocaleString() + ' facilities with coordinates, ' +
+      svcCount.toLocaleString() + ' with service data (' + allCats.length + ' categories). ' +
+      'Detect your location and select a service.', 'success');
     checkReady();
   }
+
+  // Country change handler
+  document.getElementById('country-select').addEventListener('change', function() {
+    loadCountry(this.value);
+  });
 
   // ─── Geolocation ───
   window.getLocation = function() {
@@ -880,24 +923,10 @@ ul.task-list li input[type="checkbox"] {
     return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
   }
 
-  // ─── Friendly service column names ───
-  var serviceLabels = {
-    general_services: 'General Clinical Services',
-    malaria_diagnosis: 'Malaria Diagnosis & Treatment',
-    hiv_prevention: 'HIV/AIDS Prevention',
-    hiv_caretreatment: 'HIV/AIDS Care & Treatment',
-    therapeutics: 'Therapeutics / Pharmacy',
-    health_promotion: 'Health Promotion',
-    growth_nutrition: 'Growth / Nutrition / Vaccination',
-    diagnostic_services: 'Diagnostic Services',
-    support_services: 'Support Services',
-    ent_services: 'ENT Services',
-    radiology: 'Radiology',
-    emergency: 'Emergency',
-    lab_serology: 'Lab Serology',
-    lab_parasitology: 'Lab Parasitology',
-    lab_clinicalchemistry: 'Lab Clinical Chemistry'
-  };
+  // ─── Service label helper (just returns the key as label) ───
+  function svcLabel(key) {
+    return key.length > 40 ? key.substring(0, 40) + '...' : key;
+  }
 
   // ─── Search ───
   window.searchFacilities = function() {
@@ -941,12 +970,12 @@ ul.task-list li input[type="checkbox"] {
     var nearest = matched.slice(0, maxResults);
 
     if (nearest.length === 0) {
-      showStatus('No facilities found offering <strong>' + serviceLabels[serviceKey] + '</strong>. Try a different service.', 'error');
+      showStatus('No facilities found offering <strong>' + svcLabel(serviceKey) + '</strong>. Try a different service.', 'error');
       document.getElementById('results-section').style.display = 'none';
       return;
     }
 
-    showStatus('Found <strong>' + matched.length.toLocaleString() + '</strong> facilities offering <strong>' + serviceLabels[serviceKey] + '</strong>. Showing the nearest <strong>' + nearest.length + '</strong>.', 'success');
+    showStatus('Found <strong>' + matched.length.toLocaleString() + '</strong> facilities offering <strong>' + svcLabel(serviceKey) + '</strong>. Showing the nearest <strong>' + nearest.length + '</strong>.', 'success');
 
     var bounds = L.latLngBounds([[userLat, userLon]]);
 
@@ -972,7 +1001,7 @@ ul.task-list li input[type="checkbox"] {
         '<span style="color:#666;">Region: </span>' + f.region + '<br/>' +
         '<span style="color:#666;">Distance: </span><strong style="color:#c9a227;">' + f.distance.toFixed(1) + ' km</strong><br/>' +
         '<hr style="margin:0.5rem 0;border-color:#eee;"/>' +
-        '<span style="color:#666;font-size:0.82rem;"><strong>' + serviceLabels[serviceKey] + ':</strong></span><br/>' +
+        '<span style="color:#666;font-size:0.82rem;"><strong>' + svcLabel(serviceKey) + ':</strong></span><br/>' +
         '<span style="font-size:0.82rem;">' + detailList + '</span><br/>' +
         '<span style="color:#999;font-size:0.78rem;margin-top:4px;display:block;">' + catCount + ' service categories available</span>' +
         '</div>';
@@ -1000,7 +1029,7 @@ ul.task-list li input[type="checkbox"] {
       // Service category tags
       var tags = [];
       Object.keys(f.allCategories).forEach(function(cat) {
-        if (serviceLabels[cat]) tags.push(serviceLabels[cat]);
+        tags.push(svcLabel(cat));
       });
       var tagsHtml = tags.slice(0, 5).map(function(t) { return '<span class="service-tag">' + t + '</span>'; }).join('');
       if (tags.length > 5) tagsHtml += '<span class="service-tag">+' + (tags.length - 5) + ' more</span>';
@@ -1022,7 +1051,7 @@ ul.task-list li input[type="checkbox"] {
       '</div>';
     });
 
-    document.getElementById('results-title').textContent = 'Nearest ' + nearest.length + ' Facilities for ' + serviceLabels[serviceKey];
+    document.getElementById('results-title').textContent = 'Nearest ' + nearest.length + ' Facilities for ' + svcLabel(serviceKey);
     document.getElementById('results-list').innerHTML = resultsHtml;
     document.getElementById('results-section').style.display = 'block';
   };
@@ -1038,7 +1067,7 @@ ul.task-list li input[type="checkbox"] {
   };
 
   // ─── Init ───
-  loadData();
+  loadCountry('tanzania');
 })();
 </script>
 
