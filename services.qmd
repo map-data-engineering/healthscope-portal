@@ -38,6 +38,9 @@ toc: false
   .svc-metric{background:#fff;border:1px solid var(--map-border,#e0ddd6);border-radius:8px;padding:1rem;text-align:center;box-shadow:var(--map-shadow);}
   .svc-metric .val{font-family:'Space Grotesk',sans-serif;font-size:1.5rem;font-weight:700;color:var(--map-red,#c9a227);}
   .svc-metric .lbl{font-size:.75rem;color:var(--map-text-muted,#6b6b6b);margin-top:.15rem;}
+  .svc-country-btn{padding:.5rem 1.25rem;border-radius:6px;font-size:.9rem;font-weight:600;border:2px solid var(--map-border,#e0ddd6);background:#fff;cursor:pointer;transition:all .15s;}
+  .svc-country-btn.active{background:var(--map-red,#c9a227);color:#fff;border-color:var(--map-red,#c9a227);}
+  .svc-country-btn:hover:not(.active){border-color:var(--map-red,#c9a227);color:var(--map-red,#c9a227);}
   canvas{max-height:300px!important;}
   @media(max-width:768px){.svc-grid{grid-template-columns:1fr;} #svc-map{height:350px;}}
 </style>
@@ -45,56 +48,53 @@ toc: false
 <section class="svc-hero">
   <div style="max-width:1200px;margin:0 auto;">
     <h1>Service Gap Intelligence</h1>
-    <p>208,941 service records across 11,904 Tanzanian health facilities &mdash; identifying coverage gaps and service deserts</p>
+    <p>Facility-level service data for Tanzania and Kenya &mdash; identifying coverage gaps and service deserts</p>
   </div>
 </section>
 
 <div class="svc-wrap">
 
-  <div class="svc-status" id="svc-status">Loading Tanzania facility and service data...</div>
+  <!-- Country selector -->
+  <div style="display:flex;gap:.75rem;margin-bottom:1rem;align-items:center;flex-wrap:wrap;">
+    <span style="font-weight:600;font-size:.9rem;color:var(--map-text-muted);">Country:</span>
+    <button class="svc-country-btn active" onclick="window._switchCountry('tanzania')" id="btn-tanzania">Tanzania</button>
+    <button class="svc-country-btn" onclick="window._switchCountry('kenya')" id="btn-kenya">Kenya</button>
+  </div>
 
-  <!-- Top metrics -->
+  <div class="svc-status" id="svc-status">Loading data...</div>
+
   <div class="svc-topbar" id="svc-topbar"></div>
 
-  <!-- Service heatgrid (clickable) -->
   <div class="svc-card svc-full" style="margin-bottom:1.25rem;">
     <h3>Service Category Coverage <span style="font-weight:400;font-size:.85rem;color:var(--map-text-muted);">&mdash; click a category to explore</span></h3>
     <div class="svc-heatgrid" id="svc-heatgrid"></div>
   </div>
 
   <div class="svc-grid">
-    <!-- Coverage bar chart -->
     <div class="svc-card">
       <h3>Coverage Rate by Category</h3>
       <canvas id="chart-svc"></canvas>
     </div>
-
-    <!-- Map: colored by selected category -->
     <div class="svc-card">
-      <h3 id="map-title">Map: General Clinical Services</h3>
+      <h3 id="map-title">Map</h3>
       <div id="svc-map"></div>
       <div class="svc-legend">
         <div class="svc-legend-item"><div class="svc-legend-dot" style="background:#5a8a5a;"></div> Has Service</div>
         <div class="svc-legend-item"><div class="svc-legend-dot" style="background:#d45050;"></div> No Service</div>
-        <div class="svc-legend-item"><div class="svc-legend-dot" style="background:#999;"></div> No Data</div>
       </div>
     </div>
   </div>
 
-  <!-- Service detail breakdown for selected category -->
   <div class="svc-card svc-full" style="margin-bottom:1.25rem;">
-    <h3 id="detail-title">Specific Services: General Clinical Services</h3>
+    <h3 id="detail-title">Specific Services</h3>
     <div class="svc-detail-grid" id="svc-detail-grid"></div>
   </div>
 
   <div class="svc-grid">
-    <!-- Region coverage for selected service -->
     <div class="svc-card">
-      <h3 id="region-chart-title">Regional Coverage: General Clinical Services</h3>
+      <h3 id="region-chart-title">Regional Coverage</h3>
       <canvas id="chart-region" style="max-height:380px!important;"></canvas>
     </div>
-
-    <!-- Facility type breakdown -->
     <div class="svc-card">
       <h3>Facility Type Distribution</h3>
       <canvas id="chart-types"></canvas>
@@ -105,24 +105,30 @@ toc: false
 
 <script>
 (function(){
-  var SVC_LABELS = {
-    general_services:'General Clinical',
-    malaria_diagnosis:'Malaria Diagnosis & Treatment',
-    hiv_prevention:'HIV/AIDS Prevention',
-    hiv_caretreatment:'HIV/AIDS Care & Treatment',
-    therapeutics:'Therapeutics / Pharmacy',
-    health_promotion:'Health Promotion',
-    growth_nutrition:'Nutrition / Vaccination',
-    diagnostic_services:'Diagnostic Services',
-    support_services:'Support Services',
-    ent_services:'ENT Services',
-    radiology:'Radiology',
-    emergency:'Emergency Preparedness',
-    lab_serology:'Lab &mdash; Serology',
-    lab_parasitology:'Lab &mdash; Parasitology',
-    lab_clinicalchemistry:'Lab &mdash; Clinical Chemistry'
+  // Country configurations
+  var COUNTRIES = {
+    tanzania: {
+      facFile: 'data/tanzania/tanzania_standardized.csv',
+      svcFile: 'data/tanzania/hf_services.csv',
+      bounds: [[-11.8,-1.0],[29.2,40.6]],
+      label: 'Tanzania'
+    },
+    kenya: {
+      facFile: 'data/Kenya/kenya_standardized.csv',
+      svcFile: 'data/Kenya/kenya_services.csv',
+      bounds: [[-4.7,5.5],[33.9,41.9]],
+      label: 'Kenya'
+    }
   };
-  var SVC_KEYS = Object.keys(SVC_LABELS);
+
+  var currentCountry = 'tanzania';
+  var facilities = {};
+  var svcByCode = {};
+  var svcCodes = new Set();
+  var selectedCat = '';
+  var map, markers = [];
+  var chartSvc, chartRegion, chartTypes;
+  var cache = {}; // {country: {facilities, svcByCode, svcCodes}}
 
   function colorGrad(pct){
     if(pct>=70) return '#5a8a5a';
@@ -131,69 +137,83 @@ toc: false
     return '#d45050';
   }
 
-  var facilities = {};   // code -> facility object
-  var svcByCode = {};    // code -> { category: Set of details }
-  var svcCodes = new Set(); // codes that have service data
-  var selectedCat = 'general_services';
-  var map, markers = [];
-  var chartSvc, chartRegion, chartTypes;
-
-  // Status updates
   function setStatus(msg){ document.getElementById('svc-status').innerHTML = msg; }
 
-  // Init map
-  map = L.map('svc-map').setView([-6.5,35],6);
+  map = L.map('svc-map').setView([-2,35],5);
   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
     attribution:'&copy; OSM &copy; CARTO', maxZoom:18
   }).addTo(map);
 
-  // Load data
-  var loaded = {fac:false, svc:false};
+  // ── Load a country ──
+  function loadCountry(key){
+    // Update button states
+    document.querySelectorAll('.svc-country-btn').forEach(function(b){ b.classList.remove('active'); });
+    document.getElementById('btn-'+key).classList.add('active');
+    currentCountry = key;
 
-  setStatus('Loading facility registry...');
-  Papa.parse('data/tanzania/tanzania_standardized.csv',{
-    download:true, header:true, skipEmptyLines:true,
-    complete:function(res){
-      res.data.forEach(function(r){
-        if(r.facility_code && r.facility_name && r.facility_name !== 'facility_name'){
-          // Nullify outlier coords
-          var la = parseFloat(r.latitude), lo = parseFloat(r.longitude);
-          if(!isNaN(la) && !isNaN(lo) && (la < -12 || la > -1 || lo < 29 || lo > 41)){
-            r.latitude = ''; r.longitude = '';
+    // Check cache
+    if(cache[key]){
+      facilities = cache[key].facilities;
+      svcByCode = cache[key].svcByCode;
+      svcCodes = cache[key].svcCodes;
+      selectedCat = '';
+      onReady();
+      return;
+    }
+
+    facilities = {};
+    svcByCode = {};
+    svcCodes = new Set();
+    selectedCat = '';
+    var cfg = COUNTRIES[key];
+    var loaded = {fac:false, svc:false};
+
+    setStatus('Loading ' + cfg.label + ' facilities...');
+
+    Papa.parse(cfg.facFile,{
+      download:true, header:true, skipEmptyLines:true,
+      complete:function(res){
+        var b = cfg.bounds;
+        res.data.forEach(function(r){
+          if(!r.facility_code || !r.facility_name || r.facility_name==='facility_name') return;
+          var la=parseFloat(r.latitude), lo=parseFloat(r.longitude);
+          if(!isNaN(la)&&!isNaN(lo)&&(la<b[0][0]||la>b[0][1]||lo<b[1][0]||lo>b[1][1])){
+            r.latitude=''; r.longitude='';
           }
           facilities[r.facility_code] = r;
-        }
-      });
-      loaded.fac = true;
-      console.log('HealthScope Services: ' + Object.keys(facilities).length + ' facilities loaded');
-      setStatus('Loaded ' + Object.keys(facilities).length + ' facilities. Loading service records...');
-      if(loaded.svc) onReady();
-    },
-    error:function(err){ setStatus('Failed to load facility data: ' + err, 'error'); console.error(err); }
-  });
+        });
+        loaded.fac=true;
+        setStatus('Loaded '+Object.keys(facilities).length+' facilities. Loading services...');
+        if(loaded.svc) finishLoad(key);
+      },
+      error:function(){ setStatus('Failed to load facility data.'); }
+    });
 
-  Papa.parse('data/tanzania/hf_services.csv',{
-    download:true, header:true, skipEmptyLines:true,
-    complete:function(res){
-      var count = 0;
-      res.data.forEach(function(r){
-        if(!r.facility_code || !r.service_category) return;
-        if(r.facility_code === 'facility_code') return;
-        svcCodes.add(r.facility_code);
-        if(!svcByCode[r.facility_code]) svcByCode[r.facility_code] = {};
-        if(!svcByCode[r.facility_code][r.service_category]){
-          svcByCode[r.facility_code][r.service_category] = [];
-        }
-        svcByCode[r.facility_code][r.service_category].push(r.service_detail || r.service_group || '');
-        count++;
-      });
-      loaded.svc = true;
-      console.log('HealthScope Services: ' + count + ' service records for ' + svcCodes.size + ' facilities');
-      if(loaded.fac) onReady();
-    },
-    error:function(err){ setStatus('Failed to load service data: ' + err); console.error(err); }
-  });
+    Papa.parse(cfg.svcFile,{
+      download:true, header:true, skipEmptyLines:true,
+      complete:function(res){
+        res.data.forEach(function(r){
+          if(!r.facility_code || r.facility_code==='facility_code') return;
+          var cat = r.service_category || r.service_group || '';
+          if(!cat) return;
+          svcCodes.add(r.facility_code);
+          if(!svcByCode[r.facility_code]) svcByCode[r.facility_code]={};
+          if(!svcByCode[r.facility_code][cat]) svcByCode[r.facility_code][cat]=[];
+          svcByCode[r.facility_code][cat].push(r.service_detail || r.service_group || '');
+        });
+        loaded.svc=true;
+        if(loaded.fac) finishLoad(key);
+      },
+      error:function(){ setStatus('Failed to load service data.'); }
+    });
+  }
 
+  function finishLoad(key){
+    cache[key] = {facilities:facilities, svcByCode:svcByCode, svcCodes:svcCodes};
+    onReady();
+  }
+
+  // ── Render everything ──
   function onReady(){
     var totalFac = Object.keys(facilities).length;
     var totalSvc = svcCodes.size;
@@ -202,72 +222,98 @@ toc: false
       Object.values(cats).forEach(function(arr){ totalRecords += arr.length; });
     });
 
-    setStatus('<strong>' + totalFac.toLocaleString() + '</strong> facilities loaded, <strong>' + totalSvc.toLocaleString() + '</strong> with service data (<strong>' + totalRecords.toLocaleString() + '</strong> service records)');
+    // Discover all categories from the data
+    var catSet = new Set();
+    Object.values(svcByCode).forEach(function(cats){ Object.keys(cats).forEach(function(c){ catSet.add(c); }); });
+    var allCats = Array.from(catSet).sort();
 
-    renderTopbar(totalFac, totalSvc, totalRecords);
-    renderHeatgrid();
-    renderCoverageChart();
+    // Auto-select first category
+    if(!selectedCat || !catSet.has(selectedCat)){
+      selectedCat = allCats[0] || '';
+    }
+
+    setStatus('<strong>'+COUNTRIES[currentCountry].label+':</strong> '+totalFac.toLocaleString()+' facilities, '+totalSvc.toLocaleString()+' with service data ('+totalRecords.toLocaleString()+' records)');
+
+    renderTopbar(totalFac, totalSvc, totalRecords, allCats.length);
+    renderHeatgrid(allCats);
+    renderCoverageChart(allCats);
     renderMap(selectedCat);
     renderDetails(selectedCat);
     renderRegionChart(selectedCat);
     renderTypeChart();
+    updateTitles();
   }
 
-  function renderTopbar(totalFac, totalSvc, totalRecords){
-    var covPct = Math.round(totalSvc / totalFac * 100);
-    // Count categories present
-    var catSet = new Set();
-    Object.values(svcByCode).forEach(function(cats){ Object.keys(cats).forEach(function(c){ catSet.add(c); }); });
+  function updateTitles(){
+    var catLabel = selectedCat.length > 40 ? selectedCat.substring(0,40)+'...' : selectedCat;
+    document.getElementById('map-title').innerHTML = 'Map: ' + catLabel;
+    document.getElementById('detail-title').innerHTML = 'Specific Services: ' + catLabel;
+    document.getElementById('region-chart-title').innerHTML = 'Regional Coverage: ' + catLabel;
+  }
 
+  function renderTopbar(totalFac, totalSvc, totalRecords, catCount){
+    var covPct = totalFac > 0 ? Math.round(totalSvc / totalFac * 100) : 0;
+    var regionSet = new Set();
+    Object.values(facilities).forEach(function(f){ if(f.admin1 && f.admin1!=='admin1') regionSet.add(f.admin1); });
     document.getElementById('svc-topbar').innerHTML =
-      '<div class="svc-metric"><div class="val">' + totalFac.toLocaleString() + '</div><div class="lbl">Total Facilities</div></div>' +
-      '<div class="svc-metric"><div class="val">' + totalSvc.toLocaleString() + '</div><div class="lbl">With Service Data</div></div>' +
-      '<div class="svc-metric"><div class="val">' + covPct + '%</div><div class="lbl">Service Coverage</div></div>' +
-      '<div class="svc-metric"><div class="val">' + totalRecords.toLocaleString() + '</div><div class="lbl">Service Records</div></div>' +
-      '<div class="svc-metric"><div class="val">' + catSet.size + '</div><div class="lbl">Service Categories</div></div>' +
-      '<div class="svc-metric"><div class="val">26</div><div class="lbl">Regions</div></div>';
+      '<div class="svc-metric"><div class="val">'+totalFac.toLocaleString()+'</div><div class="lbl">Total Facilities</div></div>'+
+      '<div class="svc-metric"><div class="val">'+totalSvc.toLocaleString()+'</div><div class="lbl">With Service Data</div></div>'+
+      '<div class="svc-metric"><div class="val">'+covPct+'%</div><div class="lbl">Service Coverage</div></div>'+
+      '<div class="svc-metric"><div class="val">'+totalRecords.toLocaleString()+'</div><div class="lbl">Service Records</div></div>'+
+      '<div class="svc-metric"><div class="val">'+catCount+'</div><div class="lbl">Service Categories</div></div>'+
+      '<div class="svc-metric"><div class="val">'+regionSet.size+'</div><div class="lbl">Regions / Counties</div></div>';
   }
 
-  function renderHeatgrid(){
+  function renderHeatgrid(allCats){
     var totalWithSvc = svcCodes.size || 1;
     var html = '';
-    SVC_KEYS.forEach(function(key){
+    allCats.forEach(function(cat){
       var count = 0;
-      Object.keys(svcByCode).forEach(function(code){
-        if(svcByCode[code][key]) count++;
-      });
+      Object.keys(svcByCode).forEach(function(code){ if(svcByCode[code][cat]) count++; });
       var pct = Math.round(count / totalWithSvc * 100);
       var bg = colorGrad(pct);
-      var active = key === selectedCat ? ' active' : '';
-      html += '<div class="svc-tile' + active + '" data-cat="' + key + '" style="background:' + bg + '15;border-left:3px solid ' + bg + ';" onclick="window._selectCat(\'' + key + '\')">' +
-        '<span class="svc-name">' + SVC_LABELS[key] + '</span>' +
-        '<span class="svc-pct" style="color:' + bg + ';">' + pct + '%</span>' +
-        '<span class="svc-count" style="color:' + bg + ';">(' + count.toLocaleString() + ')</span></div>';
+      var active = cat === selectedCat ? ' active' : '';
+      var label = cat.length > 35 ? cat.substring(0,35)+'...' : cat;
+      html += '<div class="svc-tile'+active+'" style="background:'+bg+'15;border-left:3px solid '+bg+';" onclick="window._selectCat(\''+cat.replace(/'/g,"\\'")+'\')">' +
+        '<span class="svc-name">'+label+'</span>' +
+        '<span class="svc-pct" style="color:'+bg+';">'+pct+'%</span>' +
+        '<span class="svc-count" style="color:'+bg+';">('+count.toLocaleString()+')</span></div>';
     });
     document.getElementById('svc-heatgrid').innerHTML = html;
   }
 
   window._selectCat = function(cat){
     selectedCat = cat;
-    renderHeatgrid();
+    // Rebuild categories list from cache
+    var catSet = new Set();
+    Object.values(svcByCode).forEach(function(cats){ Object.keys(cats).forEach(function(c){ catSet.add(c); }); });
+    renderHeatgrid(Array.from(catSet).sort());
     renderMap(cat);
     renderDetails(cat);
     renderRegionChart(cat);
-    document.getElementById('map-title').innerHTML = 'Map: ' + SVC_LABELS[cat];
-    document.getElementById('detail-title').innerHTML = 'Specific Services: ' + SVC_LABELS[cat];
-    document.getElementById('region-chart-title').innerHTML = 'Regional Coverage: ' + SVC_LABELS[cat];
+    updateTitles();
   };
 
-  function renderCoverageChart(){
+  window._switchCountry = function(key){
+    if(key === currentCountry) return;
+    loadCountry(key);
+  };
+
+  function renderCoverageChart(allCats){
     var totalWithSvc = svcCodes.size || 1;
-    var labels = [], values = [], colors = [];
-    SVC_KEYS.forEach(function(key){
-      var count = 0;
-      Object.keys(svcByCode).forEach(function(code){ if(svcByCode[code][key]) count++; });
-      var pct = Math.round(count / totalWithSvc * 100);
-      labels.push(SVC_LABELS[key].replace('&mdash;','—'));
-      values.push(pct);
-      colors.push(colorGrad(pct));
+    var labels=[], values=[], colors=[];
+    // Show top 15 categories by coverage
+    var catData = allCats.map(function(cat){
+      var count=0;
+      Object.keys(svcByCode).forEach(function(code){ if(svcByCode[code][cat]) count++; });
+      return {cat:cat, count:count, pct:Math.round(count/totalWithSvc*100)};
+    }).sort(function(a,b){return b.count-a.count;}).slice(0,15);
+
+    catData.forEach(function(d){
+      var label = d.cat.length > 30 ? d.cat.substring(0,30)+'...' : d.cat;
+      labels.push(label);
+      values.push(d.pct);
+      colors.push(colorGrad(d.pct));
     });
     if(chartSvc) chartSvc.destroy();
     chartSvc = new Chart(document.getElementById('chart-svc'),{
@@ -281,20 +327,18 @@ toc: false
   function renderMap(cat){
     markers.forEach(function(m){map.removeLayer(m);});
     markers = [];
-
-    // Only show facilities that HAVE service data (reduces to ~11K)
+    var cfg = COUNTRIES[currentCountry];
     var codes = Object.keys(svcByCode);
-    // Sample for performance
-    var step = codes.length > 4000 ? Math.ceil(codes.length / 4000) : 1;
-    var count = 0;
+    var step = codes.length > 5000 ? Math.ceil(codes.length/5000) : 1;
 
     codes.forEach(function(code, i){
       if(i % step !== 0) return;
       var f = facilities[code];
       if(!f) return;
-      var lat = parseFloat(f.latitude), lon = parseFloat(f.longitude);
-      // Validate Tanzania bounds
-      if(isNaN(lat) || isNaN(lon) || lat < -12 || lat > -1 || lon < 29 || lon > 41) return;
+      var lat=parseFloat(f.latitude), lon=parseFloat(f.longitude);
+      if(isNaN(lat)||isNaN(lon)) return;
+      // Bounds check
+      if(lat<cfg.bounds[0][0]||lat>cfg.bounds[0][1]||lon<cfg.bounds[1][0]||lon>cfg.bounds[1][1]) return;
 
       var hasSvc = svcByCode[code][cat] && svcByCode[code][cat].length > 0;
       var color = hasSvc ? '#5a8a5a' : '#d45050';
@@ -308,57 +352,42 @@ toc: false
       if(hasSvc){
         details = '<br/><strong style="color:#5a8a5a;">Services:</strong><br/>' +
           svcByCode[code][cat].slice(0,5).map(function(d){return '&bull; '+d;}).join('<br/>');
-        if(svcByCode[code][cat].length > 5) details += '<br/><em>+' + (svcByCode[code][cat].length-5) + ' more</em>';
+        if(svcByCode[code][cat].length > 5) details += '<br/><em>+'+(svcByCode[code][cat].length-5)+' more</em>';
       }
-
-      m.bindPopup(
-        '<strong>' + f.facility_name + '</strong><br/>' +
-        '<span style="color:#6b6b6b;">' + (f.facility_type||'') + ' &bull; ' + (f.facility_ownership||'') + '</span><br/>' +
-        '<span style="color:#6b6b6b;">' + (f.admin1||'') + '</span>' +
-        details
-      );
+      m.bindPopup('<strong>'+f.facility_name+'</strong><br/><span style="color:#6b6b6b;">'+(f.facility_type||'')+' &bull; '+(f.facility_ownership||'')+'</span><br/><span style="color:#6b6b6b;">'+(f.admin1||'')+'</span>'+details);
       markers.push(m);
-      count++;
     });
 
-    console.log('HealthScope: Rendered ' + count + ' markers for ' + cat);
-    // Fit to Tanzania
-    map.fitBounds([[-12, 29], [-1, 41]], {padding:[10,10]});
+    map.fitBounds([[cfg.bounds[0][0],cfg.bounds[1][0]],[cfg.bounds[0][1],cfg.bounds[1][1]]],{padding:[10,10]});
   }
 
   function renderDetails(cat){
-    // Count each service_detail within the selected category
     var detailCounts = {};
     Object.values(svcByCode).forEach(function(cats){
       if(!cats[cat]) return;
-      cats[cat].forEach(function(d){
-        detailCounts[d] = (detailCounts[d]||0) + 1;
-      });
+      cats[cat].forEach(function(d){ detailCounts[d]=(detailCounts[d]||0)+1; });
     });
     var entries = Object.entries(detailCounts).sort(function(a,b){return b[1]-a[1];});
     var html = '';
     entries.forEach(function(e){
-      html += '<div class="svc-detail-item"><span>' + e[0] + '</span><span class="cnt">' + e[1].toLocaleString() + '</span></div>';
+      html += '<div class="svc-detail-item"><span>'+e[0]+'</span><span class="cnt">'+e[1].toLocaleString()+'</span></div>';
     });
-    if(!entries.length) html = '<div style="color:var(--map-text-muted);padding:1rem;">No service details available for this category.</div>';
+    if(!entries.length) html = '<div style="color:var(--map-text-muted);padding:1rem;">No service details for this category.</div>';
     document.getElementById('svc-detail-grid').innerHTML = html;
   }
 
   function renderRegionChart(cat){
-    // Count facilities with this service per region
-    var regionTotal = {}, regionHas = {};
+    var regionTotal={}, regionHas={};
     Object.keys(facilities).forEach(function(code){
-      var f = facilities[code];
-      var region = f.admin1 || 'Unknown';
-      regionTotal[region] = (regionTotal[region]||0) + 1;
-      if(svcByCode[code] && svcByCode[code][cat]){
-        regionHas[region] = (regionHas[region]||0) + 1;
-      }
+      var f=facilities[code];
+      var region=f.admin1||'Unknown';
+      if(region==='admin1'||region==='NA') return;
+      regionTotal[region]=(regionTotal[region]||0)+1;
+      if(svcByCode[code]&&svcByCode[code][cat]) regionHas[region]=(regionHas[region]||0)+1;
     });
-    var entries = Object.keys(regionTotal).filter(function(r){return r!=='admin1'&&r!=='NA';})
-      .map(function(r){
-        return {region:r, total:regionTotal[r], has:regionHas[r]||0, pct:Math.round((regionHas[r]||0)/regionTotal[r]*100)};
-      }).sort(function(a,b){return b.pct - a.pct;});
+    var entries = Object.keys(regionTotal).map(function(r){
+      return {region:r, total:regionTotal[r], has:regionHas[r]||0};
+    }).sort(function(a,b){return b.has-a.has;}).slice(0,20);
 
     if(chartRegion) chartRegion.destroy();
     chartRegion = new Chart(document.getElementById('chart-region'),{
@@ -370,23 +399,21 @@ toc: false
           {label:'No Service',data:entries.map(function(e){return e.total-e.has;}),backgroundColor:'#d4503033',borderRadius:4}
         ]
       },
-      options:{
-        indexAxis:'y',responsive:true,
+      options:{indexAxis:'y',responsive:true,
         plugins:{legend:{position:'top',labels:{boxWidth:12,font:{size:11}}}},
-        scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,grid:{display:false},ticks:{font:{size:10}}}}
-      }
+        scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,grid:{display:false},ticks:{font:{size:10}}}}}
     });
   }
 
   function renderTypeChart(){
-    var types = {};
+    var types={};
     Object.values(facilities).forEach(function(f){
-      var t = f.facility_type || 'Unknown';
-      if(t === 'facility_type') return;
-      types[t] = (types[t]||0)+1;
+      var t=f.facility_type||'Unknown';
+      if(t==='facility_type') return;
+      types[t]=(types[t]||0)+1;
     });
-    var entries = Object.entries(types).sort(function(a,b){return b[1]-a[1];}).slice(0,8);
-    var COLORS = ['#c9a227','#5a7a9b','#5a8a5a','#d48a27','#8b5cf6','#5a9a8a','#6b6b6b','#d45050'];
+    var entries = Object.entries(types).sort(function(a,b){return b[1]-a[1];}).slice(0,10);
+    var COLORS = ['#c9a227','#5a7a9b','#5a8a5a','#d48a27','#8b5cf6','#5a9a8a','#6b6b6b','#d45050','#e05930','#3d3d3d'];
     if(chartTypes) chartTypes.destroy();
     chartTypes = new Chart(document.getElementById('chart-types'),{
       type:'doughnut',
@@ -394,6 +421,9 @@ toc: false
       options:{responsive:true,plugins:{legend:{position:'right',labels:{boxWidth:12,font:{size:11}}}}}
     });
   }
+
+  // ── Init: load Tanzania by default ──
+  loadCountry('tanzania');
 })();
 </script>
 ```
