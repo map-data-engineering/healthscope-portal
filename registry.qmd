@@ -54,7 +54,7 @@ toc: false
 <section class="reg-hero">
   <div style="max-width:1400px;margin:0 auto;">
     <h1>Facility Registry Explorer</h1>
-    <p>88,799 health facilities across 7 Sub-Saharan African countries &mdash; standardized, quality-assessed, and open</p>
+    <p>95,624 health facilities across 7 Sub-Saharan African countries &mdash; standardized, quality-assessed, and open</p>
   </div>
 </section>
 
@@ -66,7 +66,7 @@ toc: false
       <label>Country</label>
       <select id="f-country">
         <option value="all">All Countries</option>
-        <option value="kenya">Kenya (10,453)</option>
+        <option value="kenya">Kenya (17,353)</option>
         <option value="tanzania" selected>Tanzania (13,075)</option>
         <option value="nigeria">Nigeria (51,023)</option>
         <option value="uganda">Uganda (8,512)</option>
