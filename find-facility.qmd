@@ -347,8 +347,8 @@ execute:
     </div>
   </div>
 
-  <!-- MANUAL COORDS (hidden by default, shown if geolocation fails) -->
-  <div id="manual-coords" style="display:none; margin-bottom:1.5rem;">
+  <!-- MANUAL COORDS -->
+  <div id="manual-coords" style="margin-bottom:1rem;">
     <div class="finder-controls" style="grid-template-columns: 1fr 1fr auto;">
       <div>
         <label for="manual-lat">Latitude</label>
