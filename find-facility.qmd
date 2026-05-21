@@ -323,6 +323,7 @@ execute:
         <option value="tanzania" selected>Tanzania</option>
         <option value="kenya">Kenya</option>
         <option value="zambia">Zambia</option>
+        <option value="malawi">Malawi</option>
       </select>
     </div>
     <div>
@@ -407,6 +408,13 @@ execute:
       svcFile: 'data/Zambia/zambia_services.csv',
       bounds: [-18.1, -8.2, 21.9, 33.7],
       label: 'Zambia',
+      statusFilter: 'Functional'
+    },
+    malawi: {
+      facFile: 'data/Malawi/malawi_standardized.csv',
+      svcFile: 'data/Malawi/malawi_services.csv',
+      bounds: [-17.2, -9.3, 32.6, 36.0],
+      label: 'Malawi',
       statusFilter: 'Functional'
     }
   };
