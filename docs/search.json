@@ -11,7 +11,7 @@
     "href": "services.html",
     "title": "Service Gap Intelligence",
     "section": "",
-    "text": "Service Gap Intelligence\n    Facility-level service data for Tanzania and Kenya — identifying coverage gaps and service deserts across countries\n  \n\n\n\n\n  \n  \n    Country:\n    Tanzania\n    Kenya\n    Zambia\n    Malawi\n  \n\n  Loading data...\n\n  \n\n  \n    Service Category Coverage — click a category to explore\n    \n  \n\n  \n    \n      Coverage Rate by Category\n      \n    \n    \n      Map\n      \n      \n         Has Service\n         No Service\n      \n    \n  \n\n  \n    Specific Services\n    \n  \n\n  \n    \n      Regional Coverage\n      \n    \n    \n      Facility Type Distribution\n      \n    \n  \n\n\n\n\n\n\n\n Back to top"
+    "text": "Facility-level service data across Tanzania, Kenya, Zambia, Malawi and Botswana — identifying coverage gaps and service deserts across countries\n  \n\n\n\n\n  \n  \n    Country:\n    Tanzania\n    Kenya\n    Zambia\n    Malawi\n    Botswana\n  \n\n  Loading data...\n\n  \n\n  \n    Service Category Coverage — click a category to explore\n    \n  \n\n  \n    \n      Coverage Rate by Category\n      \n    \n    \n      Map\n      \n      \n         Has Service\n         No Service\n      \n    \n  \n\n  \n    Specific Services\n    \n  \n\n  \n    \n      Regional Coverage\n      \n    \n    \n      Facility Type Distribution\n      \n    \n  \n\n\n\n\n\n\n\n Back to top"
   },
   {
     "objectID": "registry.html",
@@ -221,7 +221,7 @@
     "href": "countries/Botswana.html#services",
     "title": "\n",
     "section": "Services",
-    "text": "Services\nBotswana’s facilities offer comprehensive primary care, one of Africa’s most successful HIV/ART programmes (with over 85% of eligible patients on treatment), TB services, maternal and child health, immunization, malaria diagnosis and treatment (primarily in the northern districts bordering Zimbabwe and Zambia), mental health services, and management of NCDs including diabetes and hypertension. ## Data Download {#data-download}\nDownload facilities dtaset here:\n\nCSV\n\nRDS"
+    "text": "Services\nBotswana’s facilities offer comprehensive primary care, one of Africa’s most successful HIV/ART programmes (with over 85% of eligible patients on treatment), TB services, maternal and child health, immunization, malaria diagnosis and treatment (primarily in the northern districts bordering Zimbabwe and Zambia), mental health services, and management of NCDs including diabetes and hypertension.\nService availability has been extracted from the Botswana Master Facility List, covering clinical services, infrastructure, and staffing across the registry."
   },
   {
     "objectID": "about.html",
@@ -235,14 +235,14 @@
     "href": "about.html#mission",
     "title": "About HealthScope",
     "section": "Mission",
-    "text": "Mission\nHealthScope is an open-access health facility intelligence portal designed to move beyond static facility inventories toward dynamic, demand-driven health access analytics across malaria-endemic countries in Sub-Saharan Africa. Developed from data extracted directly from Ministries of Health, HealthScope transforms raw registry data into actionable intelligence.\nThe portal reveals not just where health facilities exist, but whether populations can realistically access them, what services they offer, and how this landscape has changed over time."
+    "text": "Mission\nHealthScope is an open-access health facility intelligence portal designed to move beyond static facility inventories toward dynamic, demand-driven health access analytics across malaria-endemic countries in Sub-Saharan Africa. Developed from data extracted directly from Ministries of Health, HealthScope transforms raw registry data into actionable intelligence.\nThe portal reveals not just where health facilities exist, but whether populations can realistically access them and what services they offer."
   },
   {
     "objectID": "about.html#the-gap-we-fill",
     "href": "about.html#the-gap-we-fill",
     "title": "About HealthScope",
     "section": "The Gap We Fill",
-    "text": "The Gap We Fill\nExisting platforms such as the WHO AFRO Health Facility Portal and the Humanitarian Data Exchange (HDX) document facility locations but provide no:\n\nPopulation-demand modelling – no reachability analysis\nTemporal facility tracking – no understanding of change over time\nService-level intelligence – no mapping of what services exist where\nEquity analysis at scale – no population-weighted access metrics\n\nHealthScope fills all four gaps simultaneously within a lightweight, open-source, zero-server infrastructure."
+    "text": "The Gap We Fill\nCurrent approaches to health facility mapping focus primarily on documenting facility locations without deeper analysis. HealthScope goes further by providing:\n\nPopulation-demand modelling – reachability analysis beyond simple location pins\nService-level intelligence – mapping of what services exist where\nGeneral information at scale – population-weighted access metrics and facility distribution analysis\n\nHealthScope addresses these gaps within a lightweight, open-source, zero-server infrastructure."
   },
   {
     "objectID": "about.html#five-intelligence-layers",
@@ -263,7 +263,7 @@
     "href": "about.html#etl-pipeline-v2",
     "title": "About HealthScope",
     "section": "ETL Pipeline (v2)",
-    "text": "ETL Pipeline (v2)\nThe HealthScope ETL pipeline processes raw MoH data through 7 validated steps:\n\nread_country_data() – reads CSV/XLSX with encoding handling\nstandardize_columns() – maps raw columns to shared 23-field schema\nclean_coordinates() – coerces to numeric; flags missing/implausible GPS\nclean_dates() – parses Stata-format and ISO 8601 dates\nenforce_schema_types() – coerces all fields to correct types\nflag_data_quality() – assigns high/medium/low/unknown per record\nsave_standardized_data() – writes CSV and per-country QA report\n\n\nCurrent Pipeline Status\n\n\n\nCountry\nFacilities\nSource\n\n\n\n\nTanzania\n13,075\nMoH HFR Portal\n\n\nNigeria\n51,023\nNHMIS / DHIS2\n\n\nUganda\n8,512\nMoH DHIS2\n\n\nZambia\n3,731\nMoH HRIS\n\n\nMalawi\n1,929\nMoH CMED\n\n\nBotswana\n1,076\nMoH Registry\n\n\nTotal\n78,346"
+    "text": "ETL Pipeline (v2)\nThe HealthScope ETL pipeline processes raw MoH data through 7 validated steps:\n\nread_country_data() – reads CSV/XLSX with encoding handling\nstandardize_columns() – maps raw columns to shared 23-field schema\nclean_coordinates() – coerces to numeric; flags missing/implausible GPS\nclean_dates() – parses Stata-format and ISO 8601 dates\nenforce_schema_types() – coerces all fields to correct types\nflag_data_quality() – assigns high/medium/low/unknown per record\nsave_standardized_data() – writes CSV and per-country QA report\n\n\nCurrent Pipeline Status\n\n\n\nCountry\nFacilities\nSource\n\n\n\n\nTanzania\n13,075\nMoH HFR Portal\n\n\nNigeria\n51,023\nNHMIS / DHIS2\n\n\nKenya\n17,353\nKMHFR\n\n\nUganda\n8,512\nMoH DHIS2\n\n\nZambia\n3,731\nMoH HRIS\n\n\nMalawi\n1,929\nMoH CMED\n\n\nBotswana\n1,076\nMoH Registry\n\n\nTotal\n96,699"
   },
   {
     "objectID": "about.html#funding-acknowledgements",
@@ -277,7 +277,7 @@
     "href": "about.html#team",
     "title": "About HealthScope",
     "section": "Team",
-    "text": "Team\nThe portal is maintained by a team of data engineers, GIS specialists, epidemiologists, and researchers at the Malaria Atlas Project East Africa Node.\nVisit the Team Page → | View Data Sources → | Read Methodology →"
+    "text": "Team\nThe portal is maintained by a team of data engineers, GIS specialists, epidemiologists, and researchers at the Malaria Atlas Project Dar es Salaam Node.\nVisit the Team Page → | View Data Sources →"
   },
   {
     "objectID": "countries/Benin.html",
@@ -473,7 +473,7 @@
     "href": "index.html",
     "title": "\n      HealthScope\n    ",
     "section": "",
-    "text": "Malaria Atlas Project — East Africa Node\n    \n\n    \n      HealthScope\n    \n    Health Facility Intelligence Portal\n    Beyond static inventories. Demand-driven health access analytics across Sub-Saharan Africa — revealing not just where facilities exist, but whether populations can realistically access them.\n\n    \n      \n        \n        Explore Registry\n      \n      \n        \n        Find Nearby Facility\n      \n    \n  \n\n  \n    \n  \n\n\n\n\n  \n    95,624\n    Facilities in Registry\n  \n  \n    7\n    Countries Live\n  \n  \n    18\n    Service Categories Tracked\n  \n  \n    MoH-Sourced\n    Direct from Ministries of Health\n  \n\n\n\n\n  \n    The Problem\n    Existing portals show where facilities are. Not whether anyone can reach them.\n    \n      WHO AFRO and HDX document facility locations but offer no population-demand modelling, temporal tracking, service-level intelligence, or equity analysis. A dispensary 15 km from the nearest road and one on a highway appear identically as map pins. HealthScope fills all four gaps simultaneously.\n    \n  \n\n\n\n\n  \n    \n      Five Intelligence Layers\n      Each layer transforms raw registry data into actionable health system intelligence\n    \n\n    \n\n      \n      \n        \n          \n        \n        Facility Registry Lake\n        Standardized facility data from MoH sources across 6 SSA countries. Multi-country harmonized schema with 78,000+ facilities — directly from Ministries, not aggregators.\n        Explore Registry →\n      \n\n      \n      \n        \n          \n        \n        Temporal Tracking\n        Animated timeline of facility openings, service expansions, and closures. No existing open platform tracks how health infrastructure has evolved over time.\n        \n          \n          Phase 2 — Data enrichment underway\n        \n      \n\n      \n      \n        \n          \n        \n        Demand-Side Access\n        Find the nearest facility offering the service you need. Travel-time isochrones and population catchment zones — showing not just location, but reachability.\n        Find Nearest Facility →\n      \n\n      \n      \n        \n          \n        \n        Service Gap Intelligence\n        Which services exist where? Identify malaria service deserts, lab coverage gaps, and emergency preparedness blind spots at the facility level.\n        View Service Analysis →\n      \n\n      \n      \n        \n          \n        \n        Equity & Vulnerability Lens\n        Population-weighted access scores. Facility density by region, ownership distribution, and type coverage — exposing inequities masked by aggregate counts.\n        View Equity Dashboard →\n      \n\n    \n  \n\n\n\n\n  \n    \n\n      \n        ETL Pipeline v2\n        MoH Data → Standardized Intelligence\n        \n          Raw facility data from Ministry of Health registries is processed through a validated 7-step ETL pipeline: extraction, column standardization, coordinate cleaning, date parsing, schema enforcement, quality flagging, and versioned export.\n        \n        \n          Architecture & Methods\n          Data Sources\n        \n      \n\n      \n        \n          \n            13,075\n            Tanzania\n          \n        \n        \n          \n            51,023\n            Nigeria\n          \n        \n        \n          \n            17,353\n            Kenya\n          \n        \n        \n          \n            8,512\n            Uganda\n          \n        \n        \n          \n            3,731\n            Zambia\n          \n        \n        \n          \n            1,929\n            Malawi\n          \n        \n        \n          \n            1,076\n            Botswana\n          \n        \n      \n\n    \n  \n\n\n\n\n  Start Exploring\n  Choose a country or tool to begin working with HealthScope data\n  \n    Registry Explorer\n    Find Nearby Facility\n    Equity Dashboard\n  \n\n\n\n\n Back to top"
+    "text": "Malaria Atlas Project — Dar es Salaam Node\n    \n\n    \n      HealthScope\n    \n    Health Facility Intelligence Portal\n    Beyond static inventories. Demand-driven health access analytics across Sub-Saharan Africa — revealing not just where facilities exist, but whether populations can realistically access them.\n\n    \n      \n        \n        Explore Registry\n      \n      \n        \n        Find Nearby Facility\n      \n    \n  \n\n  \n    \n  \n\n\n\n\n  \n    95,624\n    Facilities in Registry\n  \n  \n    7\n    Countries Live\n  \n  \n    18\n    Service Categories Tracked\n  \n  \n    MoH-Sourced\n    Direct from Ministries of Health\n  \n\n\n\n\n  \n    \n      Intelligence Layers\n      Each layer transforms raw registry data into actionable health system intelligence\n    \n\n    \n\n      \n      \n        \n          \n        \n        Facility Registry Lake\n        Standardized facility data from MoH sources across 6 SSA countries. Multi-country harmonized schema with 78,000+ facilities — directly from Ministries, not aggregators.\n        Explore Registry →\n      \n\n      \n      \n        \n          \n        \n        Demand-Side Access\n        Find the nearest facility offering the service you need. Travel-time isochrones and population catchment zones — showing not just location, but reachability.\n        Find Nearest Facility →\n      \n\n      \n      \n        \n          \n        \n        Service Gap Intelligence\n        Which services exist where? Identify malaria service deserts, lab coverage gaps, and emergency preparedness blind spots at the facility level.\n        View Service Analysis →\n      \n\n      \n      \n        \n          \n        \n        General Information\n        Population-weighted access scores. Facility density by region, ownership distribution, and type coverage — exposing inequities masked by aggregate counts.\n        View General Information →\n      \n\n    \n  \n\n\n\n\n  \n    \n\n      \n        ETL Pipeline v2\n        MoH Data → Standardized Intelligence\n        \n          Raw facility data from Ministry of Health registries is processed through a validated 7-step ETL pipeline: extraction, column standardization, coordinate cleaning, date parsing, schema enforcement, quality flagging, and versioned export.\n        \n        \n          Architecture & Methods\n          Data Sources\n        \n      \n\n      \n        \n          \n            13,075\n            Tanzania\n          \n        \n        \n          \n            51,023\n            Nigeria\n          \n        \n        \n          \n            17,353\n            Kenya\n          \n        \n        \n          \n            8,512\n            Uganda\n          \n        \n        \n          \n            3,731\n            Zambia\n          \n        \n        \n          \n            1,929\n            Malawi\n          \n        \n        \n          \n            1,076\n            Botswana\n          \n        \n      \n\n    \n  \n\n\n\n\n  Start Exploring\n  Choose a country or tool to begin working with HealthScope data\n  \n    Registry Explorer\n    Find Nearby Facility\n    General Information\n  \n\n\n\n\n Back to top"
   },
   {
     "objectID": "methodology.html",
@@ -530,5 +530,61 @@
     "title": "Source Code & Repositories",
     "section": "",
     "text": "Source Code & Repositories\n    Open-source code for the data portal and analytical workflows\n  \n\n\n\n\n  \n    \n      \n    \n    HealthScope – GitHub Organization\n    All code is publicly available under open-source licenses. Contributions welcome!\n    Visit GitHub Organization\n  \n\n\n\n\n  Repository Guides\n  Key projects and their purposes\n\n  \n\n    \n    \n      Portal Code\n      \n        Quarto-based website code for the health facilities data portal. Includes HTML templates, R Shiny components, \n        styling, and deployment configuration.\n      \n      \n        Language: R, Quarto, HTML/CSS\n        License: MIT\n      \n      \n        \n          \n        \n        View on GitHub\n      \n    \n\n    \n    \n      Data Processing Scripts\n      \n        R and Python scripts for downloading, cleaning, harmonizing, and quality-assessing health facility datasets. \n        Reproducible workflows for data integration from multiple sources.\n      \n      \n        Language: R, Python\n        License: MIT\n      \n      \n        \n          \n        \n        View on GitHub\n      \n    \n\n    \n    \n      Analytical Workflows\n      \n        Example analyses and workflows demonstrating how to use health facility datasets for research. Covers access mapping, \n        coverage analysis, and facility clustering studies.\n      \n      \n        Language: R Markdown, Python Jupyter\n        License: MIT\n      \n      \n        \n          \n        \n        View on GitHub\n      \n    \n\n  \n\n\n\n\n  Contributing\n  We welcome contributions from the research community! To contribute:\n  \n    Fork the relevant repository and create a feature branch\n    Follow our coding standards (documented in each repo)\n    Submit a pull request with a clear description of your changes\n    Wait for code review and feedback from maintainers\n    Once approved, your changes will be merged and deployed\n  \n  Questions? Open an issue in the relevant repository or contact us at map-eastafrica@example.org\n\n\n\n\n  Repository Status & Badges\n  \n    \n    \n    \n    \n    \n  \n\n\n\n\n  Ready to Get Started?\n  Explore our repositories and start using health facility data in your research.\n  \n    Browse All Repositories →\n  \n\n\n\n\n Back to top"
+  },
+  {
+    "objectID": "index.html#mission",
+    "href": "index.html#mission",
+    "title": "\n      HealthScope\n    ",
+    "section": "Mission",
+    "text": "Mission\nHealthScope is an open-access health facility intelligence portal designed to move beyond static facility inventories toward dynamic, demand-driven health access analytics across malaria-endemic countries in Sub-Saharan Africa. Developed from data extracted directly from Ministries of Health, HealthScope transforms raw registry data into actionable intelligence.\nThe portal reveals not just where health facilities exist, but whether populations can realistically access them and what services they offer."
+  },
+  {
+    "objectID": "index.html#the-gap-we-fill",
+    "href": "index.html#the-gap-we-fill",
+    "title": "\n      HealthScope\n    ",
+    "section": "The Gap We Fill",
+    "text": "The Gap We Fill\nCurrent approaches to health facility mapping focus primarily on documenting facility locations without deeper analysis. HealthScope goes further by providing:\n\nPopulation-demand modelling – reachability analysis beyond simple location pins\nService-level intelligence – mapping of what services exist where\nGeneral information at scale – population-weighted access metrics and facility distribution analysis\n\nHealthScope addresses these gaps within a lightweight, open-source, zero-server infrastructure."
+  },
+  {
+    "objectID": "index.html#intelligence-layers",
+    "href": "index.html#intelligence-layers",
+    "title": "\n      HealthScope\n    ",
+    "section": "Intelligence Layers",
+    "text": "Intelligence Layers\n\n\n  \n    1. Facility Registry Lake\n    Standardized facility data from MoH sources across 7 SSA countries. Multi-country harmonized schema; direct MoH sourcing.\n  \n\n  \n    2. Demand-Side Access\n    Population catchment zones using road networks; travel-time isochrones showing not just location, but reachability.\n  \n\n  \n    3. Service Gap Intelligence\n    Which services exist where. Heatmaps of malaria service deserts, lab coverage gaps, and emergency preparedness blind spots.\n  \n\n  \n    4. General Information\n    Population-weighted access scores; rural/urban parity metrics by district. Exposing inequities masked by aggregate counts."
+  },
+  {
+    "objectID": "index.html#technical-architecture",
+    "href": "index.html#technical-architecture",
+    "title": "\n      HealthScope\n    ",
+    "section": "Technical Architecture",
+    "text": "Technical Architecture\nHealthScope is built on a zero-server, open-source stack that is free to operate, reproducible, and scalable without infrastructure investment.\n\n  \n\n\n\nLayer\nTechnology\nRole\n\n\n\n\nData Extraction\nR (httr2, rvest)\nScrape / download from MoH registries\n\n\nETL Pipeline\nR (tidyverse, sf, lubridate)\nStandardize, clean, validate, flag quality\n\n\nStorage\nCSV + GeoParquet + DuckDB\nSpatial data lake; fast in-process queries\n\n\nSpatial Analysis\nR (sf, osrm, WorldPop)\nCatchment zones, access scoring\n\n\nPortal Frontend\nQuarto + Leaflet + Chart.js\nInteractive maps, dashboards, reports\n\n\nHosting\nGitHub Pages\nFree static hosting; auto-deploy on push\n\n\nOpen Data\nZenodo / Hugging Face\nVersioned, DOI-assigned releases"
+  },
+  {
+    "objectID": "index.html#etl-pipeline-v2",
+    "href": "index.html#etl-pipeline-v2",
+    "title": "\n      HealthScope\n    ",
+    "section": "ETL Pipeline (v2)",
+    "text": "ETL Pipeline (v2)\nThe HealthScope ETL pipeline processes raw MoH data through 7 validated steps:\n\nread_country_data() – reads CSV/XLSX with encoding handling\nstandardize_columns() – maps raw columns to shared 23-field schema\nclean_coordinates() – coerces to numeric; flags missing/implausible GPS\nclean_dates() – parses Stata-format and ISO 8601 dates\nenforce_schema_types() – coerces all fields to correct types\nflag_data_quality() – assigns high/medium/low/unknown per record\nsave_standardized_data() – writes CSV and per-country QA report\n\n\nCurrent Pipeline Status\n\n\n\nCountry\nFacilities\nSource\n\n\n\n\nTanzania\n13,075\nMoH HFR Portal\n\n\nNigeria\n51,023\nNHMIS / DHIS2\n\n\nKenya\n17,353\nKMHFR\n\n\nUganda\n8,512\nMoH DHIS2\n\n\nZambia\n3,731\nMoH HRIS\n\n\nMalawi\n1,929\nMoH CMED\n\n\nBotswana\n1,076\nMoH Registry\n\n\nTotal\n96,699"
+  },
+  {
+    "objectID": "index.html#team",
+    "href": "index.html#team",
+    "title": "\n      HealthScope\n    ",
+    "section": "Team",
+    "text": "Team\nThe portal is maintained by a team of data engineers, GIS specialists, epidemiologists, and researchers at the Malaria Atlas Project Dar es Salaam Node.\nVisit the Team Page → | View Data Sources →"
+  },
+  {
+    "objectID": "about.html#intelligence-layers",
+    "href": "about.html#intelligence-layers",
+    "title": "About HealthScope",
+    "section": "Intelligence Layers",
+    "text": "Intelligence Layers\n\n\n  \n    1. Facility Registry Lake\n    Standardized facility data from MoH sources across 7 SSA countries. Multi-country harmonized schema; direct MoH sourcing.\n  \n\n  \n    2. Demand-Side Access\n    Population catchment zones using road networks; travel-time isochrones showing not just location, but reachability.\n  \n\n  \n    3. Service Gap Intelligence\n    Which services exist where. Heatmaps of malaria service deserts, lab coverage gaps, and emergency preparedness blind spots.\n  \n\n  \n    4. General Information\n    Population-weighted access scores; rural/urban parity metrics by district. Exposing inequities masked by aggregate counts."
+  },
+  {
+    "objectID": "countries/Botswana.html#data-download",
+    "href": "countries/Botswana.html#data-download",
+    "title": "\n",
+    "section": "Data Download",
+    "text": "Data Download\nDownload Botswana datasets here:\n\nFacilities — CSV · RDS\nServices & infrastructure — CSV"
   }
 ]
