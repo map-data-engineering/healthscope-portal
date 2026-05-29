@@ -48,7 +48,7 @@ toc: false
 <section class="svc-hero">
   <div style="max-width:1200px;margin:0 auto;">
     <h1>Service Gap Intelligence</h1>
-    <p>Facility-level service data for Tanzania and Kenya &mdash; identifying coverage gaps and service deserts across countries</p>
+    <p>Facility-level service data across Tanzania, Kenya, Zambia, Malawi and Botswana &mdash; identifying coverage gaps and service deserts across countries</p>
   </div>
 </section>
 
@@ -61,6 +61,7 @@ toc: false
     <button class="svc-country-btn" onclick="window._switchCountry('kenya')" id="btn-kenya">Kenya</button>
     <button class="svc-country-btn" onclick="window._switchCountry('zambia')" id="btn-zambia">Zambia</button>
     <button class="svc-country-btn" onclick="window._switchCountry('malawi')" id="btn-malawi">Malawi</button>
+    <button class="svc-country-btn" onclick="window._switchCountry('botswana')" id="btn-botswana">Botswana</button>
   </div>
 
   <div class="svc-status" id="svc-status">Loading data...</div>
@@ -132,6 +133,12 @@ toc: false
       svcFile: 'data/Malawi/malawi_services.csv',
       bounds: [[-17.2,-9.3],[32.6,36.0]],
       label: 'Malawi'
+    },
+    botswana: {
+      facFile: 'data/Botswana/botswana_standardized.csv',
+      svcFile: 'data/Botswana/botswana_services.csv',
+      bounds: [[-26.9,-17.7],[20.0,29.4]],
+      label: 'Botswana'
     }
   };
 

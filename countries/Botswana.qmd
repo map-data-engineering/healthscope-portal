@@ -80,10 +80,83 @@ With a population of approximately 2.5 million and a relatively low population d
 ## Services {#services}
 
 Botswana's facilities offer comprehensive primary care, one of Africa's most successful HIV/ART programmes (with over 85% of eligible patients on treatment), TB services, maternal and child health, immunization, malaria diagnosis and treatment (primarily in the northern districts bordering Zimbabwe and Zambia), mental health services, and management of NCDs including diabetes and hypertension.
+
+Service availability has been extracted from the [Botswana Master Facility List](https://healthfacilities.gov.bw/facilities), covering clinical services, infrastructure, and staffing across the registry.
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(scales)
+
+svc <- read.csv("../data/Botswana/botswana_services.csv", stringsAsFactors = FALSE)
+
+n_facilities <- length(unique(svc$facility_code))
+
+top_clinical <- svc |>
+  dplyr::filter(service_category == "clinical_services") |>
+  dplyr::distinct(facility_code, service_detail) |>
+  dplyr::count(service_detail, name = "facilities") |>
+  dplyr::mutate(pct = facilities / n_facilities) |>
+  dplyr::arrange(dplyr::desc(facilities)) |>
+  utils::head(15)
+
+ggplot2::ggplot(top_clinical,
+                ggplot2::aes(x = facilities,
+                             y = stats::reorder(service_detail, facilities))) +
+  ggplot2::geom_col(fill = "#c9a227") +
+  ggplot2::geom_text(ggplot2::aes(label = scales::percent(pct, accuracy = 1)),
+                     hjust = -0.15, size = 3.2, colour = "#3d3d3d") +
+  ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = c(0, 0.18))) +
+  ggplot2::labs(
+    title = "Top 15 clinical services across Botswana facilities",
+    subtitle = paste0("Share of ", n_facilities, " facilities offering each service"),
+    x = "Facilities offering service",
+    y = NULL
+  ) +
+  ggplot2::theme_minimal(base_size = 11) +
+  ggplot2::theme(
+    panel.grid.major.y = ggplot2::element_blank(),
+    panel.grid.minor   = ggplot2::element_blank(),
+    plot.title    = ggplot2::element_text(face = "bold", colour = "#3d3d3d"),
+    plot.subtitle = ggplot2::element_text(colour = "#6b6b6b")
+  )
+```
+
+```{r}
+infra <- svc |>
+  dplyr::filter(service_category == "infrastructure") |>
+  dplyr::mutate(service_detail = sub(" \\(qty:.*$", "", service_detail)) |>
+  dplyr::distinct(facility_code, service_detail) |>
+  dplyr::count(service_detail, name = "facilities") |>
+  dplyr::mutate(pct = facilities / n_facilities) |>
+  dplyr::arrange(dplyr::desc(facilities)) |>
+  utils::head(10)
+
+ggplot2::ggplot(infra,
+                ggplot2::aes(x = facilities,
+                             y = stats::reorder(service_detail, facilities))) +
+  ggplot2::geom_col(fill = "#5a7a9b") +
+  ggplot2::geom_text(ggplot2::aes(label = scales::percent(pct, accuracy = 1)),
+                     hjust = -0.15, size = 3.2, colour = "#3d3d3d") +
+  ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = c(0, 0.18))) +
+  ggplot2::labs(
+    title = "Reported infrastructure availability",
+    subtitle = "Share of facilities reporting each infrastructure item",
+    x = "Facilities reporting",
+    y = NULL
+  ) +
+  ggplot2::theme_minimal(base_size = 11) +
+  ggplot2::theme(
+    panel.grid.major.y = ggplot2::element_blank(),
+    panel.grid.minor   = ggplot2::element_blank(),
+    plot.title    = ggplot2::element_text(face = "bold", colour = "#3d3d3d"),
+    plot.subtitle = ggplot2::element_text(colour = "#6b6b6b")
+  )
+```
+
 ## Data Download {#data-download}
 
-Download facilities dtaset here:
+Download Botswana datasets here:
 
--   [CSV](../data/Botswana/botswana_standardized.csv)\
-<!--   [JSON](../data/tanzania/hf_demographics.json)-->
--   [RDS](../data/Botswana/Botswana_standardized.rds)
+-   Facilities &mdash; [CSV](../data/Botswana/botswana_standardized.csv) &middot; [RDS](../data/Botswana/Botswana_standardized.rds)
+-   Services &amp; infrastructure &mdash; [CSV](../data/Botswana/botswana_services.csv)
