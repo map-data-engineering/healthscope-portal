@@ -138,11 +138,10 @@ toc: false
       label: 'Malawi'
     },
     botswana: {
-      facFile: 'data/Botswana/botswana_standardized.csv',
-      svcFile: 'data/Botswana/botswana_services.csv',
+      facFile: ETL_BASE + '/botswana_standardized.csv',
+      svcFile: ETL_BASE + '/botswana_services_standardized.csv',
       bounds: [[-26.9,-17.7],[20.0,29.4]],
-      label: 'Botswana',
-      categoryFilter: ['clinical_services']
+      label: 'Botswana'
     }
   };
 

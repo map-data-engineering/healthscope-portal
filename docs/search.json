@@ -18,7 +18,7 @@
     "href": "registry.html",
     "title": "Facility Registry Explorer",
     "section": "",
-    "text": "Facility Registry Explorer\n    95,624 health facilities across 7 Sub-Saharan African countries — standardized, quality-assessed, and open\n  \n\n\n\n\n  \n  \n    \n      Country\n      \n        All Countries\n        Kenya (17,353)\n        Tanzania (13,075)\n        Nigeria (51,023)\n        Uganda (8,512)\n        Zambia (3,731)\n        Malawi (1,929)\n        Botswana (1,076)\n      \n    \n    \n      Facility Type\n      \n        All Types\n      \n    \n    \n      Ownership\n      \n        All Ownership\n      \n    \n    \n      Search\n      \n    \n    \n       \n      \n        \n        Download CSV\n      \n    \n  \n\n  \n  Loading facility data from 6 countries...\n\n  \n  \n\n  \n  \n\n  \n  \n    \n      \n\n\n\nFacility Name\nType\nOwnership\nRegion\nCountry\nStatus\n\n\n\n\n\n\n    \n  \n\n\n\n\n\n\n\n Back to top"
+    "text": "95,624 health facilities across 7 Sub-Saharan African countries — standardized, quality-assessed, and open\n  \n\n\n\n\n  \n  \n    \n      Country\n      \n        All Countries\n        Kenya (17,353)\n        Tanzania (13,075)\n        Nigeria (51,023)\n        Uganda (8,512)\n        Zambia (3,731)\n        Malawi (1,929)\n        Botswana (1,076)\n      \n    \n    \n      Facility Type\n      \n        All Types\n      \n    \n    \n      Ownership\n      \n        All Ownership\n      \n    \n    \n      Search\n      \n    \n    \n       \n      \n        \n        Download CSV\n      \n    \n  \n\n  \n  Loading facility data from 6 countries...\n\n  \n  \n\n  \n  \n\n  \n  \n    \n      \n\n\n\nFacility Name\nType\nOwnership\nRegion\nCountry\nStatus\n\n\n\n\n\n\n    \n  \n\n\n\n\n\n\n\n Back to top"
   },
   {
     "objectID": "kenya.html",
@@ -81,7 +81,7 @@
     "href": "equity.html",
     "title": "Equity & Access Dashboard",
     "section": "",
-    "text": "Equity & Access Dashboard\n    Population-weighted access metrics exposing inequities masked by aggregate facility counts\n  \n\n\n\n\n  \n    Country:\n    \n      Kenya\n      Tanzania\n      Nigeria\n      Uganda\n      Zambia\n      Malawi\n      Botswana\n    \n  \n\n  \n  \n\n  \n  \n    \n      Facility Type Distribution\n      \n    \n    \n      Ownership Breakdown\n      \n    \n  \n\n  \n    \n      Facilities by Region\n      \n    \n    \n      Regional Facility Distribution\n      \n        \n\n\n\nRegion\nFacilities\nPublic %\nDistribution\n\n\n\n\n\n\n      \n    \n  \n\n  \n    Note: Equity metrics currently reflect facility counts and distribution by region. Phase 2 will integrate WorldPop population rasters to compute population-weighted access scores, urban/rural parity indices, and travel-time catchment analysis.\n  \n\n\n\n\n\n\n Back to top"
+    "text": "Population-weighted access metrics exposing inequities masked by aggregate facility counts\n  \n\n\n\n\n  \n    Country:\n    \n      Kenya\n      Tanzania\n      Nigeria\n      Uganda\n      Zambia\n      Malawi\n      Botswana\n    \n  \n\n  \n  \n\n  \n  \n    \n      Facility Type Distribution\n      \n    \n    \n      Ownership Breakdown\n      \n    \n  \n\n  \n    \n      Facilities by Region\n      \n    \n    \n      Regional Facility Distribution\n      \n        \n\n\n\nRegion\nFacilities\nPublic %\nDistribution\n\n\n\n\n\n\n      \n    \n  \n\n  \n    Note: Equity metrics currently reflect facility counts and distribution by region. Phase 2 will integrate WorldPop population rasters to compute population-weighted access scores, urban/rural parity indices, and travel-time catchment analysis.\n  \n\n\n\n\n\n\n Back to top"
   },
   {
     "objectID": "demographics.html",
@@ -221,7 +221,7 @@
     "href": "countries/Botswana.html#services",
     "title": "\n",
     "section": "Services",
-    "text": "Services\nBotswana’s facilities offer comprehensive primary care, one of Africa’s most successful HIV/ART programmes (with over 85% of eligible patients on treatment), TB services, maternal and child health, immunization, malaria diagnosis and treatment (primarily in the northern districts bordering Zimbabwe and Zambia), mental health services, and management of NCDs including diabetes and hypertension.\nService availability has been extracted from the Botswana Master Facility List, covering clinical services, infrastructure, and staffing across the registry."
+    "text": "Services\nBotswana’s facilities offer comprehensive primary care, one of Africa’s most successful HIV/ART programmes (with over 85% of eligible patients on treatment), TB services, maternal and child health, immunization, malaria diagnosis and treatment (primarily in the northern districts bordering Zimbabwe and Zambia), mental health services, and management of NCDs including diabetes and hypertension.\nService availability has been extracted from the Botswana Master Facility List and standardised through the HealthScope ETL pipeline into the same 3-level domain hierarchy used for every other country."
   },
   {
     "objectID": "about.html",
@@ -585,6 +585,6 @@
     "href": "countries/Botswana.html#data-download",
     "title": "\n",
     "section": "Data Download",
-    "text": "Data Download\nDownload Botswana datasets here:\n\nFacilities — CSV · RDS\nServices & infrastructure — CSV"
+    "text": "Data Download\nDownload Botswana datasets here:\n\nFacilities — CSV\nServices — CSV\n\nProduced by the HealthScope ETL pipeline."
   }
 ]

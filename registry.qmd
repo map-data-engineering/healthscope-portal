@@ -139,7 +139,7 @@ toc: false
     uganda:   {file:'data/Uganda/uganda_standardized.csv',     label:'Uganda',   color:'#059669', bounds:[-1.5,4.3,29.5,35.1]},
     zambia:   {file:'data/Zambia/zambia_standardized.csv',     label:'Zambia',   color:'#f59e0b', bounds:[-18.1,-8.2,21.9,33.7]},
     malawi:   {file:'data/Malawi/malawi_standardized.csv',     label:'Malawi',   color:'#8b5cf6', bounds:[-17.2,-9.3,32.6,36]},
-    botswana: {file:'data/Botswana/botswana_standardized.csv', label:'Botswana', color:'#06b6d4', bounds:[-27,-17.7,19.9,29.4]}
+    botswana: {file:'etl/data/processed/country_standardized/botswana_standardized.csv', label:'Botswana', color:'#06b6d4', bounds:[-27,-17.7,19.9,29.4]}
   };
 
   var allFacilities = [];

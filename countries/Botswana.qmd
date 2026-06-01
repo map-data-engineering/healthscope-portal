@@ -41,7 +41,8 @@ library(shiny)
 library(dplyr)
 
 # Example: load pre processed sf object
-hf_sf <- read.csv("../data/Botswana/botswana_standardized.csv") |>
+hf_sf <- read.csv("../etl/data/processed/country_standardized/botswana_standardized.csv") |>
+  dplyr::select(facility_name, facility_type, latitude, longitude, admin1) |>
   dplyr::mutate(
     latitude = as.numeric(latitude),
     longitude = as.numeric(longitude)
@@ -81,34 +82,35 @@ With a population of approximately 2.5 million and a relatively low population d
 
 Botswana's facilities offer comprehensive primary care, one of Africa's most successful HIV/ART programmes (with over 85% of eligible patients on treatment), TB services, maternal and child health, immunization, malaria diagnosis and treatment (primarily in the northern districts bordering Zimbabwe and Zambia), mental health services, and management of NCDs including diabetes and hypertension.
 
-Service availability has been extracted from the [Botswana Master Facility List](https://healthfacilities.gov.bw/facilities), covering clinical services, infrastructure, and staffing across the registry.
+Service availability has been extracted from the [Botswana Master Facility List](https://healthfacilities.gov.bw/facilities) and standardised through the [HealthScope ETL pipeline](https://github.com/map-data-engineering/health_facility_etl) into the same 3-level domain hierarchy used for every other country.
 
 ```{r}
 library(dplyr)
 library(ggplot2)
 library(scales)
 
-svc <- read.csv("../data/Botswana/botswana_services.csv", stringsAsFactors = FALSE)
+svc <- read.csv("../etl/data/processed/country_standardized/botswana_services_standardized.csv",
+                stringsAsFactors = FALSE) |>
+  dplyr::filter(include_in_analysis == "TRUE" | include_in_analysis == TRUE)
 
 n_facilities <- length(unique(svc$facility_code))
 
-top_clinical <- svc |>
-  dplyr::filter(service_category == "clinical_services") |>
-  dplyr::distinct(facility_code, service_detail) |>
-  dplyr::count(service_detail, name = "facilities") |>
+top_services <- svc |>
+  dplyr::distinct(facility_code, service_name) |>
+  dplyr::count(service_name, name = "facilities") |>
   dplyr::mutate(pct = facilities / n_facilities) |>
   dplyr::arrange(dplyr::desc(facilities)) |>
   utils::head(15)
 
-ggplot2::ggplot(top_clinical,
+ggplot2::ggplot(top_services,
                 ggplot2::aes(x = facilities,
-                             y = stats::reorder(service_detail, facilities))) +
+                             y = stats::reorder(service_name, facilities))) +
   ggplot2::geom_col(fill = "#c9a227") +
   ggplot2::geom_text(ggplot2::aes(label = scales::percent(pct, accuracy = 1)),
                      hjust = -0.15, size = 3.2, colour = "#3d3d3d") +
   ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = c(0, 0.18))) +
   ggplot2::labs(
-    title = "Top 15 clinical services across Botswana facilities",
+    title = "Top 15 services across Botswana facilities",
     subtitle = paste0("Share of ", n_facilities, " facilities offering each service"),
     x = "Facilities offering service",
     y = NULL
@@ -123,26 +125,23 @@ ggplot2::ggplot(top_clinical,
 ```
 
 ```{r}
-infra <- svc |>
-  dplyr::filter(service_category == "infrastructure") |>
-  dplyr::mutate(service_detail = sub(" \\(qty:.*$", "", service_detail)) |>
-  dplyr::distinct(facility_code, service_detail) |>
-  dplyr::count(service_detail, name = "facilities") |>
+domain_coverage <- svc |>
+  dplyr::distinct(facility_code, service_domain) |>
+  dplyr::count(service_domain, name = "facilities") |>
   dplyr::mutate(pct = facilities / n_facilities) |>
-  dplyr::arrange(dplyr::desc(facilities)) |>
-  utils::head(10)
+  dplyr::arrange(dplyr::desc(facilities))
 
-ggplot2::ggplot(infra,
+ggplot2::ggplot(domain_coverage,
                 ggplot2::aes(x = facilities,
-                             y = stats::reorder(service_detail, facilities))) +
+                             y = stats::reorder(service_domain, facilities))) +
   ggplot2::geom_col(fill = "#5a7a9b") +
   ggplot2::geom_text(ggplot2::aes(label = scales::percent(pct, accuracy = 1)),
                      hjust = -0.15, size = 3.2, colour = "#3d3d3d") +
   ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = c(0, 0.18))) +
   ggplot2::labs(
-    title = "Reported infrastructure availability",
-    subtitle = "Share of facilities reporting each infrastructure item",
-    x = "Facilities reporting",
+    title = "Facility coverage by service domain",
+    subtitle = "Share of facilities offering at least one service in each domain",
+    x = "Facilities",
     y = NULL
   ) +
   ggplot2::theme_minimal(base_size = 11) +
@@ -158,5 +157,7 @@ ggplot2::ggplot(infra,
 
 Download Botswana datasets here:
 
--   Facilities &mdash; [CSV](../data/Botswana/botswana_standardized.csv) &middot; [RDS](../data/Botswana/Botswana_standardized.rds)
--   Services &amp; infrastructure &mdash; [CSV](../data/Botswana/botswana_services.csv)
+-   Facilities &mdash; [CSV](../etl/data/processed/country_standardized/botswana_standardized.csv)
+-   Services &mdash; [CSV](../etl/data/processed/country_standardized/botswana_services_standardized.csv)
+
+Produced by the [HealthScope ETL pipeline](https://github.com/map-data-engineering/health_facility_etl).

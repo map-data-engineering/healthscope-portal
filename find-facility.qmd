@@ -419,17 +419,11 @@ execute:
       statusFilter: 'Functional'
     },
     botswana: {
-      facFile: 'data/Botswana/botswana_standardized.csv',
-      svcFile: 'data/Botswana/botswana_services.csv',
+      facFile: 'etl/data/processed/country_standardized/botswana_standardized.csv',
+      svcFile: 'etl/data/processed/country_standardized/botswana_services_standardized.csv',
       bounds: [-26.9, -17.7, 20.0, 29.4],
       label: 'Botswana',
-      statusFilter: 'OPERATIONAL',
-      // Botswana's only "real" service category is clinical_services;
-      // infrastructure and staff are facility attributes, not services.
-      categoryFilter: ['clinical_services'],
-      // The category is coarse (single "clinical_services" bucket);
-      // expose each specific service_detail as its own searchable option.
-      detailAsCategory: ['clinical_services']
+      statusFilter: 'OPERATIONAL'
     }
   };
 
