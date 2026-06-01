@@ -151,7 +151,7 @@
     "href": "countries/uganda.html#data-download",
     "title": "\n",
     "section": "Data Download",
-    "text": "Data Download\nDownload the facilities data here:\n\nCSV\n\nRDS"
+    "text": "Data Download\nDownload the facilities data here:\n\nFacilities — CSV\n\nProduced by the HealthScope ETL pipeline."
   },
   {
     "objectID": "countries/Nigeria.html",
@@ -186,7 +186,7 @@
     "href": "countries/Nigeria.html#data-download",
     "title": "\n",
     "section": "Data Download",
-    "text": "Data Download\nDownload the facilities datset here:\n\nCSV\n\nRDS"
+    "text": "Data Download\nDownload the facilities datset here:\n\nFacilities — CSV\n\nProduced by the HealthScope ETL pipeline."
   },
   {
     "objectID": "countries/Botswana.html",
@@ -361,7 +361,7 @@
     "href": "countries/Malawi.html#data-download",
     "title": "\n",
     "section": "Data Download",
-    "text": "Data Download\nDownload facilities dataset here:\n\nCSV\n\nRDS"
+    "text": "Data Download\nDownload facilities dataset here:\n\nFacilities — CSV\nServices — CSV\n\nProduced by the HealthScope ETL pipeline."
   },
   {
     "objectID": "countries/tanzania.html",
@@ -403,7 +403,7 @@
     "href": "countries/tanzania.html#data-download",
     "title": "\n",
     "section": "Data Download",
-    "text": "Data Download\nDownload the facilities data here:\n\nCSV\n\nRDS"
+    "text": "Data Download\nDownload the facilities data here:\n\nFacilities — CSV\nServices — CSV\n\nProduced by the HealthScope ETL pipeline."
   },
   {
     "objectID": "countries/Zambia.html",
@@ -445,7 +445,7 @@
     "href": "countries/Zambia.html#data-download",
     "title": "\n",
     "section": "Data Download",
-    "text": "Data Download\nDownload facilities dataset here:\n\nCSV\n\nRDS"
+    "text": "Data Download\nDownload facilities dataset here:\n\nFacilities — CSV\n\nProduced by the HealthScope ETL pipeline."
   },
   {
     "objectID": "data-sources.html",
