@@ -42,7 +42,8 @@ library(dplyr)
 
 # Example: load pre processed sf object
 
-hf_sf <- readRDS("../data/Malawi/malawi_standardized.rds") |>
+hf_sf <- read.csv("../etl/data/processed/country_standardized/malawi_standardized.csv") |>
+  dplyr::select(facility_name, facility_type, latitude, longitude, admin1) |>
   dplyr::filter(
     !is.na(latitude) & !is.na(longitude),
     latitude >= -18 & latitude <= -8,
@@ -83,6 +84,7 @@ Malawian health facilities deliver outpatient care, malaria prevention (includin
 
 Download facilities dataset here:
 
--   [CSV](../data/Malawi/malawi_standardized.csv)\
-<!--   [JSON](../data/tanzania/hf_demographics.json)-->
--   [RDS](../data/Malawi/malawi_standardized.rds)
+-   Facilities &mdash; [CSV](../etl/data/processed/country_standardized/malawi_standardized.csv)
+-   Services &mdash; [CSV](../etl/data/processed/country_standardized/malawi_services_standardized.csv)
+
+Produced by the [HealthScope ETL pipeline](https://github.com/map-data-engineering/health_facility_etl).

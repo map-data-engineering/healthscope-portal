@@ -109,10 +109,13 @@ toc: false
 <script>
 (function(){
   // Country configurations
+  // ETL_BASE: per-country ETL outputs published by the
+  // health_facility_etl pipeline (git submodule at etl/).
+  var ETL_BASE = 'etl/data/processed/country_standardized';
   var COUNTRIES = {
     tanzania: {
-      facFile: 'data/tanzania/tanzania_standardized.csv',
-      svcFile: 'data/tanzania/hf_services.csv',
+      facFile: ETL_BASE + '/tanzania_standardized.csv',
+      svcFile: ETL_BASE + '/tanzania_services_standardized.csv',
       bounds: [[-11.8,-1.0],[29.2,40.6]],
       label: 'Tanzania'
     },
@@ -123,14 +126,14 @@ toc: false
       label: 'Kenya'
     },
     zambia: {
-      facFile: 'data/Zambia/zambia_standardized.csv',
+      facFile: ETL_BASE + '/zambia_standardized.csv',
       svcFile: 'data/Zambia/zambia_services.csv',
       bounds: [[-18.1,-8.2],[21.9,33.7]],
       label: 'Zambia'
     },
     malawi: {
-      facFile: 'data/Malawi/malawi_standardized.csv',
-      svcFile: 'data/Malawi/malawi_services.csv',
+      facFile: ETL_BASE + '/malawi_standardized.csv',
+      svcFile: ETL_BASE + '/malawi_services_standardized.csv',
       bounds: [[-17.2,-9.3],[32.6,36.0]],
       label: 'Malawi'
     },
@@ -216,13 +219,18 @@ toc: false
       complete:function(res){
         res.data.forEach(function(r){
           if(!r.facility_code || r.facility_code==='facility_code') return;
-          var cat = r.service_category || r.service_group || '';
+          // ETL flag — skip equipment, commodities, training records, etc.
+          if(r.include_in_analysis === 'FALSE') return;
+          // ETL schema: service_domain > service_group > service_name
+          // Legacy: service_category / service_detail
+          var cat = r.service_domain || r.service_category || r.service_group || '';
           if(!cat) return;
           if(cfg.categoryFilter && cfg.categoryFilter.indexOf(cat) < 0) return;
+          var detail = r.service_name || r.service_detail || r.service_group || '';
           svcCodes.add(r.facility_code);
           if(!svcByCode[r.facility_code]) svcByCode[r.facility_code]={};
           if(!svcByCode[r.facility_code][cat]) svcByCode[r.facility_code][cat]=[];
-          svcByCode[r.facility_code][cat].push(r.service_detail || r.service_group || '');
+          svcByCode[r.facility_code][cat].push(detail);
         });
         loaded.svc=true;
         if(loaded.fac) finishLoad(key);
@@ -377,7 +385,7 @@ toc: false
           svcByCode[code][cat].slice(0,5).map(function(d){return '&bull; '+d;}).join('<br/>');
         if(svcByCode[code][cat].length > 5) details += '<br/><em>+'+(svcByCode[code][cat].length-5)+' more</em>';
       }
-      m.bindPopup('<strong>'+f.facility_name+'</strong><br/><span style="color:#6b6b6b;">'+(f.facility_type||'')+' &bull; '+(f.facility_ownership||'')+'</span><br/><span style="color:#6b6b6b;">'+(f.admin1||'')+'</span>'+details);
+      m.bindPopup('<strong>'+f.facility_name+'</strong><br/><span style="color:#6b6b6b;">'+(f.facility_type||'')+' &bull; '+(f.ownership||f.facility_ownership||'')+'</span><br/><span style="color:#6b6b6b;">'+(f.admin1||'')+'</span>'+details);
       markers.push(m);
     });
 

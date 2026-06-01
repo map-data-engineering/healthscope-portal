@@ -42,7 +42,8 @@ library(dplyr)
 
 # Example: load pre processed sf object
 
-hf_sf <- readRDS("../data/Uganda/Uganda_standardized.rds") |>
+hf_sf <- read.csv("../etl/data/processed/country_standardized/uganda_standardized.csv") |>
+  dplyr::select(facility_name, facility_type, latitude, longitude, admin1) |>
   dplyr::filter(
     !is.na(latitude) & !is.na(longitude),
     latitude >= -2 & latitude <= 4.5,
@@ -82,6 +83,6 @@ Ugandan facilities offer outpatient and inpatient care, malaria diagnosis (RDT a
 
 Download the facilities data here:
 
--   [CSV](../data/Uganda/uganda_standardized.csv)\
-<!--   [JSON](../data/tanzania/hf_demographics.json)-->
--   [RDS](../data/Uganda/Uganda_standardized.rds)
+-   Facilities &mdash; [CSV](../etl/data/processed/country_standardized/uganda_standardized.csv)
+
+Produced by the [HealthScope ETL pipeline](https://github.com/map-data-engineering/health_facility_etl).

@@ -1,0 +1,4 @@
+[submodule "etl"]
+	path = etl
+	url = https://github.com/map-data-engineering/health_facility_etl.git
+	shallow = true

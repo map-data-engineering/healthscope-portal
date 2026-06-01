@@ -41,7 +41,8 @@ library(shiny)
 library(dplyr)
 
 # Example: load pre processed sf object
-hf_sf <- read.csv("../data/Tanzania/tanzania_standardized.csv") |>
+hf_sf <- read.csv("../etl/data/processed/country_standardized/tanzania_standardized.csv") |>
+  dplyr::select(facility_name, facility_type, latitude, longitude, admin1) |>
   dplyr::filter(
     !is.na(latitude) & !is.na(longitude),
     latitude >= -12 & latitude <= -1,
@@ -81,6 +82,7 @@ Tanzanian health facilities provide outpatient consultations, maternal and child
 
 Download the facilities data here:
 
--   [CSV](../data/Tanzania/tanzania_standardized.csv)\
-<!--   [JSON](../data/tanzania/hf_demographics.json)-->
--   [RDS](../data/Tanzania/Tanzania_standardized.rds)
+-   Facilities &mdash; [CSV](../etl/data/processed/country_standardized/tanzania_standardized.csv)
+-   Services &mdash; [CSV](../etl/data/processed/country_standardized/tanzania_services_standardized.csv)
+
+Produced by the [HealthScope ETL pipeline](https://github.com/map-data-engineering/health_facility_etl).

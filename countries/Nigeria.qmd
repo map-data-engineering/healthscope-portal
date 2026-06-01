@@ -42,7 +42,8 @@ library(dplyr)
 
 # Example: load pre processed sf object
 
-hf_sf <- read.csv("../data/Nigeria/nigeria_standardized.csv") |>
+hf_sf <- read.csv("../etl/data/processed/country_standardized/nigeria_standardized.csv") |>
+  dplyr::select(facility_name, facility_type, latitude, longitude, admin1) |>
   dplyr::mutate(
     latitude = as.numeric(latitude),
     longitude = as.numeric(longitude)
@@ -85,6 +86,6 @@ Nigerian health facilities deliver a broad range of services including outpatien
 
 Download the facilities datset here:
 
--   [CSV](../data/Nigeria/nigeria_standardized.csv)\
-<!--   [JSON](../data/tanzania/hf_demographics.json)-->
--   [RDS](../data/Nigeria/Nigeria_standardized.rds)
+-   Facilities &mdash; [CSV](../etl/data/processed/country_standardized/nigeria_standardized.csv)
+
+Produced by the [HealthScope ETL pipeline](https://github.com/map-data-engineering/health_facility_etl).
