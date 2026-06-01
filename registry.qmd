@@ -133,7 +133,7 @@ toc: false
 <script>
 (function(){
   var COUNTRIES = {
-    kenya:    {file:'data/Kenya/kenya_standardized.csv',       label:'Kenya',    color:'#e05930', bounds:[-4.7,5.5,33.9,41.9]},
+    kenya:    {file:'etl/data/processed/country_standardized/kenya_standardized.csv', label:'Kenya', color:'#e05930', bounds:[-4.7,5.5,33.9,41.9]},
     tanzania: {file:'data/tanzania/tanzania_standardized.csv', label:'Tanzania', color:'#c9a227', bounds:[-11.8,-1.0,29.2,40.6]},
     nigeria:  {file:'data/Nigeria/nigeria_standardized.csv',   label:'Nigeria',  color:'#2563eb', bounds:[4,14,2.7,14.7]},
     uganda:   {file:'data/Uganda/uganda_standardized.csv',     label:'Uganda',   color:'#059669', bounds:[-1.5,4.3,29.5,35.1]},

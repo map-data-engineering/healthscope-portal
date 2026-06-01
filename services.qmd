@@ -120,8 +120,8 @@ toc: false
       label: 'Tanzania'
     },
     kenya: {
-      facFile: 'data/Kenya/kenya_standardized.csv',
-      svcFile: 'data/Kenya/kenya_services.csv',
+      facFile: ETL_BASE + '/kenya_standardized.csv',
+      svcFile: ETL_BASE + '/kenya_services_standardized.csv',
       bounds: [[-4.7,5.5],[33.9,41.9]],
       label: 'Kenya'
     },
