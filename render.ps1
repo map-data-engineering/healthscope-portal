@@ -9,8 +9,21 @@
 # The wrapper references %QUARTO_DENO% unquoted; cmd then word-splits the
 # "C:\Program Files\..." path. We pre-set QUARTO_DENO to its 8.3 short path
 # and invoke quarto.cmd through its short path too.
+#
+# Also kills leftover deno/quarto/Rscript/pandoc processes from interrupted
+# prior runs, which otherwise hold ~GB of virtual memory each and OOM the
+# next render. Interactive R sessions (Rterm/Rgui) are NOT touched.
 
 $ErrorActionPreference = 'Stop'
+
+# Reap leftover render processes (Rscript is the non-interactive one;
+# Rterm/Rgui are user sessions and intentionally left alone).
+$stuck = Get-Process -Name deno, quarto, Rscript, pandoc -ErrorAction SilentlyContinue
+if ($stuck) {
+  Write-Host ("Killing {0} stuck render process(es): {1}" -f $stuck.Count, (($stuck | ForEach-Object { "$($_.ProcessName)($($_.Id))" }) -join ', ')) -ForegroundColor Yellow
+  $stuck | Stop-Process -Force -ErrorAction SilentlyContinue
+  Start-Sleep -Milliseconds 500
+}
 
 $quartoCandidates = @(
   "C:\Program Files\Positron\resources\app\quarto\bin\quarto.cmd",
