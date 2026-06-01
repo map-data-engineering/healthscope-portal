@@ -8,7 +8,7 @@ toc: false
 <section class="page-banner">
   <div style="max-width:1200px;margin:0 auto;">
     <h1>Help & Support</h1>
-    <p>Find answers to common questions and get in touch with our team</p>
+    <p>Find answers to common questions about the data and the portal</p>
   </div>
 </section>
 
@@ -59,7 +59,7 @@ toc: false
       <span class="faq-toggle">&#9660;</span>
     </div>
     <div class="faq-content">
-      Navigate to the <a href="country-data.html" style="color:var(--map-red);text-decoration:none;font-weight:600;">Country Data</a> page and select your country of interest.
+      Navigate to the <a href="registry.html" style="color:var(--map-red);text-decoration:none;font-weight:600;">Country Data</a> page and select your country of interest.
       You can explore the interactive map to view facility locations and then download the full dataset in CSV or GeoJSON format.
       All data is freely available under the CC BY 4.0 license.
     </div>
@@ -122,7 +122,7 @@ toc: false
     <div class="faq-content">
       We currently provide comprehensive data for Tanzania, Uganda, Zambia, Malawi, Nigeria, Botswana, and Benin.
       Coverage is expanding to additional Sub-Saharan African countries. Visit the
-      <a href="country-data.html" style="color:var(--map-red);text-decoration:none;font-weight:600;">Country Data</a> page to see which countries are available.
+      <a href="registry.html" style="color:var(--map-red);text-decoration:none;font-weight:600;">Country Data</a> page to see which countries are available.
     </div>
   </div>
 
@@ -133,100 +133,18 @@ toc: false
     </div>
     <div class="faq-content">
       If you discover errors or inconsistencies in the data, we appreciate feedback!
-      You can <a href="#report-issue" style="color:var(--map-red);text-decoration:none;font-weight:600;">report a data issue</a> using our form below,
-      or open an issue directly on our
-      <a href="https://github.com/map-east-africa" target="_blank" style="color:var(--map-red);text-decoration:none;font-weight:600;">GitHub repository</a>.
+      Email us at <a href="mailto:cmyalla@ihi.or.tz" style="color:var(--map-red);text-decoration:none;font-weight:600;">cmyalla@ihi.or.tz</a>
+      with the country, facility name, and a description of the issue.
     </div>
   </div>
 </section>
 
-<!-- CONTACT FORM -->
-<section id="contact" style="max-width:900px;margin:3rem auto;padding:0 2rem 3rem;">
-  <h2 style="text-align:center;margin-bottom:2rem;">Get in Touch</h2>
-  <div class="card-modern" style="border-top:4px solid var(--map-red,#c9a227);">
-    <form style="display:grid;gap:1.5rem;">
-      <div>
-        <label style="display:block;font-weight:600;margin-bottom:0.5rem;">Your Name *</label>
-        <input type="text" placeholder="Your full name" required style="width:100%;padding:0.75rem;border:1px solid var(--map-border,#e2e8f0);border-radius:8px;font-size:1rem;">
-      </div>
-      <div>
-        <label style="display:block;font-weight:600;margin-bottom:0.5rem;">Email Address *</label>
-        <input type="email" placeholder="your.email@example.com" required style="width:100%;padding:0.75rem;border:1px solid var(--map-border,#e2e8f0);border-radius:8px;font-size:1rem;">
-      </div>
-      <div>
-        <label style="display:block;font-weight:600;margin-bottom:0.5rem;">Organization</label>
-        <input type="text" placeholder="University, Ministry, NGO, etc." style="width:100%;padding:0.75rem;border:1px solid var(--map-border,#e2e8f0);border-radius:8px;font-size:1rem;">
-      </div>
-      <div>
-        <label style="display:block;font-weight:600;margin-bottom:0.5rem;">Subject *</label>
-        <select required style="width:100%;padding:0.75rem;border:1px solid var(--map-border,#e2e8f0);border-radius:8px;font-size:1rem;">
-          <option value="">-- Select a subject --</option>
-          <option value="data-access">Data Access Question</option>
-          <option value="data-issue">Report Data Issue</option>
-          <option value="partnership">Partnership Inquiry</option>
-          <option value="technical">Technical Support</option>
-          <option value="feedback">Feedback / Suggestions</option>
-          <option value="other">Other</option>
-        </select>
-      </div>
-      <div>
-        <label style="display:block;font-weight:600;margin-bottom:0.5rem;">Message *</label>
-        <textarea placeholder="Tell us how we can help..." required rows="6" style="width:100%;padding:0.75rem;border:1px solid var(--map-border,#e2e8f0);border-radius:8px;font-size:1rem;font-family:inherit;resize:vertical;"></textarea>
-      </div>
-      <button type="submit" class="btn-primary" style="width:100%;padding:1rem;font-size:1rem;cursor:pointer;">Send Message</button>
-    </form>
-  </div>
-</section>
-
-<!-- REPORT DATA ISSUE -->
-<section id="report-issue" style="max-width:900px;margin:0 auto 3rem;padding:0 2rem;">
-  <h2 style="text-align:center;margin-bottom:2rem;">Report a Data Issue</h2>
-  <div class="card-modern" style="border-top:4px solid var(--map-amber,#f59e0b);">
-    <form style="display:grid;gap:1.5rem;">
-      <div>
-        <label style="display:block;font-weight:600;margin-bottom:0.5rem;">Country *</label>
-        <select required style="width:100%;padding:0.75rem;border:1px solid var(--map-border,#e2e8f0);border-radius:8px;font-size:1rem;">
-          <option value="">-- Select country --</option>
-          <option value="tanzania">Tanzania</option>
-          <option value="uganda">Uganda</option>
-          <option value="zambia">Zambia</option>
-          <option value="malawi">Malawi</option>
-          <option value="nigeria">Nigeria</option>
-          <option value="botswana">Botswana</option>
-          <option value="benin">Benin</option>
-        </select>
-      </div>
-      <div>
-        <label style="display:block;font-weight:600;margin-bottom:0.5rem;">Facility Name *</label>
-        <input type="text" placeholder="Name of the facility with the issue" required style="width:100%;padding:0.75rem;border:1px solid var(--map-border,#e2e8f0);border-radius:8px;font-size:1rem;">
-      </div>
-      <div>
-        <label style="display:block;font-weight:600;margin-bottom:0.5rem;">Issue Type *</label>
-        <select required style="width:100%;padding:0.75rem;border:1px solid var(--map-border,#e2e8f0);border-radius:8px;font-size:1rem;">
-          <option value="">-- Select issue type --</option>
-          <option value="coordinates">Incorrect Coordinates</option>
-          <option value="duplicate">Duplicate Entry</option>
-          <option value="missing">Missing Information</option>
-          <option value="outdated">Outdated Information</option>
-          <option value="name">Facility Name Error</option>
-          <option value="other">Other</option>
-        </select>
-      </div>
-      <div>
-        <label style="display:block;font-weight:600;margin-bottom:0.5rem;">Description *</label>
-        <textarea placeholder="Please provide details about the issue..." required rows="5" style="width:100%;padding:0.75rem;border:1px solid var(--map-border,#e2e8f0);border-radius:8px;font-size:1rem;font-family:inherit;resize:vertical;"></textarea>
-      </div>
-      <button type="submit" class="btn-primary" style="width:100%;padding:1rem;font-size:1rem;cursor:pointer;">Submit Issue Report</button>
-    </form>
-  </div>
-</section>
-
-<!-- EMAIL FALLBACK -->
+<!-- EMAIL CONTACT -->
 <section style="max-width:900px;margin:0 auto 3rem;padding:2rem;background:linear-gradient(135deg,rgba(201,162,39,0.04) 0%,rgba(37,99,235,0.03) 100%);border:1px solid var(--map-border,#e2e8f0);border-radius:12px;text-align:center;">
   <h3 style="margin-top:0;">Email Contact</h3>
   <p style="color:var(--map-text-muted,#64748b);margin-bottom:1rem;">Prefer direct email? Reach out to our team:</p>
   <p style="margin:0;font-size:1.1rem;">
-    <a href="mailto:map-eastafrica@example.org" style="color:var(--map-red,#c9a227);text-decoration:none;font-weight:600;">map-eastafrica@example.org</a>
+    <a href="mailto:cmyalla@ihi.or.tz" style="color:var(--map-red,#c9a227);text-decoration:none;font-weight:600;">cmyalla@ihi.or.tz</a>
   </p>
   <p style="color:var(--map-text-muted);font-size:0.9rem;margin-top:0.5rem;">We typically respond within 2&ndash;3 business days.</p>
 </section>
