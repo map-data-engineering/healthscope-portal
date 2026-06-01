@@ -450,7 +450,8 @@ ul.task-list li input[type="checkbox"] {
       facFile: 'data/Botswana/botswana_standardized.csv',
       svcFile: 'data/Botswana/botswana_services.csv',
       bounds: [[-26.9,-17.7],[20.0,29.4]],
-      label: 'Botswana'
+      label: 'Botswana',
+      categoryFilter: ['clinical_services']
     }
   };
 
@@ -529,6 +530,7 @@ ul.task-list li input[type="checkbox"] {
           if(!r.facility_code || r.facility_code==='facility_code') return;
           var cat = r.service_category || r.service_group || '';
           if(!cat) return;
+          if(cfg.categoryFilter && cfg.categoryFilter.indexOf(cat) < 0) return;
           svcCodes.add(r.facility_code);
           if(!svcByCode[r.facility_code]) svcByCode[r.facility_code]={};
           if(!svcByCode[r.facility_code][cat]) svcByCode[r.facility_code][cat]=[];
