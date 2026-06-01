@@ -324,6 +324,7 @@ execute:
         <option value="kenya">Kenya</option>
         <option value="zambia">Zambia</option>
         <option value="malawi">Malawi</option>
+        <option value="botswana">Botswana</option>
       </select>
     </div>
     <div>
@@ -379,8 +380,8 @@ execute:
   <!-- FOOTER NOTE -->
   <div style="margin-top: 2rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(0, 180, 216, 0.05) 0%, rgba(0, 180, 216, 0.02) 100%); border-radius: 8px; border: 1px solid rgba(201, 162, 39, 0.15);">
     <p style="margin: 0; font-size: 0.9rem; color: #666;">
-      <strong>Data Coverage:</strong> Tanzania (13,075 facilities, 209K service records) and Kenya (17,353 facilities, 201K service records).
-      Distances are calculated as straight-line (not road distance). Sources: Tanzania HFR and Kenya KMHFR.
+      <strong>Data Coverage:</strong> Tanzania, Kenya, Zambia, Malawi and Botswana. Botswana exposes only clinical services (infrastructure and staff are filtered out).
+      Distances are calculated as straight-line (not road distance). Sources: Tanzania HFR, Kenya KMHFR, Zambia MoH, Malawi MHFR, Botswana MFL.
     </p>
   </div>
 </div>
@@ -416,6 +417,19 @@ execute:
       bounds: [-17.2, -9.3, 32.6, 36.0],
       label: 'Malawi',
       statusFilter: 'Functional'
+    },
+    botswana: {
+      facFile: 'data/Botswana/botswana_standardized.csv',
+      svcFile: 'data/Botswana/botswana_services.csv',
+      bounds: [-26.9, -17.7, 20.0, 29.4],
+      label: 'Botswana',
+      statusFilter: 'OPERATIONAL',
+      // Botswana's only "real" service category is clinical_services;
+      // infrastructure and staff are facility attributes, not services.
+      categoryFilter: ['clinical_services'],
+      // The category is coarse (single "clinical_services" bucket);
+      // expose each specific service_detail as its own searchable option.
+      detailAsCategory: ['clinical_services']
     }
   };
 
@@ -495,6 +509,13 @@ execute:
           if (!row.facility_code || row.facility_code === 'facility_code') return;
           var cat = row.service_category || row.service_group || '';
           if (!cat) return;
+          // Drop unwanted categories (e.g. Botswana's infrastructure/staff rows)
+          if (cfg.categoryFilter && cfg.categoryFilter.indexOf(cat) < 0) return;
+          // For countries with a coarse category, expose each specific
+          // service_detail as its own searchable category instead.
+          if (cfg.detailAsCategory && cfg.detailAsCategory.indexOf(cat) >= 0) {
+            cat = row.service_detail || cat;
+          }
           if (!svcByCode[row.facility_code]) svcByCode[row.facility_code] = {};
           if (!svcByCode[row.facility_code][cat]) svcByCode[row.facility_code][cat] = [];
           svcByCode[row.facility_code][cat].push(row.service_detail || row.service_group || '');
