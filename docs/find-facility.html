@@ -633,6 +633,7 @@ ul.task-list li input[type="checkbox"] {
         <option value="zambia">Zambia</option>
         <option value="malawi">Malawi</option>
         <option value="botswana">Botswana</option>
+        <option value="ethiopia">Ethiopia</option>
       </select>
     </div>
     <div>
@@ -688,8 +689,8 @@ ul.task-list li input[type="checkbox"] {
   <!-- FOOTER NOTE -->
   <div style="margin-top: 2rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(0, 180, 216, 0.05) 0%, rgba(0, 180, 216, 0.02) 100%); border-radius: 8px; border: 1px solid rgba(201, 162, 39, 0.15);">
     <p style="margin: 0; font-size: 0.9rem; color: #666;">
-      <strong>Data Coverage:</strong> Tanzania, Kenya, Zambia, Malawi and Botswana. Botswana exposes only clinical services (infrastructure and staff are filtered out).
-      Distances are calculated as straight-line (not road distance). Sources: Tanzania HFR, Kenya KMHFR, Zambia MoH, Malawi MHFR, Botswana MFL.
+      <strong>Data Coverage:</strong> Tanzania, Kenya, Zambia, Malawi, Botswana and Ethiopia. Botswana exposes only clinical services (infrastructure and staff are filtered out). Ethiopia coordinates joined from HDX cover ~63% of the registry; unmatched facilities (mostly drug stores and private clinics) are excluded from the map.
+      Distances are calculated as straight-line (not road distance). Sources: Tanzania HFR, Kenya KMHFR, Zambia MoH, Malawi MHFR, Botswana MFL, Ethiopia e-HFR + HDX.
     </p>
   </div>
 </div>
@@ -732,6 +733,13 @@ ul.task-list li input[type="checkbox"] {
       bounds: [-26.9, -17.7, 20.0, 29.4],
       label: 'Botswana',
       statusFilter: 'OPERATIONAL'
+    },
+    ethiopia: {
+      facFile: 'etl/data/processed/country_standardized/ethiopia_standardized.csv',
+      svcFile: 'etl/data/processed/country_standardized/ethiopia_services_standardized.csv',
+      bounds: [3.0, 15.0, 33.0, 48.0],
+      label: 'Ethiopia',
+      statusFilter: 'Operational'
     }
   };
 

@@ -1,0 +1,152 @@
+---
+title: ""
+runtime:
+toc: false
+---
+
+```{r}
+#| include: false
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+
+::: country-hero-text
+<h1 class="country-title">
+
+</h1>
+
+<h2>Ethiopia Health Facilities</h2>
+
+<p>Standardized, geolocated facility information to strengthen modelling, planning, and decision-making</p>
+:::
+
+::::: {.columns .country-main}
+::: {.column width="70%"}
+## Health Facilities Map
+
+```{r}
+library(sf)
+library(leaflet)
+library(dplyr)
+
+hf_sf <- read.csv("../etl/data/processed/country_standardized/ethiopia_standardized.csv") |>
+  dplyr::select(facility_name, facility_type, latitude, longitude, admin1) |>
+  dplyr::mutate(
+    latitude  = as.numeric(latitude),
+    longitude = as.numeric(longitude)
+  ) |>
+  dplyr::filter(
+    !is.na(latitude) & !is.na(longitude),
+    latitude  >= 3   & latitude  <= 15,
+    longitude >= 33  & longitude <= 48
+  ) |>
+  sf::st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+
+leaflet(hf_sf) |>
+  addTiles() |>
+  addCircleMarkers(radius = 2, stroke = FALSE, fillOpacity = 0.6)
+```
+:::
+
+::: {.column .toc-panel width="30%"}
+### On this page
+
+-   [Overview](#overview)
+-   [Demographics](#demographics)
+-   [Services](#services)
+-   [Data Download](#data-download)
+:::
+:::::
+
+## Overview {#overview}
+
+Ethiopia operates one of the largest health systems in sub-Saharan Africa, organised in a three-tier structure: primary health care (health posts, health centres and primary hospitals), general hospitals, and specialised / tertiary hospitals. The Federal Ministry of Health maintains a centralised e-HFR (electronic Health Facility Registry), with this dataset reflecting a recent extract spanning all 11 regional administrations and city administrations.
+
+## Demographics {#demographics}
+
+With a population of approximately 125 million — the second-largest in Africa — Ethiopia faces enormous service-delivery demand. The Health Extension Programme has placed two trained extension workers at each rural kebele-level health post, making the country a continental reference for community-based primary care. Doctor density remains low (~1.1 per 10,000), with nurses, midwives and Health Extension Workers carrying most of the front-line workload.
+
+## Services {#services}
+
+The e-HFR records four service domains per facility — clinical, diagnostic, support, and 24-hour services — which the HealthScope ETL pipeline unnests and maps to the standard 3-level hierarchy used for every other country. Coordinates were joined from the [Humanitarian Data Exchange Ethiopia Health Facilities dataset](https://data.humdata.org/dataset/ethiopian-health-facilities) (~63% direct match by Facility ID); facilities without an HDX coordinate (mostly drug stores and small private clinics) are excluded from the map.
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(scales)
+
+svc <- read.csv("../etl/data/processed/country_standardized/ethiopia_services_standardized.csv",
+                stringsAsFactors = FALSE) |>
+  dplyr::filter(include_in_analysis == "TRUE" | include_in_analysis == TRUE)
+
+n_facilities <- length(unique(svc$facility_code))
+
+top_services <- svc |>
+  dplyr::distinct(facility_code, service_name) |>
+  dplyr::count(service_name, name = "facilities") |>
+  dplyr::mutate(pct = facilities / n_facilities) |>
+  dplyr::arrange(dplyr::desc(facilities)) |>
+  utils::head(15)
+
+ggplot2::ggplot(top_services,
+                ggplot2::aes(x = facilities,
+                             y = stats::reorder(service_name, facilities))) +
+  ggplot2::geom_col(fill = "#c9a227") +
+  ggplot2::geom_text(ggplot2::aes(label = scales::percent(pct, accuracy = 1)),
+                     hjust = -0.15, size = 3.2, colour = "#3d3d3d") +
+  ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = c(0, 0.18))) +
+  ggplot2::labs(
+    title = "Top 15 services across Ethiopian facilities",
+    subtitle = paste0("Share of ", scales::comma(n_facilities), " facilities offering each service"),
+    x = "Facilities offering service",
+    y = NULL
+  ) +
+  ggplot2::theme_minimal(base_size = 11) +
+  ggplot2::theme(
+    panel.grid.major.y = ggplot2::element_blank(),
+    panel.grid.minor   = ggplot2::element_blank(),
+    plot.title    = ggplot2::element_text(face = "bold", colour = "#3d3d3d"),
+    plot.subtitle = ggplot2::element_text(colour = "#6b6b6b")
+  )
+```
+
+```{r}
+domain_coverage <- svc |>
+  dplyr::distinct(facility_code, service_domain) |>
+  dplyr::count(service_domain, name = "facilities") |>
+  dplyr::mutate(pct = facilities / n_facilities) |>
+  dplyr::arrange(dplyr::desc(facilities))
+
+ggplot2::ggplot(domain_coverage,
+                ggplot2::aes(x = facilities,
+                             y = stats::reorder(service_domain, facilities))) +
+  ggplot2::geom_col(fill = "#5a7a9b") +
+  ggplot2::geom_text(ggplot2::aes(label = scales::percent(pct, accuracy = 1)),
+                     hjust = -0.15, size = 3.2, colour = "#3d3d3d") +
+  ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = c(0, 0.18))) +
+  ggplot2::labs(
+    title = "Facility coverage by service domain",
+    subtitle = "Share of facilities offering at least one service in each domain",
+    x = "Facilities",
+    y = NULL
+  ) +
+  ggplot2::theme_minimal(base_size = 11) +
+  ggplot2::theme(
+    panel.grid.major.y = ggplot2::element_blank(),
+    panel.grid.minor   = ggplot2::element_blank(),
+    plot.title    = ggplot2::element_text(face = "bold", colour = "#3d3d3d"),
+    plot.subtitle = ggplot2::element_text(colour = "#6b6b6b")
+  )
+```
+
+## Data Download {#data-download}
+
+Download Ethiopia datasets here:
+
+-   Facilities &mdash; [CSV](../etl/data/processed/country_standardized/ethiopia_standardized.csv)
+-   Services &mdash; [CSV](../etl/data/processed/country_standardized/ethiopia_services_standardized.csv)
+
+Produced by the [HealthScope ETL pipeline](https://github.com/map-data-engineering/health_facility_etl) from the Ethiopia MoH e-HFR, with coordinates joined from HDX.

@@ -62,6 +62,7 @@ toc: false
     <button class="svc-country-btn" onclick="window._switchCountry('zambia')" id="btn-zambia">Zambia</button>
     <button class="svc-country-btn" onclick="window._switchCountry('malawi')" id="btn-malawi">Malawi</button>
     <button class="svc-country-btn" onclick="window._switchCountry('botswana')" id="btn-botswana">Botswana</button>
+    <button class="svc-country-btn" onclick="window._switchCountry('ethiopia')" id="btn-ethiopia">Ethiopia</button>
   </div>
 
   <div class="svc-status" id="svc-status">Loading data...</div>
@@ -142,6 +143,12 @@ toc: false
       svcFile: ETL_BASE + '/botswana_services_standardized.csv',
       bounds: [[-26.9,-17.7],[20.0,29.4]],
       label: 'Botswana'
+    },
+    ethiopia: {
+      facFile: ETL_BASE + '/ethiopia_standardized.csv',
+      svcFile: ETL_BASE + '/ethiopia_services_standardized.csv',
+      bounds: [[3.0,15.0],[33.0,48.0]],
+      label: 'Ethiopia'
     }
   };
 

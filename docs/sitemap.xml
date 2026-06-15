@@ -6,11 +6,11 @@
   </url>
   <url>
     <loc>https://map.ox.ac.uk/healthscope/services.html</loc>
-    <lastmod>2026-06-01T13:37:17.290Z</lastmod>
+    <lastmod>2026-06-15T06:30:45.754Z</lastmod>
   </url>
   <url>
     <loc>https://map.ox.ac.uk/healthscope/registry.html</loc>
-    <lastmod>2026-06-01T13:39:44.356Z</lastmod>
+    <lastmod>2026-06-15T06:32:26.364Z</lastmod>
   </url>
   <url>
     <loc>https://map.ox.ac.uk/healthscope/kenya.html</loc>
@@ -22,7 +22,7 @@
   </url>
   <url>
     <loc>https://map.ox.ac.uk/healthscope/equity.html</loc>
-    <lastmod>2026-06-01T13:38:42.257Z</lastmod>
+    <lastmod>2026-06-15T06:31:53.714Z</lastmod>
   </url>
   <url>
     <loc>https://map.ox.ac.uk/healthscope/demographics.html</loc>
@@ -74,7 +74,7 @@
   </url>
   <url>
     <loc>https://map.ox.ac.uk/healthscope/find-facility.html</loc>
-    <lastmod>2026-06-01T13:37:58.835Z</lastmod>
+    <lastmod>2026-06-15T06:31:21.673Z</lastmod>
   </url>
   <url>
     <loc>https://map.ox.ac.uk/healthscope/index.html</loc>
@@ -91,5 +91,9 @@
   <url>
     <loc>https://map.ox.ac.uk/healthscope/source-code.html</loc>
     <lastmod>2026-05-15T12:48:34.001Z</lastmod>
+  </url>
+  <url>
+    <loc>https://map.ox.ac.uk/healthscope/countries/Ethiopia.html</loc>
+    <lastmod>2026-06-15T06:33:47.680Z</lastmod>
   </url>
 </urlset>
