@@ -28,26 +28,25 @@ knitr::opts_chunk$set(
 ## Health Facilities Map
 
 ```{r}
-library(sf)
 library(leaflet)
-library(dplyr)
+library(data.table)
 
-hf_sf <- read.csv("../etl/data/processed/country_standardized/ethiopia_standardized.csv") |>
-  dplyr::select(facility_name, facility_type, latitude, longitude, admin1) |>
-  dplyr::mutate(
-    latitude  = as.numeric(latitude),
-    longitude = as.numeric(longitude)
-  ) |>
-  dplyr::filter(
-    !is.na(latitude) & !is.na(longitude),
-    latitude  >= 3   & latitude  <= 15,
-    longitude >= 33  & longitude <= 48
-  ) |>
-  sf::st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+# data.table::fread + select keeps memory low on the 40K-row
+# Ethiopia file; leaflet accepts plain data frames with lng/lat
+# columns, no sf conversion needed.
+hf <- data.table::fread(
+  "../etl/data/processed/country_standardized/ethiopia_standardized.csv",
+  select = c("facility_name", "facility_type", "latitude",
+             "longitude", "admin1")
+)
+hf <- hf[!is.na(latitude) & !is.na(longitude) &
+         latitude  >= 3  & latitude  <= 15 &
+         longitude >= 33 & longitude <= 48]
 
-leaflet(hf_sf) |>
+leaflet(hf) |>
   addTiles() |>
-  addCircleMarkers(radius = 2, stroke = FALSE, fillOpacity = 0.6)
+  addCircleMarkers(lng = ~longitude, lat = ~latitude,
+                   radius = 2, stroke = FALSE, fillOpacity = 0.6)
 ```
 :::
 
@@ -63,7 +62,7 @@ leaflet(hf_sf) |>
 
 ## Overview {#overview}
 
-Ethiopia operates one of the largest health systems in sub-Saharan Africa, organised in a three-tier structure: primary health care (health posts, health centres and primary hospitals), general hospitals, and specialised / tertiary hospitals. The Federal Ministry of Health maintains a centralised e-HFR (electronic Health Facility Registry), with this dataset reflecting a recent extract spanning all 11 regional administrations and city administrations.
+Ethiopia operates one of the largest health systems in sub-Saharan Africa, organised in a three-tier structure: primary health care (health posts, health centres and primary hospitals), general hospitals, and specialised / tertiary hospitals. The Federal Ministry of Health maintains the centralised [Master Facility Registry v2](https://mfrv2.moh.gov.et/#/facility/all), and this dataset reflects a recent CSV export from that registry covering all 11 regional administrations and the two chartered city administrations.
 
 ## Demographics {#demographics}
 
@@ -71,25 +70,20 @@ With a population of approximately 125 million — the second-largest in Africa 
 
 ## Services {#services}
 
-The e-HFR records four service domains per facility — clinical, diagnostic, support, and 24-hour services — which the HealthScope ETL pipeline unnests and maps to the standard 3-level hierarchy used for every other country. Coordinates were joined from the [Humanitarian Data Exchange Ethiopia Health Facilities dataset](https://data.humdata.org/dataset/ethiopian-health-facilities) (~63% direct match by Facility ID); facilities without an HDX coordinate (mostly drug stores and small private clinics) are excluded from the map.
+MFR v2 records four service domains per facility — clinical, diagnostic, support, and 24-hour services — which the HealthScope ETL pipeline unnests and maps to the standard 3-level hierarchy used for every other country. The public MFR v2 CSV export does not include GPS, so coordinates are joined from the openly-licensed WHO AFRO compilation on the [Humanitarian Data Exchange](https://data.humdata.org/dataset/ethiopian-health-facilities) (~63% direct match by Facility ID); facilities without an HDX coordinate (mostly drug stores and small private clinics outside WHO AFRO's traditional coverage scope) are excluded from the map.
 
 ```{r}
 library(dplyr)
 library(ggplot2)
 library(scales)
 
-svc <- read.csv("../etl/data/processed/country_standardized/ethiopia_services_standardized.csv",
-                stringsAsFactors = FALSE) |>
-  dplyr::filter(include_in_analysis == "TRUE" | include_in_analysis == TRUE)
-
-n_facilities <- length(unique(svc$facility_code))
-
-top_services <- svc |>
-  dplyr::distinct(facility_code, service_name) |>
-  dplyr::count(service_name, name = "facilities") |>
-  dplyr::mutate(pct = facilities / n_facilities) |>
-  dplyr::arrange(dplyr::desc(facilities)) |>
-  utils::head(15)
+# Pre-aggregated summary — the full Ethiopia services CSV (84 MB)
+# is too large to load in this render. Regenerate with
+# scripts/aggregate_ethiopia_stats.R after a fresh ETL refresh.
+.eth_summary <- readRDS("../data/Ethiopia/ethiopia_services_summary.rds")
+n_facilities    <- .eth_summary$n_facilities
+top_services    <- .eth_summary$top_services
+domain_coverage <- .eth_summary$domain_coverage
 
 ggplot2::ggplot(top_services,
                 ggplot2::aes(x = facilities,
@@ -114,12 +108,6 @@ ggplot2::ggplot(top_services,
 ```
 
 ```{r}
-domain_coverage <- svc |>
-  dplyr::distinct(facility_code, service_domain) |>
-  dplyr::count(service_domain, name = "facilities") |>
-  dplyr::mutate(pct = facilities / n_facilities) |>
-  dplyr::arrange(dplyr::desc(facilities))
-
 ggplot2::ggplot(domain_coverage,
                 ggplot2::aes(x = facilities,
                              y = stats::reorder(service_domain, facilities))) +
@@ -149,4 +137,4 @@ Download Ethiopia datasets here:
 -   Facilities &mdash; [CSV](../etl/data/processed/country_standardized/ethiopia_standardized.csv)
 -   Services &mdash; [CSV](../etl/data/processed/country_standardized/ethiopia_services_standardized.csv)
 
-Produced by the [HealthScope ETL pipeline](https://github.com/map-data-engineering/health_facility_etl) from the Ethiopia MoH e-HFR, with coordinates joined from HDX.
+Produced by the [HealthScope ETL pipeline](https://github.com/map-data-engineering/health_facility_etl) from the [Ethiopia MoH Master Facility Registry v2](https://mfrv2.moh.gov.et/#/facility/all), with coordinates joined from the WHO AFRO compilation on HDX.
