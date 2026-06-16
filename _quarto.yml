@@ -7,7 +7,7 @@ project:
 
 website:
   title: "HealthScope"
-  site-url: https://map.ox.ac.uk/healthscope
+  site-url: https://map-data-engineering.github.io/healthscope-portal
   back-to-top-navigation: true
 
   page-footer:
