@@ -50,7 +50,7 @@ website:
         href: https://github.com/map-east-africa
         aria-label: "GitHub Repository"
       - icon: globe
-        href: https://map.ox.ac.uk
+        href: https://https://malariaatlas.org/
         aria-label: "Malaria Atlas Project"
 
 format:
