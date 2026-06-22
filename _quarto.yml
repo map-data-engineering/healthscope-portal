@@ -15,9 +15,6 @@ website:
       &copy; 2026 HealthScope &mdash; Malaria Atlas Project, Dar es Salaam Node
 
       Open health facility intelligence for Sub-Saharan Africa
-    right: |
-      [GitHub](https://github.com/map-east-africa){target="_blank"} |
-      [Malaria Atlas Project](https://map.ox.ac.uk){target="_blank"}
     background: "#3d3d3d"
     foreground: light
     border: false
@@ -44,14 +41,6 @@ website:
         href: find-facility.qmd
       - text: "Help"
         href: help.qmd
-
-    right:
-      - icon: github
-        href: https://github.com/map-east-africa
-        aria-label: "GitHub Repository"
-      - icon: globe
-        href: https://https://malariaatlas.org/
-        aria-label: "Malaria Atlas Project"
 
 format:
   html:

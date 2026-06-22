@@ -43,9 +43,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-f76bc8977d73b885a14b8e65af68f455.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-49fda4e1e092d048e05a43e05a16b7bf.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-f76bc8977d73b885a14b8e65af68f455.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-45fdb136ce349644504a03af55a2a0ff.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-f577a83f358d2b451e06e9461c3d0de1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-45fdb136ce349644504a03af55a2a0ff.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -286,18 +286,6 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Help</span></a>
   </li>  
 </ul>
-            <ul class="navbar-nav navbar-nav-scroll ms-auto">
-  <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/map-east-africa"> <i class="bi bi-github" role="img" aria-label="GitHub Repository">
-</i> 
-<span class="menu-text"></span></a>
-  </li>  
-  <li class="nav-item compact">
-    <a class="nav-link" href="https://map.ox.ac.uk"> <i class="bi bi-globe" role="img" aria-label="Malaria Atlas Project">
-</i> 
-<span class="menu-text"></span></a>
-  </li>  
-</ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
@@ -350,9 +338,19 @@ ul.task-list li input[type="checkbox"] {
   .svc-metric{background:#fff;border:1px solid var(--map-border,#e0ddd6);border-radius:8px;padding:1rem;text-align:center;box-shadow:var(--map-shadow);}
   .svc-metric .val{font-family:'Space Grotesk',sans-serif;font-size:1.5rem;font-weight:700;color:var(--map-red,#c9a227);}
   .svc-metric .lbl{font-size:.75rem;color:var(--map-text-muted,#6b6b6b);margin-top:.15rem;}
-  .svc-country-btn{padding:.5rem 1.25rem;border-radius:6px;font-size:.9rem;font-weight:600;border:2px solid var(--map-border,#e0ddd6);background:#fff;cursor:pointer;transition:all .15s;}
-  .svc-country-btn.active{background:var(--map-red,#c9a227);color:#fff;border-color:var(--map-red,#c9a227);}
-  .svc-country-btn:hover:not(.active){border-color:var(--map-red,#c9a227);color:var(--map-red,#c9a227);}
+  .svc-country-picker{display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem;flex-wrap:wrap;}
+  .svc-country-picker__label{font-weight:600;font-size:.85rem;color:var(--map-text-muted,#64748b);text-transform:uppercase;letter-spacing:.04em;}
+  .svc-country-picker__select{
+    appearance:none;-webkit-appearance:none;
+    background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' stroke='%23475569' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>") no-repeat right .85rem center / 12px 8px;
+    border:1.5px solid var(--map-border,#e2e8f0);border-radius:8px;
+    padding:.55rem 2.25rem .55rem .9rem;
+    font-size:.95rem;font-weight:600;color:var(--map-navy,#1a2332);
+    min-width:200px;cursor:pointer;
+    transition:border-color .15s,box-shadow .15s;
+  }
+  .svc-country-picker__select:hover{border-color:var(--map-red,#c9a227);}
+  .svc-country-picker__select:focus{outline:none;border-color:var(--map-red,#c9a227);box-shadow:0 0 0 3px rgba(201,162,39,.18);}
   canvas{max-height:300px!important;}
   @media(max-width:768px){.svc-grid{grid-template-columns:1fr;} #svc-map{height:350px;}}
 </style>
@@ -360,26 +358,26 @@ ul.task-list li input[type="checkbox"] {
 <section class="svc-hero">
   <div style="max-width:1200px;margin:0 auto;">
     
-    <p>Facility-level service data across Tanzania, Kenya, Zambia, Malawi and Botswana — identifying coverage gaps and service deserts across countries</p>
+    <p>Facility-level service data across countries — identifying coverage gaps and service deserts</p>
   </div>
 </section>
 
 <div class="svc-wrap">
 
   <!-- Country selector -->
-  <div style="display:flex;gap:.75rem;margin-bottom:1rem;align-items:center;flex-wrap:wrap;">
-    <span style="font-weight:600;font-size:.9rem;color:var(--map-text-muted);">Country:</span>
-    <button class="svc-country-btn active" onclick="window._switchCountry('tanzania')" id="btn-tanzania">Tanzania</button>
-    <button class="svc-country-btn" onclick="window._switchCountry('kenya')" id="btn-kenya">Kenya</button>
-    <button class="svc-country-btn" onclick="window._switchCountry('zambia')" id="btn-zambia">Zambia</button>
-    <button class="svc-country-btn" onclick="window._switchCountry('malawi')" id="btn-malawi">Malawi</button>
-    <button class="svc-country-btn" onclick="window._switchCountry('botswana')" id="btn-botswana">Botswana</button>
-    <button class="svc-country-btn" onclick="window._switchCountry('ethiopia')" id="btn-ethiopia">Ethiopia</button>
+  <div class="svc-country-picker">
+    <label for="svc-country-select" class="svc-country-picker__label">Country</label>
+    <select id="svc-country-select" class="svc-country-picker__select" onchange="window._switchCountry(this.value)">
+      <option value="tanzania" selected="">Tanzania</option>
+      <option value="kenya">Kenya</option>
+      <option value="zambia">Zambia</option>
+      <option value="malawi">Malawi</option>
+      <option value="botswana">Botswana</option>
+      <option value="ethiopia">Ethiopia</option>
+    </select>
   </div>
 
   <div class="svc-status" id="svc-status">Loading data...</div>
-
-  <div class="svc-topbar" id="svc-topbar"></div>
 
   <div class="svc-card svc-full" style="margin-bottom:1.25rem;">
     <h3 class="anchored">Service Category Coverage <span style="font-weight:400;font-size:.85rem;color:var(--map-text-muted);">— click a category to explore</span></h3>
@@ -489,9 +487,9 @@ ul.task-list li input[type="checkbox"] {
 
   // ── Load a country ──
   function loadCountry(key){
-    // Update button states
-    document.querySelectorAll('.svc-country-btn').forEach(function(b){ b.classList.remove('active'); });
-    document.getElementById('btn-'+key).classList.add('active');
+    // Sync the dropdown (no-op if the change came from the dropdown)
+    var sel = document.getElementById('svc-country-select');
+    if (sel && sel.value !== key) sel.value = key;
     currentCountry = key;
 
     // Check cache
@@ -583,7 +581,6 @@ ul.task-list li input[type="checkbox"] {
 
     setStatus('<strong>'+COUNTRIES[currentCountry].label+':</strong> '+totalFac.toLocaleString()+' facilities, '+totalSvc.toLocaleString()+' with service data ('+totalRecords.toLocaleString()+' records)');
 
-    renderTopbar(totalFac, totalSvc, totalRecords, allCats.length);
     renderHeatgrid(allCats);
     renderCoverageChart(allCats);
     renderMap(selectedCat);
@@ -598,19 +595,6 @@ ul.task-list li input[type="checkbox"] {
     document.getElementById('map-title').innerHTML = 'Map: ' + catLabel;
     document.getElementById('detail-title').innerHTML = 'Specific Services: ' + catLabel;
     document.getElementById('region-chart-title').innerHTML = 'Regional Coverage: ' + catLabel;
-  }
-
-  function renderTopbar(totalFac, totalSvc, totalRecords, catCount){
-    var covPct = totalFac > 0 ? Math.round(totalSvc / totalFac * 100) : 0;
-    var regionSet = new Set();
-    Object.values(facilities).forEach(function(f){ if(f.admin1 && f.admin1!=='admin1') regionSet.add(f.admin1); });
-    document.getElementById('svc-topbar').innerHTML =
-      '<div class="svc-metric"><div class="val">'+totalFac.toLocaleString()+'</div><div class="lbl">Total Facilities</div></div>'+
-      '<div class="svc-metric"><div class="val">'+totalSvc.toLocaleString()+'</div><div class="lbl">With Service Data</div></div>'+
-      '<div class="svc-metric"><div class="val">'+covPct+'%</div><div class="lbl">Service Coverage</div></div>'+
-      '<div class="svc-metric"><div class="val">'+totalRecords.toLocaleString()+'</div><div class="lbl">Service Records</div></div>'+
-      '<div class="svc-metric"><div class="val">'+catCount+'</div><div class="lbl">Service Categories</div></div>'+
-      '<div class="svc-metric"><div class="val">'+regionSet.size+'</div><div class="lbl">Regions / Counties</div></div>';
   }
 
   function renderHeatgrid(allCats){
@@ -865,7 +849,7 @@ ul.task-list li input[type="checkbox"] {
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/map\.ox\.ac\.uk\/healthscope");
+        var filterRegex = new RegExp("https:\/\/map-data-engineering\.github\.io\/healthscope-portal");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -1210,8 +1194,8 @@ ul.task-list li input[type="checkbox"] {
       &nbsp;
     </div>
     <div class="nav-footer-right">
-<p><a href="https://github.com/map-east-africa" target="_blank">GitHub</a> | <a href="https://map.ox.ac.uk" target="_blank">Malaria Atlas Project</a></p>
-</div>
+      &nbsp;
+    </div>
   </div>
 </footer>
 

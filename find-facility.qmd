@@ -290,7 +290,7 @@ execute:
 <section class="finder-hero">
   <div style="max-width: 1200px; margin: 0 auto;">
     <h1>Find Nearby Health Facility</h1>
-    <p>Select a service you need and we'll show you the closest facilities that provide it</p>
+    <p>Select a service you need and get the closest facilities that provide it</p>
   </div>
 </section>
 
@@ -378,13 +378,6 @@ execute:
     <div id="results-list"></div>
   </div>
 
-  <!-- FOOTER NOTE -->
-  <div style="margin-top: 2rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(0, 180, 216, 0.05) 0%, rgba(0, 180, 216, 0.02) 100%); border-radius: 8px; border: 1px solid rgba(201, 162, 39, 0.15);">
-    <p style="margin: 0; font-size: 0.9rem; color: #666;">
-      <strong>Data Coverage:</strong> Tanzania, Kenya, Zambia, Malawi, Botswana and Ethiopia. Botswana exposes only clinical services (infrastructure and staff are filtered out). Ethiopia coordinates joined from HDX cover ~63% of the registry; unmatched facilities (mostly drug stores and private clinics) are excluded from the map.
-      Distances are calculated as straight-line (not road distance). Sources: Tanzania HFR, Kenya KMHFR, Zambia MoH, Malawi MHFR, Botswana MFL, Ethiopia MFR v2 + HDX/WHO AFRO.
-    </p>
-  </div>
 </div>
 
 <script>

@@ -912,3 +912,286 @@ h1, h2, h3, h4 {
   .stats-bar { grid-template-columns: 1fr; }
   .stat-number { font-size: 1.6rem; }
 }
+
+// ═════════════════════════════════════════════════════════════════
+// POLISH LAYER (v2.1)
+// Modernises container/card/button/form/table look without rewriting
+// existing classes. White surfaces, clear shadow & border demarcation,
+// generous focus states, and a mobile-first responsive pass.
+// ═════════════════════════════════════════════════════════════════
+
+// ── Tokens ───────────────────────────────────────────────────────
+$pl-radius:       12px;
+$pl-radius-pill:  9999px;
+$pl-border:       1px solid #e5e7eb;
+$pl-shadow-sm:    0 1px 2px rgba(15, 23, 42, .04), 0 1px 1px rgba(15, 23, 42, .03);
+$pl-shadow-md:    0 4px 8px -2px rgba(15, 23, 42, .06), 0 2px 4px -2px rgba(15, 23, 42, .04);
+$pl-shadow-lg:    0 12px 24px -8px rgba(15, 23, 42, .10), 0 4px 8px -4px rgba(15, 23, 42, .05);
+$pl-transition:   180ms cubic-bezier(.4, 0, .2, 1);
+$pl-focus-ring:   0 0 0 3px rgba(201, 162, 39, .22);
+
+// ── Page surface ─────────────────────────────────────────────────
+body {
+  background: #f8fafc;       // soft gray off-white so white cards pop
+  letter-spacing: -0.005em;
+}
+
+// Quarto's main column should NOT have a background — sections handle it
+main.content,
+.quarto-container,
+.page-columns { background: transparent; }
+
+// ── Hero / page-banner section ───────────────────────────────────
+.page-banner,
+.svc-hero,
+.reg-hero,
+.eq-hero,
+.finder-hero {
+  background: linear-gradient(135deg, $map-navy 0%, lighten($map-navy, 8%) 100%);
+  color: #fff;
+  padding: 3rem 2rem 2.75rem;
+  position: relative;
+  overflow: hidden;
+
+  h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.85rem, 3vw + .5rem, 2.6rem);
+    margin: 0 0 .5rem;
+    color: #fff;
+    letter-spacing: -0.015em;
+  }
+  p {
+    font-size: 1.025rem;
+    opacity: .82;
+    margin: 0;
+    max-width: 720px;
+    line-height: 1.55;
+  }
+}
+
+// ── Container cards (.card-modern, .feature-card, .svc-card, etc.) ─
+.card-modern,
+.feature-card,
+.svc-card,
+.reg-scard,
+.eq-metric,
+.svc-metric,
+.stat-card,
+.step-card,
+.result-card,
+.eq-card,
+.hf-card,
+.eq-chart-card,
+.reg-table-container {
+  background: #ffffff !important;
+  border: $pl-border;
+  border-radius: $pl-radius;
+  box-shadow: $pl-shadow-sm;
+  transition: box-shadow $pl-transition, transform $pl-transition;
+}
+
+// Subtle hover lift for the interactive ones
+.card-modern:hover,
+.feature-card:hover,
+.svc-card:hover {
+  box-shadow: $pl-shadow-md;
+  transform: translateY(-2px);
+}
+
+// ── Buttons (consistent modern look) ─────────────────────────────
+%pl-btn-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .45rem;
+  padding: .65rem 1.25rem;
+  border-radius: $pl-radius-pill;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: .92rem;
+  line-height: 1.2;
+  letter-spacing: .005em;
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background $pl-transition, color $pl-transition,
+              border-color $pl-transition, box-shadow $pl-transition,
+              transform $pl-transition;
+  &:focus-visible { outline: none; box-shadow: $pl-focus-ring; }
+}
+
+.btn-primary,
+.btn-hf-primary,
+.finder-btn,
+.dl-btn,
+.locate-btn {
+  @extend %pl-btn-base;
+  background: $map-red;
+  color: #fff !important;
+  border-color: $map-red;
+  &:hover { background: darken($map-red, 6%); border-color: darken($map-red, 6%); transform: translateY(-1px); box-shadow: $pl-shadow-md; }
+}
+
+.btn-secondary,
+.btn-hf-outline {
+  @extend %pl-btn-base;
+  background: #fff;
+  color: $map-navy !important;
+  border-color: #d4dae4;
+  &:hover { color: $map-red !important; border-color: $map-red; transform: translateY(-1px); }
+}
+
+// Smaller pill chip used for filters / tags
+.reg-pill {
+  @extend %pl-btn-base;
+  padding: .4rem .9rem;
+  font-size: .82rem;
+  background: #f1f5f9;
+  color: $map-text-muted !important;
+  &.active { background: $map-red; color: #fff !important; }
+  &:hover:not(.active) { background: #e2e8f0; }
+}
+
+// ── Forms: selects + text inputs ─────────────────────────────────
+.reg-controls select,
+.finder-controls select,
+.finder-controls input[type="text"],
+.finder-controls input[type="number"],
+.svc-country-picker__select,
+select.form-select,
+.search-input {
+  border: 1.5px solid #d4dae4;
+  border-radius: $pl-radius - 4px;
+  background-color: #fff;
+  padding: .55rem .85rem;
+  font-size: .92rem;
+  color: $map-navy;
+  transition: border-color $pl-transition, box-shadow $pl-transition;
+  &:hover  { border-color: $map-red; }
+  &:focus  { outline: none; border-color: $map-red; box-shadow: $pl-focus-ring; }
+}
+
+// ── Status banners (info / success / error) ──────────────────────
+.reg-status,
+.svc-status,
+.finder-status,
+.eq-note {
+  background: #f8fafc;
+  border: $pl-border;
+  border-left: 4px solid $map-red;
+  border-radius: $pl-radius;
+  padding: .85rem 1.1rem;
+  font-size: .9rem;
+  color: $map-text;
+  box-shadow: $pl-shadow-sm;
+}
+.finder-status.success { border-left-color: #16a34a; background: #f0fdf4; color: #14532d; }
+.finder-status.error   { border-left-color: #dc2626; background: #fef2f2; color: #7f1d1d; }
+
+// ── Tables (registry, methodology, etc.) ─────────────────────────
+#reg-table,
+table.table-sm,
+.eq-region-table,
+.data-section table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: .9rem;
+  background: #fff;
+  border-radius: $pl-radius;
+  overflow: hidden;
+  box-shadow: $pl-shadow-sm;
+  border: $pl-border;
+
+  thead { background: $map-navy; color: #fff; }
+  th { padding: .8rem .9rem; font-weight: 600; text-align: left; }
+  td { padding: .7rem .9rem; border-top: 1px solid #f1f5f9; }
+  tbody tr:hover { background: rgba(201, 162, 39, .04); }
+}
+
+// ── Maps (Leaflet panel) ─────────────────────────────────────────
+.leaflet-container,
+#reg-map,
+#svc-map,
+#finder-map,
+#eq-map {
+  border-radius: $pl-radius;
+  border: $pl-border;
+  box-shadow: $pl-shadow-md;
+}
+
+// ── Footer ───────────────────────────────────────────────────────
+.page-footer {
+  font-size: .85rem;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
+// ── Navbar refinement ────────────────────────────────────────────
+.navbar {
+  border-bottom: 0;
+  box-shadow: $pl-shadow-sm;
+  .navbar-brand img { max-height: 32px; }
+  .nav-link {
+    font-weight: 500;
+    font-size: .94rem;
+    padding-inline: .9rem !important;
+    transition: color $pl-transition;
+    &:hover { color: $map-red !important; }
+  }
+}
+
+// ── Responsive: keep cards readable on small screens ─────────────
+@media (max-width: 992px) {
+  .reg-controls,
+  .finder-controls,
+  .svc-country-picker {
+    flex-direction: column;
+    align-items: stretch !important;
+    .ctrl,
+    .reg-controls select,
+    .search-input,
+    .svc-country-picker__select {
+      width: 100%;
+      min-width: 0;
+    }
+  }
+  .svc-grid,
+  .reg-summary,
+  .svc-topbar { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 640px) {
+  .page-banner,
+  .svc-hero,
+  .reg-hero,
+  .eq-hero,
+  .finder-hero { padding: 2rem 1.25rem 1.75rem; }
+
+  .svc-grid,
+  .reg-summary,
+  .svc-topbar { grid-template-columns: 1fr; }
+
+  .card-modern,
+  .feature-card,
+  .svc-card { padding: 1.25rem; }
+
+  .btn-primary,
+  .btn-secondary,
+  .btn-hf-primary,
+  .btn-hf-outline,
+  .finder-btn,
+  .locate-btn,
+  .dl-btn { width: 100%; }
+}
+
+// ── Focus accessibility ──────────────────────────────────────────
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid $map-red;
+  outline-offset: 2px;
+  border-radius: 4px;
+}

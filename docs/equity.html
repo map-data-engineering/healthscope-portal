@@ -43,9 +43,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-f76bc8977d73b885a14b8e65af68f455.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-49fda4e1e092d048e05a43e05a16b7bf.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-f76bc8977d73b885a14b8e65af68f455.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-45fdb136ce349644504a03af55a2a0ff.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-f577a83f358d2b451e06e9461c3d0de1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-45fdb136ce349644504a03af55a2a0ff.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -286,18 +286,6 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Help</span></a>
   </li>  
 </ul>
-            <ul class="navbar-nav navbar-nav-scroll ms-auto">
-  <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/map-east-africa"> <i class="bi bi-github" role="img" aria-label="GitHub Repository">
-</i> 
-<span class="menu-text"></span></a>
-  </li>  
-  <li class="nav-item compact">
-    <a class="nav-link" href="https://map.ox.ac.uk"> <i class="bi bi-globe" role="img" aria-label="Malaria Atlas Project">
-</i> 
-<span class="menu-text"></span></a>
-  </li>  
-</ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
@@ -311,7 +299,7 @@ ul.task-list li input[type="checkbox"] {
 <!-- margin-sidebar -->
     
 <!-- main -->
-<main class="content column-page" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><h1 class="title display-7">Equity &amp; Access Dashboard</h1></header>
+<main class="content column-page" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><h1 class="title display-7">General Information</h1></header>
 
 
 
@@ -351,7 +339,7 @@ ul.task-list li input[type="checkbox"] {
 <section class="eq-hero">
   <div style="max-width:1200px;margin:0 auto;">
     
-    <p>Population-weighted access metrics exposing inequities masked by aggregate facility counts</p>
+    <p>Country-level descriptive statistics derived from the standardised registry — facility counts, type mix, ownership split, and regional distribution.</p>
   </div>
 </section>
 
@@ -412,9 +400,6 @@ ul.task-list li input[type="checkbox"] {
     </div>
   </div>
 
-  <div class="eq-note">
-    <strong>Note:</strong> Equity metrics currently reflect facility counts and distribution by region. Phase 2 will integrate WorldPop population rasters to compute population-weighted access scores, urban/rural parity indices, and travel-time catchment analysis.
-  </div>
 </div>
 
 <script>
@@ -486,9 +471,7 @@ ul.task-list li input[type="checkbox"] {
       '<div class="eq-metric"><div class="val">'+total.toLocaleString()+'</div><div class="lbl">Total Facilities</div></div>'+
       '<div class="eq-metric"><div class="val">'+regionCount+'</div><div class="lbl">Regions</div></div>'+
       '<div class="eq-metric"><div class="val">'+Math.round(publicCount/total*100)+'%</div><div class="lbl">Public Ownership</div></div>'+
-      '<div class="eq-metric"><div class="val">'+Math.round(withCoords/total*100)+'%</div><div class="lbl">Geocoded</div></div>'+
-      '<div class="eq-metric"><div class="val">'+ratio+'x</div><div class="lbl">Max/Min Region Ratio</div></div>'+
-      '<div class="eq-metric"><div class="val">'+avgPerRegion+'</div><div class="lbl">Avg per Region</div></div>';
+      '<div class="eq-metric"><div class="val">'+Math.round(withCoords/total*100)+'%</div><div class="lbl">Geocoded</div></div>';
 
     // Type chart
     var types = {};
@@ -637,7 +620,7 @@ ul.task-list li input[type="checkbox"] {
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/map\.ox\.ac\.uk\/healthscope");
+        var filterRegex = new RegExp("https:\/\/map-data-engineering\.github\.io\/healthscope-portal");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -982,8 +965,8 @@ ul.task-list li input[type="checkbox"] {
       &nbsp;
     </div>
     <div class="nav-footer-right">
-<p><a href="https://github.com/map-east-africa" target="_blank">GitHub</a> | <a href="https://map.ox.ac.uk" target="_blank">Malaria Atlas Project</a></p>
-</div>
+      &nbsp;
+    </div>
   </div>
 </footer>
 

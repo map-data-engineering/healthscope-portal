@@ -38,8 +38,8 @@ toc: false
 
 <section class="eq-hero">
   <div style="max-width:1200px;margin:0 auto;">
-    <h1>Equity &amp; Access Dashboard</h1>
-    <p>Population-weighted access metrics exposing inequities masked by aggregate facility counts</p>
+    <h1>General Information</h1>
+    <p>Country-level descriptive statistics derived from the standardised registry &mdash; facility counts, type mix, ownership split, and regional distribution.</p>
   </div>
 </section>
 
@@ -90,9 +90,6 @@ toc: false
     </div>
   </div>
 
-  <div class="eq-note">
-    <strong>Note:</strong> Equity metrics currently reflect facility counts and distribution by region. Phase 2 will integrate WorldPop population rasters to compute population-weighted access scores, urban/rural parity indices, and travel-time catchment analysis.
-  </div>
 </div>
 
 <script>
@@ -164,9 +161,7 @@ toc: false
       '<div class="eq-metric"><div class="val">'+total.toLocaleString()+'</div><div class="lbl">Total Facilities</div></div>'+
       '<div class="eq-metric"><div class="val">'+regionCount+'</div><div class="lbl">Regions</div></div>'+
       '<div class="eq-metric"><div class="val">'+Math.round(publicCount/total*100)+'%</div><div class="lbl">Public Ownership</div></div>'+
-      '<div class="eq-metric"><div class="val">'+Math.round(withCoords/total*100)+'%</div><div class="lbl">Geocoded</div></div>'+
-      '<div class="eq-metric"><div class="val">'+ratio+'x</div><div class="lbl">Max/Min Region Ratio</div></div>'+
-      '<div class="eq-metric"><div class="val">'+avgPerRegion+'</div><div class="lbl">Avg per Region</div></div>';
+      '<div class="eq-metric"><div class="val">'+Math.round(withCoords/total*100)+'%</div><div class="lbl">Geocoded</div></div>';
 
     // Type chart
     var types = {};

@@ -61,7 +61,7 @@ toc: false
     <div class="faq-content">
       Navigate to the <a href="registry.html" style="color:var(--map-red);text-decoration:none;font-weight:600;">Country Data</a> page and select your country of interest.
       You can explore the interactive map to view facility locations and then download the full dataset in CSV or GeoJSON format.
-      All data is freely available under the CC BY 4.0 license.
+      All data is openly downloadable.
     </div>
   </div>
 
@@ -90,17 +90,6 @@ toc: false
     </div>
   </div>
 
-  <div class="faq-item">
-    <div class="faq-title" onclick="this.parentElement.classList.toggle('active')">
-      <span>What is the license for this data?</span>
-      <span class="faq-toggle">&#9660;</span>
-    </div>
-    <div class="faq-content">
-      All health facilities data is licensed under the
-      <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" style="color:var(--map-red);text-decoration:none;font-weight:600;">Creative Commons Attribution 4.0 International (CC BY 4.0)</a> license.
-      You are free to use, share, and adapt the data with proper attribution. Please cite the HealthScope when using our data in publications or projects.
-    </div>
-  </div>
 
   <div class="faq-item">
     <div class="faq-title" onclick="this.parentElement.classList.toggle('active')">

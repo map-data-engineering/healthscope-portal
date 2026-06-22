@@ -43,9 +43,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-f76bc8977d73b885a14b8e65af68f455.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-49fda4e1e092d048e05a43e05a16b7bf.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-f76bc8977d73b885a14b8e65af68f455.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-45fdb136ce349644504a03af55a2a0ff.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-f577a83f358d2b451e06e9461c3d0de1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-45fdb136ce349644504a03af55a2a0ff.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -284,18 +284,6 @@ ul.task-list li input[type="checkbox"] {
   <li class="nav-item">
     <a class="nav-link" href="./help.html"> 
 <span class="menu-text">Help</span></a>
-  </li>  
-</ul>
-            <ul class="navbar-nav navbar-nav-scroll ms-auto">
-  <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/map-east-africa"> <i class="bi bi-github" role="img" aria-label="GitHub Repository">
-</i> 
-<span class="menu-text"></span></a>
-  </li>  
-  <li class="nav-item compact">
-    <a class="nav-link" href="https://map.ox.ac.uk"> <i class="bi bi-globe" role="img" aria-label="Malaria Atlas Project">
-</i> 
-<span class="menu-text"></span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -598,7 +586,7 @@ ul.task-list li input[type="checkbox"] {
 <section class="finder-hero">
   <div style="max-width: 1200px; margin: 0 auto;">
     
-    <p>Select a service you need and we'll show you the closest facilities that provide it</p>
+    <p>Select a service you need and get the closest facilities that provide it</p>
   </div>
 </section>
 
@@ -686,13 +674,6 @@ ul.task-list li input[type="checkbox"] {
     <div id="results-list"></div>
   </div>
 
-  <!-- FOOTER NOTE -->
-  <div style="margin-top: 2rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(0, 180, 216, 0.05) 0%, rgba(0, 180, 216, 0.02) 100%); border-radius: 8px; border: 1px solid rgba(201, 162, 39, 0.15);">
-    <p style="margin: 0; font-size: 0.9rem; color: #666;">
-      <strong>Data Coverage:</strong> Tanzania, Kenya, Zambia, Malawi, Botswana and Ethiopia. Botswana exposes only clinical services (infrastructure and staff are filtered out). Ethiopia coordinates joined from HDX cover ~63% of the registry; unmatched facilities (mostly drug stores and private clinics) are excluded from the map.
-      Distances are calculated as straight-line (not road distance). Sources: Tanzania HFR, Kenya KMHFR, Zambia MoH, Malawi MHFR, Botswana MFL, Ethiopia MFR v2 + HDX/WHO AFRO.
-    </p>
-  </div>
 </div>
 
 <script>
@@ -1199,7 +1180,7 @@ ul.task-list li input[type="checkbox"] {
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/map\.ox\.ac\.uk\/healthscope");
+        var filterRegex = new RegExp("https:\/\/map-data-engineering\.github\.io\/healthscope-portal");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -1544,8 +1525,8 @@ ul.task-list li input[type="checkbox"] {
       &nbsp;
     </div>
     <div class="nav-footer-right">
-<p><a href="https://github.com/map-east-africa" target="_blank">GitHub</a> | <a href="https://map.ox.ac.uk" target="_blank">Malaria Atlas Project</a></p>
-</div>
+      &nbsp;
+    </div>
   </div>
 </footer>
 
