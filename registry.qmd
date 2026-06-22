@@ -6,10 +6,7 @@ toc: false
 
 ```{=html}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"/>
-<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
 
 <style>
@@ -54,7 +51,7 @@ toc: false
 <section class="reg-hero">
   <div style="max-width:1400px;margin:0 auto;">
     <h1>Facility Registry Explorer</h1>
-    <p>95,624 health facilities across 7 Sub-Saharan African countries &mdash; standardized, quality-assessed, and open</p>
+    <p>Coverage at a glance &mdash; the eight countries the HealthScope registry currently reaches, with searchable facility-level detail below</p>
   </div>
 </section>
 
@@ -102,7 +99,7 @@ toc: false
   </div>
 
   <!-- Status -->
-  <div class="reg-status" id="reg-status">Loading facility data from 6 countries...</div>
+  <div class="reg-status" id="reg-status">Loading facility data from 8 countries...</div>
 
   <!-- Summary cards -->
   <div class="reg-summary" id="reg-summary"></div>
@@ -133,29 +130,84 @@ toc: false
 
 <script>
 (function(){
+  var ETL_BASE = 'etl/data/processed/country_standardized';
   var COUNTRIES = {
-    kenya:    {file:'etl/data/processed/country_standardized/kenya_standardized.csv', label:'Kenya', color:'#e05930', bounds:[-4.7,5.5,33.9,41.9]},
-    tanzania: {file:'data/tanzania/tanzania_standardized.csv', label:'Tanzania', color:'#c9a227', bounds:[-11.8,-1.0,29.2,40.6]},
-    nigeria:  {file:'data/Nigeria/nigeria_standardized.csv',   label:'Nigeria',  color:'#2563eb', bounds:[4,14,2.7,14.7]},
-    uganda:   {file:'data/Uganda/uganda_standardized.csv',     label:'Uganda',   color:'#059669', bounds:[-1.5,4.3,29.5,35.1]},
-    zambia:   {file:'data/Zambia/zambia_standardized.csv',     label:'Zambia',   color:'#f59e0b', bounds:[-18.1,-8.2,21.9,33.7]},
-    malawi:   {file:'data/Malawi/malawi_standardized.csv',     label:'Malawi',   color:'#8b5cf6', bounds:[-17.2,-9.3,32.6,36]},
-    botswana: {file:'etl/data/processed/country_standardized/botswana_standardized.csv', label:'Botswana', color:'#06b6d4', bounds:[-27,-17.7,19.9,29.4]},
-    ethiopia: {file:'etl/data/processed/country_standardized/ethiopia_standardized.csv', label:'Ethiopia', color:'#10b981', bounds:[3.0,15.0,33.0,48.0]}
+    kenya:    {file: ETL_BASE + '/kenya_standardized.csv',    label:'Kenya',    color:'#e05930', bounds:[-4.7, 5.5, 33.9,41.9]},
+    tanzania: {file: ETL_BASE + '/tanzania_standardized.csv', label:'Tanzania', color:'#c9a227', bounds:[-11.8,-1.0,29.2,40.6]},
+    nigeria:  {file: ETL_BASE + '/nigeria_standardized.csv',  label:'Nigeria',  color:'#2563eb', bounds:[ 4,  14,  2.7,14.7]},
+    uganda:   {file: ETL_BASE + '/uganda_standardized.csv',   label:'Uganda',   color:'#059669', bounds:[-1.5, 4.3,29.5,35.1]},
+    zambia:   {file: ETL_BASE + '/zambia_standardized.csv',   label:'Zambia',   color:'#f59e0b', bounds:[-18.1,-8.2,21.9,33.7]},
+    malawi:   {file: ETL_BASE + '/malawi_standardized.csv',   label:'Malawi',   color:'#8b5cf6', bounds:[-17.2,-9.3,32.6,36.0]},
+    botswana: {file: ETL_BASE + '/botswana_standardized.csv', label:'Botswana', color:'#06b6d4', bounds:[-27, -17.7,19.9,29.4]},
+    ethiopia: {file: ETL_BASE + '/ethiopia_standardized.csv', label:'Ethiopia', color:'#10b981', bounds:[ 3.0,15.0,33.0,48.0]}
   };
 
   var allFacilities = [];
   var filtered = [];
-  var map, clusterGroup;
+  var map, coverageLayer;
   var typesSet = new Set(), ownershipSet = new Set();
   var loadedCount = 0, failedCount = 0, totalCountries = Object.keys(COUNTRIES).length;
+  // Country-name strings as they appear in the world GeoJSON
+  // (Natural Earth via johan/world.geo.json), keyed to our local key.
+  var COUNTRY_NAMES = {
+    kenya: 'Kenya', tanzania: 'United Republic of Tanzania', nigeria: 'Nigeria',
+    uganda: 'Uganda', zambia: 'Zambia', malawi: 'Malawi', botswana: 'Botswana',
+    ethiopia: 'Ethiopia'
+  };
 
-  map = L.map('reg-map').setView([-2, 28], 4);
+  map = L.map('reg-map').setView([4, 25], 3);
   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
-    attribution:'&copy; OpenStreetMap &copy; CARTO', maxZoom:18
+    attribution:'&copy; OpenStreetMap &copy; CARTO', maxZoom:8
   }).addTo(map);
-  clusterGroup = L.markerClusterGroup({maxClusterRadius:50, spiderfyOnMaxZoom:true, showCoverageOnHover:false});
-  map.addLayer(clusterGroup);
+
+  // Load world country boundaries once and overlay only our covered set
+  fetch('https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json')
+    .then(function(r){return r.json();})
+    .then(function(geojson){
+      // Build reverse map: GeoJSON name -> our country key
+      var nameToKey = {};
+      Object.keys(COUNTRY_NAMES).forEach(function(k){ nameToKey[COUNTRY_NAMES[k]] = k; });
+      coverageLayer = L.geoJSON(geojson, {
+        filter: function(feature){ return !!nameToKey[feature.properties.name]; },
+        style: function(feature){
+          var key = nameToKey[feature.properties.name];
+          var col = COUNTRIES[key].color;
+          return {color: col, weight: 1.5, opacity: 0.85, fillColor: col, fillOpacity: 0.35};
+        },
+        onEachFeature: function(feature, layer){
+          layer._countryKey = nameToKey[feature.properties.name];
+          layer.on('mouseover', function(){ this.setStyle({fillOpacity: 0.6, weight: 2.5}); });
+          layer.on('mouseout',  function(){ coverageLayer.resetStyle(this); });
+          layer.on('click', function(){
+            document.getElementById('f-country').value = this._countryKey;
+            applyFilters();
+          });
+        }
+      }).addTo(map);
+      refreshCoveragePopups();
+      map.fitBounds(coverageLayer.getBounds(), {padding:[20,20]});
+    })
+    .catch(function(err){ console.error('GeoJSON load failed:', err); });
+
+  function refreshCoveragePopups(){
+    if (!coverageLayer) return;
+    // Compute current count per country from `filtered` (or `allFacilities` if no filter yet)
+    var src = filtered.length > 0 ? filtered : allFacilities;
+    var counts = {};
+    src.forEach(function(f){ counts[f._country] = (counts[f._country] || 0) + 1; });
+    coverageLayer.eachLayer(function(layer){
+      var k = layer._countryKey;
+      var label = COUNTRIES[k].label;
+      var n = counts[k] || 0;
+      layer.bindPopup(
+        '<div style="min-width:180px;">' +
+        '<strong style="font-size:1.05rem;color:'+COUNTRIES[k].color+';">'+label+'</strong><br/>' +
+        '<span style="color:#6b6b6b;">Facilities in registry:</span> <strong>'+n.toLocaleString()+'</strong><br/>' +
+        '<a href="countries/'+(k.charAt(0).toUpperCase()+k.slice(1))+'.html" style="color:'+COUNTRIES[k].color+';text-decoration:none;font-weight:600;">Open country page &rarr;</a>' +
+        '</div>'
+      );
+    });
+  }
 
   function countryDone(key, success){
     if(success) loadedCount++; else failedCount++;
@@ -223,10 +275,11 @@ toc: false
   }
 
   function updateStatus(){
-    var withCoords = filtered.filter(function(f){return f._lat!==null;}).length;
+    var countries = new Set();
+    filtered.forEach(function(f){ countries.add(f._country); });
     document.getElementById('reg-status').innerHTML =
-      '<strong>' + filtered.length.toLocaleString() + '</strong> facilities matched &mdash; ' +
-      '<strong>' + withCoords.toLocaleString() + '</strong> with valid coordinates shown on map';
+      '<strong>' + filtered.length.toLocaleString() + '</strong> facilities matched across <strong>' +
+      countries.size + '</strong> covered countries &mdash; click a country on the map for details, or scroll for the searchable table';
   }
 
   function updateSummary(){
@@ -246,30 +299,9 @@ toc: false
   }
 
   function updateMap(){
-    clusterGroup.clearLayers();
-    var mapped = filtered.filter(function(f){return f._lat!==null && f._lon!==null;});
-
-    mapped.forEach(function(f){
-      var m = L.circleMarker([f._lat, f._lon],{
-        radius:6, color:f._color, weight:1.5, opacity:0.9,
-        fillColor:f._color, fillOpacity:0.6
-      });
-      m.bindPopup(
-        '<div style="min-width:200px;">'+
-        '<strong>'+f.facility_name+'</strong><br/>'+
-        '<span style="color:#6b6b6b;">Type:</span> '+(f.facility_type||'N/A')+'<br/>'+
-        '<span style="color:#6b6b6b;">Ownership:</span> '+(f.facility_ownership||'N/A')+'<br/>'+
-        '<span style="color:#6b6b6b;">Region:</span> '+(f.admin1||'N/A')+'<br/>'+
-        '<span style="color:#6b6b6b;">Country:</span> '+f._countryLabel+'<br/>'+
-        '<span style="color:#6b6b6b;">Status:</span> '+(f.status||'N/A')+
-        '</div>'
-      );
-      clusterGroup.addLayer(m);
-    });
-
-    if(mapped.length > 0){
-      map.fitBounds(clusterGroup.getBounds(), {padding:[40,40]});
-    }
+    // Country-coverage view: refresh popup counts to reflect the
+    // current filter; the polygons themselves never change.
+    refreshCoveragePopups();
   }
 
   function updateTable(){

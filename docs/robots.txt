@@ -1,1 +1,1 @@
-Sitemap: https://map.ox.ac.uk/healthscope/sitemap.xml
+Sitemap: https://map-data-engineering.github.io/healthscope-portal/sitemap.xml

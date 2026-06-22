@@ -48,16 +48,16 @@ toc: false
 <!-- ═══════════════ LIVE STATS ═══════════════ -->
 <section class="stats-bar">
   <div class="stat-item">
-    <span class="stat-number">95,624</span>
+    <span class="stat-number">136,734</span>
     <span class="stat-label">Facilities in Registry</span>
   </div>
   <div class="stat-item">
-    <span class="stat-number">7</span>
+    <span class="stat-number">8</span>
     <span class="stat-label">Countries Live</span>
   </div>
   <div class="stat-item">
-    <span class="stat-number">18</span>
-    <span class="stat-label">Service Categories Tracked</span>
+    <span class="stat-number">7</span>
+    <span class="stat-label">Service Domains Tracked</span>
   </div>
   <div class="stat-item">
     <span class="stat-number">MoH-Sourced</span>
@@ -81,7 +81,7 @@ toc: false
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c9a227" stroke-width="2"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/></svg>
         </div>
         <h3>Facility Registry Lake</h3>
-        <p>Standardized facility data from MoH sources across 6 SSA countries. Multi-country harmonized schema with 78,000+ facilities &mdash; directly from Ministries, not aggregators.</p>
+        <p>Standardized facility data from MoH sources across 8 SSA countries. Multi-country harmonized schema with 136,000+ facilities &mdash; directly from Ministries, not aggregators.</p>
         <a href="registry.html">Explore Registry &rarr;</a>
       </div>
 
@@ -128,7 +128,10 @@ toc: false
         <p style="font-size:0.85rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--map-red,#c9a227);font-weight:600;margin-bottom:0.5rem;">ETL Pipeline v2</p>
         <h2 style="font-family:'Space Grotesk',sans-serif;font-size:1.8rem;margin-bottom:1rem;color:var(--map-navy,#1a2332);">MoH Data &rarr; Standardized Intelligence</h2>
         <p style="color:var(--map-text-muted,#64748b);line-height:1.8;">
-          Raw facility data from Ministry of Health registries is processed through a validated 7-step ETL pipeline: extraction, column standardization, coordinate cleaning, date parsing, schema enforcement, quality flagging, and versioned export.
+          Raw facility data from Ministry of Health registries is processed in three steps:
+          <strong>Extract</strong> &mdash; pull the latest registry CSV / API payload per country.
+          <strong>Transform</strong> &mdash; standardise columns, validate coordinates, and map each raw service name to the canonical 7-domain hierarchy via per-country crosswalks.
+          <strong>Load</strong> &mdash; publish versioned per-country CSVs that the portal consumes directly.
         </p>
         <div style="display:flex;gap:0.75rem;margin-top:1.5rem;flex-wrap:wrap;">
           <a href="about.html" class="btn-hf-primary">Architecture &amp; Methods</a>
@@ -177,6 +180,12 @@ toc: false
           <div>
             <div class="about-stat-value">1,076</div>
             <div class="about-stat-label">Botswana</div>
+          </div>
+        </div>
+        <div class="about-stat">
+          <div>
+            <div class="about-stat-value">40,035</div>
+            <div class="about-stat-label">Ethiopia</div>
           </div>
         </div>
       </div>

@@ -32,8 +32,8 @@ available in the [GitHub repository](https://github.com/myalla-christina/hf-data
 ### Secondary Sources
 
 Where the MFL has coverage gaps we supplement with DHIS2 organisation unit exports,
-WHO SARA surveys, OpenStreetMap for coordinate cross-validation, and HDX historical
-snapshots.
+OpenStreetMap for coordinate cross-validation, and HDX historical snapshots
+(e.g. the WHO AFRO Ethiopia coordinate compilation).
 
 ---
 

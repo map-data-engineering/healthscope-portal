@@ -421,7 +421,7 @@ ul.task-list li input[type="checkbox"] {
     </div>
     <div class="faq-content">
       Core facility lists are updated quarterly when new data sources become available. Service availability data
-      is updated annually based on WHO SARA assessments and DHIS2 submissions. Coordinate validation is ongoing. Each dataset release includes
+      is refreshed when Ministries of Health publish new registry exports. Coordinate validation is ongoing. Each dataset release includes
       a version number and changelog so you can track what has changed.
     </div>
   </div>
@@ -550,7 +550,7 @@ ul.task-list li input[type="checkbox"] {
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/map\.ox\.ac\.uk\/healthscope");
+        var filterRegex = new RegExp("https:\/\/map-data-engineering\.github\.io\/healthscope-portal");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
