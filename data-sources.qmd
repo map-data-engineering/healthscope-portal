@@ -37,23 +37,6 @@ toc: false
       <a href="https://dhis2.org" target="_blank" class="btn-secondary" style="text-align: center; text-decoration: none;">Visit Source</a>
     </div>
 
-    <!-- WHO SARA -->
-    <div class="card-modern" style="border-top: 4px solid var(--map-red, #c9a227); display: flex; flex-direction: column;">
-      <div style="text-align: center; margin-bottom: 1rem;">
-        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, rgba(201, 162, 39, 0.15) 0%, rgba(201, 162, 39, 0.05) 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; border: 2px solid rgba(201, 162, 39, 0.3); font-size: 2rem;">
-          🏥
-        </div>
-      </div>
-      <h3 style="margin-top: 0; text-align: center; color: var(--map-red, #c9a227);">WHO SARA</h3>
-      <p style="color: #666; flex: 1;">Service Availability and Readiness Assessment (SARA) surveys conducted by WHO. Provides facility-level service capabilities and infrastructure data.</p>
-      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem;">
-        <span style="background: rgba(201, 162, 39, 0.1); color: var(--map-red, #c9a227); padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">Service Data</span>
-        <span style="background: rgba(201, 162, 39, 0.1); color: var(--map-red, #c9a227); padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">Multi-Country</span>
-        <span style="background: rgba(201, 162, 39, 0.1); color: var(--map-red, #c9a227); padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">Validated</span>
-      </div>
-      <a href="https://www.who.int/data/sara" target="_blank" class="btn-secondary" style="text-align: center; text-decoration: none;">Visit Source</a>
-    </div>
-
     <!-- National MoH Registries -->
     <div class="card-modern" style="border-top: 4px solid var(--map-red, #c9a227); display: flex; flex-direction: column;">
       <div style="text-align: center; margin-bottom: 1rem;">
@@ -131,7 +114,7 @@ toc: false
   <p style="color: #666; margin-bottom: 1rem;">Our datasets follow a structured update schedule to ensure accuracy and timeliness:</p>
   <ul style="color: #666; line-height: 1.8;">
     <li><strong>Core Facility Lists:</strong> Updated quarterly or when new data sources become available</li>
-    <li><strong>Service Availability:</strong> Updated annually based on WHO SARA and DHIS2 submissions</li>
+    <li><strong>Service Availability:</strong> Refreshed when MoH registries publish new exports</li>
     <li><strong>Coordinate Validation:</strong> Continuously verified against reference datasets</li>
     <li><strong>Quality Reports:</strong> Regenerated with each dataset version release</li>
   </ul>
@@ -141,14 +124,10 @@ toc: false
 <section style="max-width: 1200px; margin: 3rem auto; padding: 0 2rem; margin-bottom: 3rem;">
   <h2>Data Harmonization Methodology</h2>
   <p style="color: #666; line-height: 1.8;">
-    All source datasets are harmonized to a standard schema capturing: unique facility ID, official name, administrative hierarchy 
-    (country/region/district), facility type (hospital/clinic/health center), ownership (public/private/NGO), GPS coordinates, 
-    bed capacity, operational status, last verification date, and service availability indicators. Quality assessment includes 
-    duplicate detection, coordinate validation, admin hierarchy consistency, and temporal completeness checks. Full documentation 
-    is available in our <a href="source-code.html" style="color: var(--map-red, #c9a227); text-decoration: none; font-weight: 600;">GitHub repository</a>.
+    All source datasets are harmonized to a standard schema capturing: unique facility ID, official name, administrative hierarchy
+    (country/region/district), facility type (hospital/clinic/health center), ownership (public/private/NGO), GPS coordinates,
+    bed capacity, operational status, last verification date, and service availability indicators. Quality assessment includes
+    duplicate detection, coordinate validation, admin hierarchy consistency, and temporal completeness checks.
   </p>
-  <div style="text-align: center; margin-top: 2rem;">
-    <a href="source-code.html" class="btn-primary">View Full Methods & Code</a>
-  </div>
 </section>
 ```

@@ -74,7 +74,7 @@
   </url>
   <url>
     <loc>https://map.ox.ac.uk/healthscope/find-facility.html</loc>
-    <lastmod>2026-06-15T06:31:21.673Z</lastmod>
+    <lastmod>2026-06-15T08:05:49.710Z</lastmod>
   </url>
   <url>
     <loc>https://map.ox.ac.uk/healthscope/index.html</loc>
@@ -94,6 +94,30 @@
   </url>
   <url>
     <loc>https://map.ox.ac.uk/healthscope/countries/Ethiopia.html</loc>
-    <lastmod>2026-06-15T06:33:47.680Z</lastmod>
+    <lastmod>2026-06-15T08:28:58.632Z</lastmod>
+  </url>
+  <url>
+    <loc>https://map-data-engineering.github.io/healthscope-portal/index.html</loc>
+    <lastmod>2026-06-21T21:07:06.335Z</lastmod>
+  </url>
+  <url>
+    <loc>https://map-data-engineering.github.io/healthscope-portal/about.html</loc>
+    <lastmod>2026-06-22T03:14:24.426Z</lastmod>
+  </url>
+  <url>
+    <loc>https://map-data-engineering.github.io/healthscope-portal/registry.html</loc>
+    <lastmod>2026-06-22T03:34:22.047Z</lastmod>
+  </url>
+  <url>
+    <loc>https://map-data-engineering.github.io/healthscope-portal/data-sources.html</loc>
+    <lastmod>2026-06-22T03:35:06.241Z</lastmod>
+  </url>
+  <url>
+    <loc>https://map-data-engineering.github.io/healthscope-portal/help.html</loc>
+    <lastmod>2026-06-22T03:22:50.507Z</lastmod>
+  </url>
+  <url>
+    <loc>https://map-data-engineering.github.io/healthscope-portal/methodology.html</loc>
+    <lastmod>2026-06-22T03:26:00.915Z</lastmod>
   </url>
 </urlset>

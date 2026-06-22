@@ -109,7 +109,7 @@ toc: false
     </div>
     <div class="faq-content">
       Core facility lists are updated quarterly when new data sources become available. Service availability data
-      is updated annually based on WHO SARA assessments and DHIS2 submissions. Coordinate validation is ongoing. Each dataset release includes
+      is refreshed when Ministries of Health publish new registry exports. Coordinate validation is ongoing. Each dataset release includes
       a version number and changelog so you can track what has changed.
     </div>
   </div>

@@ -28,7 +28,7 @@ Current approaches to health facility mapping focus primarily on documenting fac
 - **Service-level intelligence** -- mapping of what services exist where
 - **General information at scale** -- population-weighted access metrics and facility distribution analysis
 
-HealthScope addresses these gaps within a lightweight, open-source, zero-server infrastructure.
+HealthScope addresses these gaps as an open, reproducible data platform.
 
 ## Intelligence Layers
 
@@ -37,7 +37,7 @@ HealthScope addresses these gaps within a lightweight, open-source, zero-server 
 
   <div class="card-modern" style="border-left:4px solid var(--map-red,#c9a227);">
     <h3 style="color:var(--map-red,#c9a227);margin-top:0;">1. Facility Registry Lake</h3>
-    <p>Standardized facility data from MoH sources across 7 SSA countries. Multi-country harmonized schema; direct MoH sourcing.</p>
+    <p>Standardized facility data from MoH sources across SSA countries. Multi-country harmonized schema; direct MoH sourcing.</p>
   </div>
 
   <div class="card-modern" style="border-left:4px solid #059669;">
@@ -47,53 +47,26 @@ HealthScope addresses these gaps within a lightweight, open-source, zero-server 
 
   <div class="card-modern" style="border-left:4px solid #f59e0b;">
     <h3 style="color:#f59e0b;margin-top:0;">3. Service Gap Intelligence</h3>
-    <p>Which services exist where. Heatmaps of malaria service deserts, lab coverage gaps, and emergency preparedness blind spots.</p>
+    <p>Which services exist where. Per-domain coverage across the registry, interactive country switching, and per-facility service profiles.</p>
   </div>
 
   <div class="card-modern" style="border-left:4px solid #06b6d4;">
     <h3 style="color:#06b6d4;margin-top:0;">4. General Information</h3>
-    <p>Population-weighted access scores; rural/urban parity metrics by district. Exposing inequities masked by aggregate counts.</p>
+    <p>Country-level descriptive statistics &mdash; facility counts, type mix, ownership split &mdash; that give a fast picture of the registry without claiming reachability or access modelling we have not yet built.</p>
   </div>
 
 </div>
 ```
 
-## Technical Architecture
+## ETL Pipeline
 
-HealthScope is built on a **zero-server, open-source stack** that is free to operate, reproducible, and scalable without infrastructure investment.
+The HealthScope ETL pipeline ingests each Ministry of Health registry through three steps:
 
-```{=html}
-<div style="overflow-x:auto;margin:2rem 0;">
-  <table style="width:100%;border-collapse:collapse;font-size:.9rem;background:#fff;border-radius:10px;overflow:hidden;box-shadow:var(--map-shadow);border:1px solid var(--map-border,#e2e8f0);">
-    <thead><tr style="background:var(--map-navy,#3d3d3d);color:#fff;">
-      <th style="padding:.75rem 1rem;text-align:left;">Layer</th>
-      <th style="padding:.75rem 1rem;text-align:left;">Technology</th>
-      <th style="padding:.75rem 1rem;text-align:left;">Role</th>
-    </tr></thead>
-    <tbody>
-      <tr style="border-bottom:1px solid var(--map-border);"><td style="padding:.6rem 1rem;font-weight:600;">Data Extraction</td><td style="padding:.6rem 1rem;">R (httr2, rvest)</td><td style="padding:.6rem 1rem;">Scrape / download from MoH registries</td></tr>
-      <tr style="border-bottom:1px solid var(--map-border);background:rgba(0,0,0,.01);"><td style="padding:.6rem 1rem;font-weight:600;">ETL Pipeline</td><td style="padding:.6rem 1rem;">R (tidyverse, sf, lubridate)</td><td style="padding:.6rem 1rem;">Standardize, clean, validate, flag quality</td></tr>
-      <tr style="border-bottom:1px solid var(--map-border);"><td style="padding:.6rem 1rem;font-weight:600;">Storage</td><td style="padding:.6rem 1rem;">CSV + GeoParquet + DuckDB</td><td style="padding:.6rem 1rem;">Spatial data lake; fast in-process queries</td></tr>
-      <tr style="border-bottom:1px solid var(--map-border);background:rgba(0,0,0,.01);"><td style="padding:.6rem 1rem;font-weight:600;">Spatial Analysis</td><td style="padding:.6rem 1rem;">R (sf, osrm, WorldPop)</td><td style="padding:.6rem 1rem;">Catchment zones, access scoring</td></tr>
-      <tr style="border-bottom:1px solid var(--map-border);"><td style="padding:.6rem 1rem;font-weight:600;">Portal Frontend</td><td style="padding:.6rem 1rem;">Quarto + Leaflet + Chart.js</td><td style="padding:.6rem 1rem;">Interactive maps, dashboards, reports</td></tr>
-      <tr style="border-bottom:1px solid var(--map-border);background:rgba(0,0,0,.01);"><td style="padding:.6rem 1rem;font-weight:600;">Hosting</td><td style="padding:.6rem 1rem;">GitHub Pages</td><td style="padding:.6rem 1rem;">Free static hosting; auto-deploy on push</td></tr>
-      <tr><td style="padding:.6rem 1rem;font-weight:600;">Open Data</td><td style="padding:.6rem 1rem;">Zenodo / Hugging Face</td><td style="padding:.6rem 1rem;">Versioned, DOI-assigned releases</td></tr>
-    </tbody>
-  </table>
-</div>
-```
+1. **Extract** &mdash; pull the latest country CSV / API payload (Tanzania HFR portal, Kenya KMHFR, Ethiopia MFR v2, etc.) into a country-specific raw folder.
+2. **Transform** &mdash; standardise columns to a shared schema, validate coordinates against the country's bounding box, mint a stable global facility UID, and map each raw service name to the canonical 7-domain hierarchy via per-country crosswalks.
+3. **Load** &mdash; publish versioned per-country CSVs (`{country}_standardized.csv` for facilities, `{country}_services_standardized.csv` for services) that the portal consumes directly via a git submodule.
 
-## ETL Pipeline (v2)
-
-The HealthScope ETL pipeline processes raw MoH data through 7 validated steps:
-
-1. **`read_country_data()`** -- reads CSV/XLSX with encoding handling
-2. **`standardize_columns()`** -- maps raw columns to shared 23-field schema
-3. **`clean_coordinates()`** -- coerces to numeric; flags missing/implausible GPS
-4. **`clean_dates()`** -- parses Stata-format and ISO 8601 dates
-5. **`enforce_schema_types()`** -- coerces all fields to correct types
-6. **`flag_data_quality()`** -- assigns high/medium/low/unknown per record
-7. **`save_standardized_data()`** -- writes CSV and per-country QA report
+The pipeline source code is at [`map-data-engineering/health_facility_etl`](https://github.com/map-data-engineering/health_facility_etl). Adding a new country reduces to writing one `countries.yml` block, one services crosswalk, and one `SERVICE_CONFIG` entry.
 
 ### Current Pipeline Status
 
@@ -105,8 +78,9 @@ The HealthScope ETL pipeline processes raw MoH data through 7 validated steps:
 | Uganda | 8,512 | MoH DHIS2 |
 | Zambia | 3,731 | MoH HRIS |
 | Malawi | 1,929 | MoH CMED |
-| Botswana | 1,076 | MoH Registry |
-| **Total** | **96,699** | |
+| Botswana | 1,076 | MoH MFL |
+| Ethiopia | 40,035 | MoH MFR v2 |
+| **Total** | **136,734** | |
 
 ## Team
 
