@@ -233,7 +233,10 @@ toc: false
           r.admin1 = r.admin1 || r.admin2 || '';
           allFacilities.push(r);
           if(r.facility_type && r.facility_type!=='facility_type') typesSet.add(r.facility_type);
-          if(r.facility_ownership && r.facility_ownership!=='facility_ownership') ownershipSet.add(r.facility_ownership);
+          // ETL canonical column is `ownership`; older portal-local CSVs used `facility_ownership`
+          var ownVal = r.ownership || r.facility_ownership || '';
+          r._ownership = ownVal;
+          if(ownVal && ownVal!=='ownership' && ownVal!=='facility_ownership') ownershipSet.add(ownVal);
         });
         countryDone(key, true);
       },
@@ -263,7 +266,7 @@ toc: false
     filtered = allFacilities.filter(function(f){
       if(country!=='all' && f._country!==country) return false;
       if(type!=='all' && f.facility_type!==type) return false;
-      if(own!=='all' && f.facility_ownership!==own) return false;
+      if(own!=='all' && f._ownership!==own) return false;
       if(search && f.facility_name.toLowerCase().indexOf(search)===-1) return false;
       return true;
     });
@@ -287,7 +290,8 @@ toc: false
     filtered.forEach(function(f){
       countries[f._countryLabel]=(countries[f._countryLabel]||0)+1;
       types[f.facility_type]=(types[f.facility_type]||0)+1;
-      if(f.facility_ownership && (f.facility_ownership.toLowerCase().indexOf('public')>-1 || f.facility_ownership.toLowerCase().indexOf('gov')>-1 || f.facility_ownership==='MOH')) public_count++;
+      var ow = (f._ownership || '').toLowerCase();
+      if(ow && (ow.indexOf('public')>-1 || ow.indexOf('gov')>-1 || ow==='moh')) public_count++;
       if(f.status && (f.status==='Operating'||f.status==='Functional'||f.status==='OPERATIONAL')) operating++;
     });
     var html = '<div class="reg-scard"><div class="val">'+filtered.length.toLocaleString()+'</div><div class="lbl">Total Facilities</div></div>';
@@ -312,7 +316,7 @@ toc: false
       html += '<tr>'+
         '<td><strong>'+f.facility_name+'</strong></td>'+
         '<td>'+(f.facility_type||'&mdash;')+'</td>'+
-        '<td>'+(f.facility_ownership||'&mdash;')+'</td>'+
+        '<td>'+(f._ownership||'&mdash;')+'</td>'+
         '<td>'+(f.admin1||f.admin2||'&mdash;')+'</td>'+
         '<td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:'+f._color+';margin-right:6px;"></span>'+f._countryLabel+'</td>'+
         '<td>'+(f.status||'&mdash;')+'</td>'+
@@ -327,7 +331,7 @@ toc: false
   var sortCol = -1, sortAsc = true;
   window.sortTable = function(col){
     if(sortCol === col) sortAsc = !sortAsc; else { sortCol = col; sortAsc = true; }
-    var keys = ['facility_name','facility_type','facility_ownership','admin1','_countryLabel','status'];
+    var keys = ['facility_name','facility_type','_ownership','admin1','_countryLabel','status'];
     var key = keys[col];
     filtered.sort(function(a,b){
       var va = (a[key]||'').toLowerCase(), vb = (b[key]||'').toLowerCase();
@@ -342,7 +346,7 @@ toc: false
       csv += '"'+(f.facility_name||'').replace(/"/g,'""')+'",'+
         '"'+(f.facility_code||'')+'",'+
         '"'+(f.facility_type||'')+'",'+
-        '"'+(f.facility_ownership||'')+'",'+
+        '"'+(f._ownership||'')+'",'+
         (f.latitude||'')+','+(f.longitude||'')+','+
         '"'+(f.admin1||f.admin2||'')+'",'+
         '"'+(f.status||'')+'",'+
