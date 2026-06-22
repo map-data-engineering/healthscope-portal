@@ -372,7 +372,6 @@ ul.task-list li input[type="checkbox"] {
 <li><strong>Transform</strong> — standardise columns to a shared schema, validate coordinates against the country’s bounding box, mint a stable global facility UID, and map each raw service name to the canonical 7-domain hierarchy via per-country crosswalks.</li>
 <li><strong>Load</strong> — publish versioned per-country CSVs (<code>{country}_standardized.csv</code> for facilities, <code>{country}_services_standardized.csv</code> for services) that the portal consumes directly via a git submodule.</li>
 </ol>
-<p>The pipeline source code is at <a href="https://github.com/map-data-engineering/health_facility_etl"><code>map-data-engineering/health_facility_etl</code></a>. Adding a new country reduces to writing one <code>countries.yml</code> block, one services crosswalk, and one <code>SERVICE_CONFIG</code> entry.</p>
 <section id="current-pipeline-status" class="level3">
 <h3 class="anchored" data-anchor-id="current-pipeline-status">Current Pipeline Status</h3>
 <table class="caption-top table">

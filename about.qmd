@@ -66,8 +66,6 @@ The HealthScope ETL pipeline ingests each Ministry of Health registry through th
 2. **Transform** &mdash; standardise columns to a shared schema, validate coordinates against the country's bounding box, mint a stable global facility UID, and map each raw service name to the canonical 7-domain hierarchy via per-country crosswalks.
 3. **Load** &mdash; publish versioned per-country CSVs (`{country}_standardized.csv` for facilities, `{country}_services_standardized.csv` for services) that the portal consumes directly via a git submodule.
 
-The pipeline source code is at [`map-data-engineering/health_facility_etl`](https://github.com/map-data-engineering/health_facility_etl). Adding a new country reduces to writing one `countries.yml` block, one services crosswalk, and one `SERVICE_CONFIG` entry.
-
 ### Current Pipeline Status
 
 | Country | Facilities | Source |
