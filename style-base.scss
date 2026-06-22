@@ -941,6 +941,25 @@ main.content,
 .quarto-container,
 .page-columns { background: transparent; }
 
+// Full-bleed escape: break sections out of Quarto's centred column so
+// hero/banner blocks reach the viewport edges instead of sitting in a
+// boxed inset against the page background.
+.hero-section,
+.page-banner,
+.svc-hero,
+.reg-hero,
+.eq-hero,
+.finder-hero,
+.country-hero,
+.stats-bar,
+.features-section {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  max-width: 100vw;
+}
+
 // ── Hero / page-banner section ───────────────────────────────────
 .page-banner,
 .svc-hero,
