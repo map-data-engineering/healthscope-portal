@@ -586,8 +586,17 @@ h1, h2, h3, h4 {
   color: #fff;
   padding: 3.5rem 2rem;
   margin-bottom: 2rem;
-  h1 { font-size: 2.2rem; color: #fff; margin-bottom: 0.5rem; }
-  .hero-sub { color: rgba(255,255,255,0.65); font-size: 1rem; }
+  text-align: center;
+  h1 { font-size: 2.2rem; color: #fff; margin-bottom: 0.5rem; text-align: center; }
+  .hero-sub { color: rgba(255,255,255,0.65); font-size: 1rem; text-align: center; }
+}
+
+// Country deep-dive hero title text (Quarto block: `country-hero-text`)
+.country-hero-text,
+.country-hero-text h1,
+.country-hero-text h2,
+.country-hero-text p {
+  text-align: center;
 }
 
 // ── Welcome section (for selector) ──────────────────────────────
@@ -1037,13 +1046,15 @@ main.content,
     margin: 0 0 .5rem;
     color: #fff;
     letter-spacing: -0.015em;
+    text-align: center;
   }
   p {
     font-size: 1.025rem;
     opacity: .82;
-    margin: 0;
+    margin: 0 auto;
     max-width: 720px;
     line-height: 1.55;
+    text-align: center;
   }
 }
 

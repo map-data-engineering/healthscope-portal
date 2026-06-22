@@ -7,7 +7,7 @@ toc-depth: 2
 ```{=html}
 <div class="country-hero">
   <h1>🇰🇪 Kenya</h1>
-  <p class="hero-sub">Republic of Kenya — Health Facility Dataset v1.1</p>
+  <p class="hero-sub">Republic of Kenya. Health Facility Dataset v1.1.</p>
 </div>
 
 <div class="stats-row">

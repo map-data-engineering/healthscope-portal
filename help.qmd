@@ -117,7 +117,7 @@ toc: false
     </div>
     <div class="faq-content">
       If you discover errors or inconsistencies in the data, we appreciate feedback!
-      Email us at <a href="mailto:cmyalla@ihi.or.tz" style="color:var(--map-red);text-decoration:none;font-weight:600;">cmyalla@ihi.or.tz</a>
+      Email the <a href="mailto:cmyalla@ihi.or.tz" style="color:var(--map-red);text-decoration:none;font-weight:600;">DET Team</a>
       with the country, facility name, and a description of the issue.
     </div>
   </div>
@@ -128,7 +128,7 @@ toc: false
   <h3 style="margin-top:0;">Email Contact</h3>
   <p style="color:var(--map-text-muted,#64748b);margin-bottom:1rem;">Prefer direct email? Reach out to our team:</p>
   <p style="margin:0;font-size:1.1rem;">
-    <a href="mailto:cmyalla@ihi.or.tz" style="color:var(--map-red,#c9a227);text-decoration:none;font-weight:600;">cmyalla@ihi.or.tz</a>
+    <a href="mailto:cmyalla@ihi.or.tz" style="color:var(--map-red,#c9a227);text-decoration:none;font-weight:600;">DET Team</a>
   </p>
   <p style="color:var(--map-text-muted);font-size:0.9rem;margin-top:0.5rem;">We typically respond within 2&ndash;3 business days.</p>
 </section>

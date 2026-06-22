@@ -9,7 +9,7 @@ toc-depth: 2
 <section class="page-banner">
   <div style="max-width:1000px;margin:0 auto;">
     <h1>About HealthScope</h1>
-    <p>Health facility intelligence &mdash; beyond static inventories</p>
+    <p>Health facility intelligence beyond static inventories.</p>
   </div>
 </section>
 ```

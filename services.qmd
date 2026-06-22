@@ -58,7 +58,7 @@ toc: false
 <section class="svc-hero">
   <div style="max-width:1200px;margin:0 auto;">
     <h1>Service Gap Intelligence</h1>
-    <p>Facility-level service data across countries &mdash; identifying coverage gaps and service deserts</p>
+    <p>Facility-level service data across countries. Identifying coverage gaps and service deserts.</p>
   </div>
 </section>
 

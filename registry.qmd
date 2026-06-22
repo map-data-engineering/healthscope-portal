@@ -51,7 +51,7 @@ toc: false
 <section class="reg-hero">
   <div style="max-width:1400px;margin:0 auto;">
     <h1>Facility Registry Explorer</h1>
-    <p>Coverage at a glance &mdash; the eight countries the HealthScope registry currently reaches, with searchable facility-level detail below</p>
+    <p>Coverage at a glance. The eight countries the HealthScope registry currently reaches, with searchable facility-level detail below.</p>
   </div>
 </section>
 

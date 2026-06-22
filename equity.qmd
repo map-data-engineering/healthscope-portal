@@ -39,7 +39,7 @@ toc: false
 <section class="eq-hero">
   <div style="max-width:1200px;margin:0 auto;">
     <h1>General Information</h1>
-    <p>Country-level descriptive statistics derived from the standardised registry &mdash; facility counts, type mix, ownership split, and regional distribution.</p>
+    <p>Country-level descriptive statistics derived from the standardised registry. Facility counts, type mix, ownership split, and regional distribution.</p>
   </div>
 </section>
 
