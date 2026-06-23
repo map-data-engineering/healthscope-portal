@@ -411,16 +411,21 @@ ul.task-list li input[type="checkbox"] {
     border-left: 4px solid #28a745;
     color: #155724;
   }
-  .finder-map-wrap {
-    display: grid;
-    grid-template-columns: minmax(0, 1.35fr) minmax(420px, 0.95fr);
-    gap: 1.25rem;
-    margin-bottom: 1.5rem;
-    align-items: start;
+  .finder-map-wrap,
+  .finder-map-wrap.page-columns,
+  .finder-map-wrap.page-full {
+    display: grid !important;
+    /* Map is fixed-narrow; panel takes the remaining viewport space. */
+    grid-template-columns: minmax(0, 620px) minmax(360px, 1fr) !important;
+    gap: 1.25rem !important;
+    margin-bottom: 1.5rem !important;
+    align-items: start !important;
+    width: 100% !important;
   }
   #finder-map {
-    width: 100%;
-    height: 540px;
+    width: 100% !important;
+    max-width: 620px !important;
+    height: 520px;
     border-radius: 12px;
     border: 1px solid #e8ecf1;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -432,10 +437,10 @@ ul.task-list li input[type="checkbox"] {
     border: 1px solid #e8ecf1;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    padding: 1.25rem;
-    height: 540px;
+    padding: 1.5rem;
+    height: 520px;
     overflow-y: auto;
-    font-size: 0.92rem;
+    font-size: 0.95rem;
   }
   .finder-detail-empty {
     color: #6b7280;
