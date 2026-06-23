@@ -11,14 +11,14 @@
     "href": "services.html",
     "title": "Service Gap Intelligence",
     "section": "",
-    "text": "Facility-level service data across countries. Identifying coverage gaps and service deserts.\n  \n\n\n\n\n  \n  \n    Country\n    \n      Tanzania\n      Kenya\n      Zambia\n      Malawi\n      Botswana\n      Ethiopia\n    \n  \n\n  Loading data...\n\n  \n    Service Category Coverage — click a category to explore\n    \n  \n\n  \n    \n      Coverage Rate by Category\n      \n    \n    \n      Map\n      \n      \n         Has Service\n         No Service\n      \n    \n  \n\n  \n    Specific Services\n    \n  \n\n  \n    \n      Regional Coverage\n      \n    \n    \n      Facility Type Distribution\n      \n    \n  \n\n\n\n\n\n\n\n Back to top"
+    "text": "Facility-level service data across countries. Identifying coverage gaps and service deserts.\n  \n\n\n\n\n  \n  \n    Country\n    \n      Tanzania\n      Kenya\n      Zambia\n      Malawi\n      Botswana\n      Ethiopia\n    \n  \n\n  Loading data...\n\n  \n    Service Category Coverage — click a category to explore\n    \n  \n\n  \n    \n      Regional Coverage\n      \n    \n    \n      Map\n      \n      \n         Facilities offering this service\n      \n    \n  \n\n  \n    Specific Services\n    \n  \n\n  \n    \n      Coverage Rate by Category\n      \n    \n    \n      Facility Type Distribution\n      \n    \n  \n\n\n\n\n\n\n\n Back to top"
   },
   {
     "objectID": "registry.html",
     "href": "registry.html",
     "title": "Facility Registry Explorer",
     "section": "",
-    "text": "Coverage at a glance. The eight countries the HealthScope registry currently reaches, with searchable facility-level detail below.\n  \n\n\n\n\n  \n  \n    \n      Country\n      \n        All Countries\n        Kenya (17,353)\n        Tanzania (13,075)\n        Nigeria (51,023)\n        Uganda (8,512)\n        Zambia (3,731)\n        Malawi (1,929)\n        Botswana (1,076)\n        Ethiopia (40,035)\n      \n    \n    \n      Facility Type\n      \n        All Types\n      \n    \n    \n      Ownership\n      \n        All Ownership\n      \n    \n    \n      Search\n      \n    \n    \n       \n      \n        \n        Download CSV\n      \n    \n  \n\n  \n  Loading facility data from 8 countries...\n\n  \n  \n\n  \n  \n\n  \n  \n    \n      \n\n\n\nFacility Name\nType\nOwnership\nRegion\nCountry\nStatus\n\n\n\n\n\n\n    \n  \n\n\n\n\n\n\n\n Back to top"
+    "text": "Coverage at a glance. The eight countries the HealthScope registry currently reaches, with searchable facility-level detail below.\n  \n\n\n\n\n  \n  \n    \n      Country\n      \n        All Countries\n        Kenya (17,353)\n        Tanzania (13,075)\n        Nigeria (51,023)\n        Uganda (8,512)\n        Zambia (3,731)\n        Malawi (1,929)\n        Botswana (1,076)\n        Ethiopia (40,035)\n      \n    \n    \n      Facility Type\n      \n        All Types\n      \n    \n    \n      Ownership\n      \n        All Ownership\n      \n    \n    \n      Search\n      \n    \n    \n       \n      \n        \n        Download CSV\n      \n    \n  \n\n  \n  Loading facility data from 8 countries...\n\n  \n  \n\n  \n  \n\n\n\n\n\n\n\n Back to top"
   },
   {
     "objectID": "kenya.html",
@@ -277,7 +277,7 @@
     "href": "about.html#team",
     "title": "About HealthScope",
     "section": "Team",
-    "text": "Team\nThe portal is maintained by a team of data engineers, GIS specialists, epidemiologists, and researchers at the Malaria Atlas Project Dar es Salaam Node.\nVisit the Team Page → | View Data Sources →"
+    "text": "Team\nThe portal is maintained by a team of data engineers, GIS specialists, epidemiologists, and researchers at the Malaria Atlas Project Dar es Salaam Node.\nVisit the Team Page →"
   },
   {
     "objectID": "countries/Benin.html",
@@ -466,7 +466,7 @@
     "href": "find-facility.html",
     "title": "Find Nearby Health Facility",
     "section": "",
-    "text": "Select a service you need and get the closest facilities that provide it\n  \n\n\n\n\n  \n  \n    \n      1\n      Share Your Location\n      Allow your browser to detect your current location or enter coordinates manually\n    \n    \n      2\n      Select a Service\n      Choose the type of health service you are looking for from the dropdown\n    \n    \n      3\n      View Results\n      See the nearest facilities on the map with distance and service details\n    \n  \n\n  \n  \n    \n      Country\n      \n        Tanzania\n        Kenya\n        Zambia\n        Malawi\n        Botswana\n        Ethiopia\n      \n    \n    \n      Service Type\n      \n        -- Loading services... --\n      \n    \n    \n      \n        Show nearest\n        \n          5 facilities\n          10 facilities\n          20 facilities\n          50 facilities\n        \n      \n    \n    \n      Detect My Location\n      Search\n    \n  \n\n  \n  \n    \n      \n        Latitude\n        \n      \n      \n        Longitude\n        \n      \n      Use These Coordinates\n    \n  \n\n  \n  \n\n  \n  \n\n  \n  \n    Nearest Facilities\n    \n  \n\n\n\n\n\n\n\n Back to top"
+    "text": "Select a service you need and get the closest facilities that provide it\n  \n\n\n\n\n  \n  \n    \n      1\n      Share Your Location\n      Allow your browser to detect your current location or enter coordinates manually\n    \n    \n      2\n      Select a Service\n      Choose the type of health service you are looking for from the dropdown\n    \n    \n      3\n      View Results\n      See the nearest facilities on the map with distance and service details\n    \n  \n\n  \n  \n    \n      Country\n      \n        Tanzania\n        Kenya\n        Zambia\n        Malawi\n        Botswana\n        Ethiopia\n      \n    \n    \n      Service Type\n      \n        -- Loading services... --\n      \n    \n    \n      \n        Show nearest\n        \n          5 facilities\n          10 facilities\n          20 facilities\n          50 facilities\n        \n      \n    \n    \n      Detect My Location\n      Search\n    \n  \n\n  \n  \n    \n      \n        Latitude\n        \n      \n      \n        Longitude\n        \n      \n      Use These Coordinates\n    \n  \n\n  \n  \n    Tip: click anywhere on the map to set your location, or use the\n    Detect My Location button.\n  \n\n  \n  \n    \n    \n      \n        Facility details\n        Click any facility marker on the map to view its full information and complete service list here.\n      \n      \n    \n  \n\n  \n  \n    Nearest Facilities\n    \n  \n\n\n\n\n\n\n\n Back to top"
   },
   {
     "objectID": "index.html",
@@ -635,5 +635,12 @@
     "title": "About HealthScope",
     "section": "ETL Pipeline",
     "text": "ETL Pipeline\nThe HealthScope ETL pipeline ingests each Ministry of Health registry through three steps:\n\nExtract — pull the latest country CSV / API payload (Tanzania HFR portal, Kenya KMHFR, Ethiopia MFR v2, etc.) into a country-specific raw folder.\nTransform — standardise columns to a shared schema, validate coordinates against the country’s bounding box, mint a stable global facility UID, and map each raw service name to the canonical 7-domain hierarchy via per-country crosswalks.\nLoad — publish versioned per-country CSVs ({country}_standardized.csv for facilities, {country}_services_standardized.csv for services) that the portal consumes directly via a git submodule.\n\n\nCurrent Pipeline Status\n\n\n\nCountry\nFacilities\nSource\n\n\n\n\nTanzania\n13,075\nMoH HFR Portal\n\n\nNigeria\n51,023\nNHMIS / DHIS2\n\n\nKenya\n17,353\nKMHFR\n\n\nUganda\n8,512\nMoH DHIS2\n\n\nZambia\n3,731\nMoH HRIS\n\n\nMalawi\n1,929\nMoH CMED\n\n\nBotswana\n1,076\nMoH MFL\n\n\nEthiopia\n40,035\nMoH MFR v2\n\n\nTotal\n136,734"
+  },
+  {
+    "objectID": "about.html#data-sources",
+    "href": "about.html#data-sources",
+    "title": "About HealthScope",
+    "section": "Data Sources",
+    "text": "Data Sources\nHealthScope ingests only authoritative, official sources — Ministry of Health master facility registries and openly-licensed compilations of the same upstream data. Each country’s row in the pipeline status above links back to its primary registry. For the full source catalogue with license and citation details, visit the dedicated page.\nView Data Sources →"
   }
 ]

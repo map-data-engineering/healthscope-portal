@@ -87,15 +87,14 @@ toc: false
 
   <div class="svc-grid">
     <div class="svc-card">
-      <h3>Coverage Rate by Category</h3>
-      <canvas id="chart-svc"></canvas>
+      <h3 id="region-chart-title">Regional Coverage</h3>
+      <canvas id="chart-region" style="max-height:380px!important;"></canvas>
     </div>
     <div class="svc-card">
       <h3 id="map-title">Map</h3>
       <div id="svc-map"></div>
       <div class="svc-legend">
-        <div class="svc-legend-item"><div class="svc-legend-dot" style="background:#5a8a5a;"></div> Has Service</div>
-        <div class="svc-legend-item"><div class="svc-legend-dot" style="background:#d45050;"></div> No Service</div>
+        <div class="svc-legend-item"><div class="svc-legend-dot" style="background:#5a8a5a;"></div> Facilities offering this service</div>
       </div>
     </div>
   </div>
@@ -107,8 +106,8 @@ toc: false
 
   <div class="svc-grid">
     <div class="svc-card">
-      <h3 id="region-chart-title">Regional Coverage</h3>
-      <canvas id="chart-region" style="max-height:380px!important;"></canvas>
+      <h3>Coverage Rate by Category</h3>
+      <canvas id="chart-svc"></canvas>
     </div>
     <div class="svc-card">
       <h3>Facility Type Distribution</h3>
@@ -374,20 +373,20 @@ toc: false
       // Bounds check
       if(lat<cfg.bounds[0][0]||lat>cfg.bounds[0][1]||lon<cfg.bounds[1][0]||lon>cfg.bounds[1][1]) return;
 
+      // Only show facilities that offer the selected service (skip red "No Service" points entirely)
       var hasSvc = svcByCode[code][cat] && svcByCode[code][cat].length > 0;
-      var color = hasSvc ? '#5a8a5a' : '#d45050';
+      if (!hasSvc) return;
+      var color = '#5a8a5a';
 
       var m = L.circleMarker([lat,lon],{
-        radius:4, color:color, weight:1, opacity:0.7,
-        fillColor:color, fillOpacity:0.5
+        radius:4, color:color, weight:1, opacity:0.85,
+        fillColor:color, fillOpacity:0.6
       }).addTo(map);
 
-      var details = '';
-      if(hasSvc){
-        details = '<br/><strong style="color:#5a8a5a;">Services:</strong><br/>' +
-          svcByCode[code][cat].slice(0,5).map(function(d){return '&bull; '+d;}).join('<br/>');
-        if(svcByCode[code][cat].length > 5) details += '<br/><em>+'+(svcByCode[code][cat].length-5)+' more</em>';
-      }
+      var details = '<br/><strong style="color:#5a8a5a;">Services:</strong><br/>' +
+        svcByCode[code][cat].slice(0,5).map(function(d){return '&bull; '+d;}).join('<br/>');
+      if(svcByCode[code][cat].length > 5) details += '<br/><em>+'+(svcByCode[code][cat].length-5)+' more</em>';
+
       m.bindPopup('<strong>'+f.facility_name+'</strong><br/><span style="color:#6b6b6b;">'+(f.facility_type||'')+' &bull; '+(f.ownership||f.facility_ownership||'')+'</span><br/><span style="color:#6b6b6b;">'+(f.admin1||'')+'</span>'+details);
       markers.push(m);
     });

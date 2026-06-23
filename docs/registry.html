@@ -362,9 +362,9 @@ ul.task-list li input[type="checkbox"] {
     <div class="ctrl">
       <label>Country</label>
       <select id="f-country">
-        <option value="all">All Countries</option>
+        <option value="all" selected="">All Countries</option>
         <option value="kenya">Kenya (17,353)</option>
-        <option value="tanzania" selected="">Tanzania (13,075)</option>
+        <option value="tanzania">Tanzania (13,075)</option>
         <option value="nigeria">Nigeria (51,023)</option>
         <option value="uganda">Uganda (8,512)</option>
         <option value="zambia">Zambia (3,731)</option>
@@ -406,28 +406,6 @@ ul.task-list li input[type="checkbox"] {
 
   <!-- Map -->
   <div id="reg-map"></div>
-
-  <!-- Table -->
-  <div class="reg-table-wrap">
-    <div class="reg-table-container">
-      
-<table id="reg-table" class="caption-top">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th" onclick="sortTable(0)">Facility Name</th>
-<th data-quarto-table-cell-role="th" onclick="sortTable(1)">Type</th>
-<th data-quarto-table-cell-role="th" onclick="sortTable(2)">Ownership</th>
-<th data-quarto-table-cell-role="th" onclick="sortTable(3)">Region</th>
-<th data-quarto-table-cell-role="th" onclick="sortTable(4)">Country</th>
-<th data-quarto-table-cell-role="th" onclick="sortTable(5)">Status</th>
-</tr>
-</thead>
-<tbody id="reg-tbody">
-</tbody>
-</table>
-
-    </div>
-  </div>
 
 </div>
 
@@ -577,7 +555,22 @@ ul.task-list li input[type="checkbox"] {
     updateStatus();
     updateSummary();
     updateMap();
-    updateTable();
+    zoomToSelection();
+  }
+
+  function zoomToSelection(){
+    var country = document.getElementById('f-country').value;
+    if (!coverageLayer) return;
+    if (country === 'all') {
+      map.fitBounds(coverageLayer.getBounds(), {padding: [20, 20]});
+      return;
+    }
+    // Zoom to the selected country's polygon
+    coverageLayer.eachLayer(function(layer){
+      if (layer._countryKey === country) {
+        map.fitBounds(layer.getBounds(), {padding: [30, 30]});
+      }
+    });
   }
 
   function updateStatus(){
@@ -585,7 +578,7 @@ ul.task-list li input[type="checkbox"] {
     filtered.forEach(function(f){ countries.add(f._country); });
     document.getElementById('reg-status').innerHTML =
       '<strong>' + filtered.length.toLocaleString() + '</strong> facilities matched across <strong>' +
-      countries.size + '</strong> covered countries &mdash; click a country on the map for details, or scroll for the searchable table';
+      countries.size + '</strong> covered countries. Click a country on the map for details.';
   }
 
   function updateSummary(){
@@ -610,38 +603,6 @@ ul.task-list li input[type="checkbox"] {
     // current filter; the polygons themselves never change.
     refreshCoveragePopups();
   }
-
-  function updateTable(){
-    var tbody = document.getElementById('reg-tbody');
-    var rows = filtered.slice(0, 500); // Limit table rows
-    var html = '';
-    rows.forEach(function(f){
-      html += '<tr>'+
-        '<td><strong>'+f.facility_name+'</strong></td>'+
-        '<td>'+(f.facility_type||'&mdash;')+'</td>'+
-        '<td>'+(f._ownership||'&mdash;')+'</td>'+
-        '<td>'+(f.admin1||f.admin2||'&mdash;')+'</td>'+
-        '<td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:'+f._color+';margin-right:6px;"></span>'+f._countryLabel+'</td>'+
-        '<td>'+(f.status||'&mdash;')+'</td>'+
-      '</tr>';
-    });
-    if(filtered.length > 500){
-      html += '<tr><td colspan="6" style="text-align:center;color:var(--map-text-muted);padding:1rem;">Showing 500 of '+filtered.length.toLocaleString()+' &mdash; use filters or search to narrow results, or download full CSV</td></tr>';
-    }
-    tbody.innerHTML = html;
-  }
-
-  var sortCol = -1, sortAsc = true;
-  window.sortTable = function(col){
-    if(sortCol === col) sortAsc = !sortAsc; else { sortCol = col; sortAsc = true; }
-    var keys = ['facility_name','facility_type','_ownership','admin1','_countryLabel','status'];
-    var key = keys[col];
-    filtered.sort(function(a,b){
-      var va = (a[key]||'').toLowerCase(), vb = (b[key]||'').toLowerCase();
-      return sortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
-    });
-    updateTable();
-  };
 
   window.downloadFiltered = function(){
     var csv = 'facility_name,facility_code,facility_type,facility_ownership,latitude,longitude,admin1,status,country\n';

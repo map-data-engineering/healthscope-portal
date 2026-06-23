@@ -80,8 +80,14 @@ The HealthScope ETL pipeline ingests each Ministry of Health registry through th
 | Ethiopia | 40,035 | MoH MFR v2 |
 | **Total** | **136,734** | |
 
+## Data Sources
+
+HealthScope ingests **only authoritative, official sources** — Ministry of Health master facility registries and openly-licensed compilations of the same upstream data. Each country's row in the pipeline status above links back to its primary registry. For the full source catalogue with license and citation details, visit the dedicated page.
+
+[**View Data Sources &rarr;**](data-sources.html)
+
 ## Team
 
 The portal is maintained by a team of data engineers, GIS specialists, epidemiologists, and researchers at the Malaria Atlas Project Dar es Salaam Node.
 
-[**Visit the Team Page &rarr;**](team.html) | [**View Data Sources &rarr;**](data-sources.html)
+[**Visit the Team Page &rarr;**](team.html)
