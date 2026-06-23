@@ -414,7 +414,11 @@ ul.task-list li input[type="checkbox"] {
   /* Use flexbox to defeat Quarto's auto-injected `.page-columns`
      grid (it places children into named grid-columns that ignore
      my custom `grid-template-columns`). Flex resets the layout
-     mode entirely and lays the two children out in a row. */
+     mode entirely and lays the two children out in a row.
+     The `grid-column: body-content` keeps this wrapper aligned
+     with the rest of the page's content column (controls, status
+     banner, results list) instead of escaping to the full page
+     width that Quarto's `.page-full` class would otherwise force. */
   .finder-map-wrap,
   .finder-map-wrap.page-columns,
   .finder-map-wrap.page-full {
@@ -422,9 +426,11 @@ ul.task-list li input[type="checkbox"] {
     flex-direction: row !important;
     flex-wrap: nowrap !important;
     gap: 1.25rem !important;
-    margin-bottom: 1.5rem !important;
+    margin: 1.5rem auto !important;
     align-items: stretch !important;
     width: 100% !important;
+    max-width: 100% !important;
+    grid-column: body-content !important;   /* stay in the body column */
   }
   .finder-map-wrap > #finder-map {
     flex: 0 0 620px !important;
