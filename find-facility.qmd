@@ -14,6 +14,8 @@ execute:
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <!-- PapaParse for CSV -->
 <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
+<!-- OpenRouteService key (gitignored; absent from this repo's history) -->
+<script src="ors-key.js"></script>
 
 <style>
   .finder-hero {
@@ -304,6 +306,18 @@ execute:
   .result-distance .dist-unit {
     font-size: 0.8rem;
     color: #999;
+  }
+  .result-distance .dist-time {
+    font-size: 0.78rem;
+    color: #666;
+    margin-top: 0.25rem;
+    white-space: nowrap;
+  }
+  .result-distance .dist-note {
+    font-size: 0.7rem;
+    color: #b3651e;
+    margin-top: 0.2rem;
+    font-style: italic;
   }
   .services-tags {
     display: flex;
@@ -781,7 +795,7 @@ execute:
 
   document.getElementById('service-select').addEventListener('change', checkReady);
 
-  // ─── Haversine distance (km) ───
+  // ─── Haversine distance (km) — used for pre-filter and ORS fallback ───
   function haversine(lat1, lon1, lat2, lon2) {
     var R = 6371;
     var dLat = (lat2 - lat1) * Math.PI / 180;
@@ -792,13 +806,62 @@ execute:
     return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
   }
 
+  // ─── OpenRouteService config ───
+  // Key is loaded from gitignored `ors-key.js` (see <script> tag at top of page).
+  // Free key signup: https://openrouteservice.org/dev/#/signup (2,000 req/day, 40/min).
+  var ORS_API_KEY     = (typeof window.ORS_API_KEY === 'string') ? window.ORS_API_KEY : '';
+  var ORS_PROFILE     = 'driving-car';   // driving-car | foot-walking | cycling-regular
+  var ORS_PREFILTER_N = 30;              // top-N nearest-by-haversine to road-route per search
+
+  // One matrix request: 1 origin → many destinations.
+  // Returns { distances: [km], durations: [sec] } aligned with `destinations`.
+  // Entries may be null when ORS can't snap a point to the road network.
+  async function orsMatrix(origin, destinations) {
+    if (!ORS_API_KEY) throw new Error('ORS_API_KEY not set');
+    var locations = [[origin[1], origin[0]]].concat(
+      destinations.map(function(d){ return [d[1], d[0]]; }) // ORS wants [lon, lat]
+    );
+    var destIdx = destinations.map(function(_, i){ return i + 1; });
+    var resp = await fetch('https://api.openrouteservice.org/v2/matrix/' + ORS_PROFILE, {
+      method: 'POST',
+      headers: {
+        'Authorization': ORS_API_KEY,
+        'Content-Type': 'application/json; charset=utf-8',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        locations: locations,
+        sources: [0],
+        destinations: destIdx,
+        metrics: ['distance', 'duration'],
+        units: 'km'
+      })
+    });
+    if (!resp.ok) throw new Error('ORS HTTP ' + resp.status);
+    var data = await resp.json();
+    return {
+      distances: (data.distances && data.distances[0]) || [],
+      durations: (data.durations && data.durations[0]) || []
+    };
+  }
+
+  function formatDuration(sec) {
+    if (sec == null || !isFinite(sec)) return '';
+    var m = Math.round(sec / 60);
+    if (m < 1) return '<1 min';
+    if (m < 60) return m + ' min';
+    var h = Math.floor(m / 60);
+    var r = m % 60;
+    return h + 'h ' + (r ? r + 'm' : '');
+  }
+
   // ─── Service label helper (just returns the key as label) ───
   function svcLabel(key) {
     return key.length > 40 ? key.substring(0, 40) + '...' : key;
   }
 
   // ─── Search ───
-  window.searchFacilities = function() {
+  window.searchFacilities = async function() {
     var serviceKey = document.getElementById('service-select').value;
     var maxResults = parseInt(document.getElementById('max-results').value);
 
@@ -818,7 +881,8 @@ execute:
       dContent.innerHTML = '';
     }
 
-    // Filter: facility must have the selected service category in long-format data
+    // Filter: facility must have the selected service category in long-format data.
+    // `distance` starts as straight-line (haversine) and is upgraded to road distance below.
     var matched = [];
     facilities.forEach(function(f) {
       var svc = svcByCode[f.facility_code];
@@ -836,23 +900,54 @@ execute:
             lat: lat,
             lon: lon,
             distance: dist,
-            serviceDetails: svc[serviceKey],  // array of service details
-            allCategories: svc                 // { category: [details...] }
+            duration: null,   // seconds, filled in by ORS when available
+            routed: false,    // true once road-network distance is in `distance`
+            serviceDetails: svc[serviceKey],
+            allCategories: svc
           });
         }
       }
     });
 
     matched.sort(function(a, b) { return a.distance - b.distance; });
-    var nearest = matched.slice(0, maxResults);
 
-    if (nearest.length === 0) {
+    if (matched.length === 0) {
       showStatus('No facilities found offering <strong>' + svcLabel(serviceKey) + '</strong>. Try a different service.', 'error');
       document.getElementById('results-section').style.display = 'none';
       return;
     }
 
-    showStatus('Found <strong>' + matched.length.toLocaleString() + '</strong> facilities offering <strong>' + svcLabel(serviceKey) + '</strong>. Showing the nearest <strong>' + nearest.length + '</strong>.', 'success');
+    // ─── Road-network pass: one ORS Matrix call for the top-N nearest by straight-line. ───
+    // Pre-filter keeps quota usage at 1 request/search even when thousands match.
+    var candidates = matched.slice(0, Math.max(maxResults, ORS_PREFILTER_N));
+    if (ORS_API_KEY && candidates.length > 0) {
+      showStatus('Calculating road distances for the ' + candidates.length + ' nearest candidates…', 'info');
+      try {
+        var dests = candidates.map(function(c){ return [c.lat, c.lon]; });
+        var mx = await orsMatrix([userLat, userLon], dests);
+        candidates.forEach(function(c, i) {
+          var d = mx.distances[i];
+          var t = mx.durations[i];
+          if (d != null && isFinite(d)) {
+            c.distance = d;
+            c.duration = (t != null && isFinite(t)) ? t : null;
+            c.routed = true;
+          }
+          // else: leave haversine distance in place; the card will flag it
+        });
+        candidates.sort(function(a, b) { return a.distance - b.distance; });
+        // Splice the re-sorted candidates back to the head of `matched`.
+        matched = candidates.concat(matched.slice(candidates.length));
+      } catch (err) {
+        console.warn('OpenRouteService matrix failed, falling back to straight-line distance:', err);
+        showStatus('Road-route lookup unavailable — showing straight-line distance instead.', 'info');
+      }
+    }
+
+    var nearest = matched.slice(0, maxResults);
+    var anyRouted = nearest.some(function(f){ return f.routed; });
+    var distLabel = anyRouted ? 'by road' : 'straight-line';
+    showStatus('Found <strong>' + matched.length.toLocaleString() + '</strong> facilities offering <strong>' + svcLabel(serviceKey) + '</strong>. Showing the nearest <strong>' + nearest.length + '</strong> (' + distLabel + ').', 'success');
 
     var bounds = L.latLngBounds([[userLat, userLon]]);
 
@@ -871,12 +966,14 @@ execute:
       var detailList = f.serviceDetails.slice(0,5).map(function(d){return '&bull; '+d;}).join('<br/>');
       if(f.serviceDetails.length > 5) detailList += '<br/><em>+' + (f.serviceDetails.length-5) + ' more</em>';
 
+      var distText = f.distance.toFixed(1) + ' km' + (f.routed ? ' by road' : ' (straight-line)');
+      var durText  = f.routed && f.duration != null ? ' &middot; ' + formatDuration(f.duration) + ' drive' : '';
       var popupHtml = '<div style="min-width:220px;">' +
         '<strong style="font-size:1.05rem;">' + f.name + '</strong><br/>' +
         '<span style="color:#666;">Type: </span>' + f.type + '<br/>' +
         '<span style="color:#666;">Ownership: </span>' + f.ownership + '<br/>' +
         '<span style="color:#666;">Region: </span>' + f.region + '<br/>' +
-        '<span style="color:#666;">Distance: </span><strong style="color:#c9a227;">' + f.distance.toFixed(1) + ' km</strong><br/>' +
+        '<span style="color:#666;">Distance: </span><strong style="color:#c9a227;">' + distText + '</strong>' + durText + '<br/>' +
         '<hr style="margin:0.5rem 0;border-color:#eee;"/>' +
         '<span style="color:#666;font-size:0.82rem;"><strong>' + svcLabel(serviceKey) + ':</strong></span><br/>' +
         '<span style="font-size:0.82rem;">' + detailList + '</span><br/>' +
@@ -916,6 +1013,10 @@ execute:
 
       var distStr = f.distance < 1 ? (f.distance * 1000).toFixed(0) : f.distance.toFixed(1);
       var distUnit = f.distance < 1 ? 'm' : 'km';
+      var timeHtml = (f.routed && f.duration != null)
+        ? '<div class="dist-time">' + formatDuration(f.duration) + ' drive</div>'
+        : '';
+      var noteHtml = f.routed ? '' : '<div class="dist-note">straight-line</div>';
 
       resultsHtml += '<div class="result-card" onclick="panTo(' + f.lat + ',' + f.lon + ')">' +
         '<div class="result-rank">' + (i+1) + '</div>' +
@@ -927,6 +1028,8 @@ execute:
         '<div class="result-distance">' +
           '<div class="dist-value">' + distStr + '</div>' +
           '<div class="dist-unit">' + distUnit + '</div>' +
+          timeHtml +
+          noteHtml +
         '</div>' +
       '</div>';
     });
@@ -972,6 +1075,9 @@ execute:
     var distStr = (f.distance < 1) ?
       (f.distance * 1000).toFixed(0) + ' m' :
       f.distance.toFixed(1) + ' km';
+    var distSuffix = f.routed
+      ? ' by road' + (f.duration != null ? ' &middot; ' + formatDuration(f.duration) + ' drive' : '')
+      : ' (straight-line)';
 
     content.innerHTML =
       '<div class="finder-detail-header">' +
@@ -980,7 +1086,7 @@ execute:
           (f.type || '') + (f.ownership ? ' &bull; ' + f.ownership : '') + '<br/>' +
           (f.region ? f.region : '') +
         '</div>' +
-        '<div class="finder-detail-distance">' + distStr + ' from your location</div>' +
+        '<div class="finder-detail-distance">' + distStr + distSuffix + ' from your location</div>' +
       '</div>' +
       sectionsHtml;
 

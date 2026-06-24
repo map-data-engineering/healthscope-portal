@@ -4,6 +4,7 @@ project:
   resources:
     - images/
     - etl/data/processed/country_standardized/*.csv
+    - ors-key.js
 
 website:
   title: "HealthScope"

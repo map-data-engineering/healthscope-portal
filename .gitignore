@@ -8,3 +8,8 @@ _quarto_internal_scss_error.scss
 .RData
 
 **/*.quarto_ipynb
+
+# Source copy of ORS key — never commit at repo root.
+# The rendered copy at docs/ors-key.js IS committed so GitHub Pages can serve it
+# (key is exposed to browsers either way; rotate periodically).
+/ors-key.js
