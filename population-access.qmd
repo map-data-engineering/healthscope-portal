@@ -1,0 +1,27 @@
+---
+title: ""
+page-layout: full
+toc: false
+---
+
+```{=html}
+<style>
+  .pa-hero{background:var(--map-navy,#3d3d3d);color:#fff;padding:2.5rem 2rem;}
+  .pa-hero h1{font-family:'Space Grotesk',sans-serif;font-size:2.2rem;margin:0 0 .4rem;}
+  .pa-hero p{opacity:.7;margin:0;font-size:1rem;}
+  .pa-wrap{max-width:1200px;margin:0 auto;padding:3rem 1.5rem;text-align:center;color:var(--map-text-muted,#64748b);}
+  .pa-wrap h2{font-family:'Space Grotesk',sans-serif;color:var(--map-navy,#3d3d3d);font-weight:600;margin-bottom:.5rem;}
+</style>
+
+<section class="pa-hero">
+  <div style="max-width:1200px;margin:0 auto;">
+    <h1>Population and Access</h1>
+    <p>Population catchments, accessibility surfaces, and equity of access to health facilities.</p>
+  </div>
+</section>
+
+<div class="pa-wrap">
+  <h2>Coming soon</h2>
+  <p>This section is under construction.</p>
+</div>
+```

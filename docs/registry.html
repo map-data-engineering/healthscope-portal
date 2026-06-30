@@ -270,8 +270,8 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Registry Explorer</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./equity.html"> 
-<span class="menu-text">General Information</span></a>
+    <a class="nav-link" href="./population-access.html"> 
+<span class="menu-text">Population and Access</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./services.html"> 
@@ -308,6 +308,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
 <style>
   .reg-hero{background:var(--map-navy,#3d3d3d);color:#fff;padding:2.5rem 2rem;}
@@ -346,6 +347,30 @@ ul.task-list li input[type="checkbox"] {
     .reg-controls{flex-direction:column;}
     .reg-controls select,.search-input{width:100%;min-width:unset;}
   }
+
+  /* General Information section (per selected country, below the map) */
+  .gi-section{margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--map-border,#e2e8f0);}
+  .gi-header{display:flex;align-items:baseline;gap:.6rem;margin-bottom:1rem;}
+  .gi-header h2{font-family:'Space Grotesk',sans-serif;font-size:1.5rem;margin:0;color:var(--map-navy,#3d3d3d);}
+  .gi-header .gi-country{color:var(--map-red,#c9a227);font-weight:600;}
+  .gi-header p{margin:0;font-size:.88rem;color:var(--map-text-muted,#64748b);}
+  .gi-topbar{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.75rem;margin-bottom:1.25rem;}
+  .gi-metric{background:#fff;border:1px solid var(--map-border,#e2e8f0);border-radius:8px;padding:1rem;text-align:center;box-shadow:var(--map-shadow);}
+  .gi-metric .val{font-family:'Space Grotesk',sans-serif;font-size:1.6rem;font-weight:700;color:var(--map-red,#c9a227);}
+  .gi-metric .lbl{font-size:.75rem;color:var(--map-text-muted,#64748b);margin-top:.15rem;}
+  .gi-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.5rem;}
+  .gi-card{background:#fff;border:1px solid var(--map-border,#e2e8f0);border-radius:10px;padding:1.5rem;box-shadow:var(--map-shadow);}
+  .gi-card h3{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;margin:0 0 1rem;color:var(--map-navy,#3d3d3d);}
+  .gi-card canvas{max-height:300px !important;}
+  .gi-region-table{width:100%;border-collapse:collapse;font-size:.85rem;}
+  .gi-region-table thead{background:var(--map-navy,#3d3d3d);color:#fff;}
+  .gi-region-table th{padding:.6rem .75rem;text-align:left;font-weight:600;}
+  .gi-region-table td{padding:.5rem .75rem;border-bottom:1px solid var(--map-border,#e2e8f0);}
+  .gi-region-table tbody tr:hover{background:rgba(201,162,39,.03);}
+  .gi-bar{height:8px;border-radius:4px;background:var(--map-bg-section,#f1f5f9);overflow:hidden;min-width:80px;}
+  .gi-bar-fill{height:100%;border-radius:4px;transition:width .3s;}
+  .gi-table-scroll{max-height:380px;overflow-y:auto;}
+  @media(max-width:768px){.gi-grid{grid-template-columns:1fr;}}
 </style>
 
 <section class="reg-hero">
@@ -407,6 +432,52 @@ ul.task-list li input[type="checkbox"] {
   <!-- Map -->
   <div id="reg-map"></div>
 
+  <!-- General Information (per-country; hidden when "All Countries" is selected) -->
+  <section class="gi-section" id="reg-general-info" style="display:none;">
+    <div class="gi-header">
+      <h2 class="anchored">General Information — <span class="gi-country" id="gi-country-name"></span></h2>
+    </div>
+
+    <div class="gi-topbar" id="gi-topbar"></div>
+
+    <div class="gi-grid">
+      <div class="gi-card">
+        <h3 class="anchored">Facility Type Distribution</h3>
+        <canvas id="gi-chart-type"></canvas>
+      </div>
+      <div class="gi-card">
+        <h3 class="anchored">Ownership Breakdown</h3>
+        <canvas id="gi-chart-ownership"></canvas>
+      </div>
+    </div>
+
+    <div class="gi-grid">
+      <div class="gi-card">
+        <h3 class="anchored">Facilities by Region</h3>
+        <canvas id="gi-chart-region" style="max-height:350px!important;"></canvas>
+      </div>
+      <div class="gi-card">
+        <h3 class="anchored">Regional Facility Distribution</h3>
+        <div class="gi-table-scroll">
+          
+<table class="gi-region-table caption-top">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Region</th>
+<th data-quarto-table-cell-role="th">Facilities</th>
+<th data-quarto-table-cell-role="th">Public %</th>
+<th data-quarto-table-cell-role="th">Distribution</th>
+</tr>
+</thead>
+<tbody id="gi-region-tbody">
+</tbody>
+</table>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
 </div>
 
 <script>
@@ -428,6 +499,8 @@ ul.task-list li input[type="checkbox"] {
   var map, coverageLayer;
   var typesSet = new Set(), ownershipSet = new Set();
   var loadedCount = 0, failedCount = 0, totalCountries = Object.keys(COUNTRIES).length;
+  var giChartType, giChartOwn, giChartRegion;
+  var GI_COLORS = ['#c9a227','#2563eb','#059669','#f59e0b','#8b5cf6','#06b6d4','#ec4899','#84cc16','#f97316','#6366f1','#14b8a6','#e11d48','#0ea5e9','#a855f7','#eab308'];
   // Country-name strings as they appear in the world GeoJSON
   // (Natural Earth via johan/world.geo.json), keyed to our local key.
   var COUNTRY_NAMES = {
@@ -556,6 +629,97 @@ ul.task-list li input[type="checkbox"] {
     updateSummary();
     updateMap();
     zoomToSelection();
+    updateGeneralInfo();
+  }
+
+  // Show country-specific General Information below the map.
+  // Hidden when "All Countries" is selected — the stats are inherently per-country
+  // (regions don't generalise across the 8 countries).
+  function updateGeneralInfo(){
+    var section = document.getElementById('reg-general-info');
+    var country = document.getElementById('f-country').value;
+    if (country === 'all') { section.style.display = 'none'; return; }
+    section.style.display = 'block';
+    document.getElementById('gi-country-name').textContent = COUNTRIES[country].label;
+    renderGeneralInfo(country);
+  }
+
+  function renderGeneralInfo(countryKey){
+    var data = allFacilities.filter(function(f){ return f._country === countryKey; });
+
+    // Top metrics
+    var total = data.length;
+    var withCoords = data.filter(function(f){ return f._lat !== null && f._lon !== null; }).length;
+    var publicCount = data.filter(function(f){
+      var o = (f._ownership || '').toLowerCase();
+      return o.indexOf('public') > -1 || o.indexOf('gov') > -1 || o === 'moh';
+    }).length;
+
+    var regions = {};
+    data.forEach(function(f){
+      var r = f.admin1 || f.admin2 || 'Unknown';
+      if (!regions[r]) regions[r] = {total:0, pub:0};
+      regions[r].total++;
+      var o = (f._ownership || '').toLowerCase();
+      if (o.indexOf('public') > -1 || o.indexOf('gov') > -1 || o === 'moh') regions[r].pub++;
+    });
+    var regionEntries = Object.entries(regions).sort(function(a,b){ return b[1].total - a[1].total; });
+    var regionCount = regionEntries.length;
+
+    document.getElementById('gi-topbar').innerHTML =
+      '<div class="gi-metric"><div class="val">'+total.toLocaleString()+'</div><div class="lbl">Total Facilities</div></div>'+
+      '<div class="gi-metric"><div class="val">'+regionCount+'</div><div class="lbl">Regions</div></div>'+
+      '<div class="gi-metric"><div class="val">'+(total>0?Math.round(publicCount/total*100):0)+'%</div><div class="lbl">Public Ownership</div></div>'+
+      '<div class="gi-metric"><div class="val">'+(total>0?Math.round(withCoords/total*100):0)+'%</div><div class="lbl">Geocoded</div></div>';
+
+    // Type chart (top 8)
+    var types = {};
+    data.forEach(function(f){ types[f.facility_type || 'Unknown'] = (types[f.facility_type || 'Unknown'] || 0) + 1; });
+    var typeEntries = Object.entries(types).sort(function(a,b){ return b[1] - a[1]; }).slice(0,8);
+    if (giChartType) giChartType.destroy();
+    giChartType = new Chart(document.getElementById('gi-chart-type'), {
+      type: 'doughnut',
+      data: { labels: typeEntries.map(function(e){return e[0];}), datasets: [{ data: typeEntries.map(function(e){return e[1];}), backgroundColor: GI_COLORS.slice(0, typeEntries.length), borderWidth: 0 }] },
+      options: { responsive: true, plugins: { legend: { position: 'right', labels: { boxWidth: 12, font: { size: 11 } } } } }
+    });
+
+    // Ownership chart (top 8)
+    var owns = {};
+    data.forEach(function(f){ owns[f._ownership || 'Unknown'] = (owns[f._ownership || 'Unknown'] || 0) + 1; });
+    var ownEntries = Object.entries(owns).sort(function(a,b){ return b[1] - a[1]; }).slice(0,8);
+    if (giChartOwn) giChartOwn.destroy();
+    giChartOwn = new Chart(document.getElementById('gi-chart-ownership'), {
+      type: 'doughnut',
+      data: { labels: ownEntries.map(function(e){return e[0];}), datasets: [{ data: ownEntries.map(function(e){return e[1];}), backgroundColor: GI_COLORS.slice(0, ownEntries.length), borderWidth: 0 }] },
+      options: { responsive: true, plugins: { legend: { position: 'right', labels: { boxWidth: 12, font: { size: 11 } } } } }
+    });
+
+    // Region bar chart (top 15)
+    var topRegions = regionEntries.slice(0,15);
+    if (giChartRegion) giChartRegion.destroy();
+    giChartRegion = new Chart(document.getElementById('gi-chart-region'), {
+      type: 'bar',
+      data: {
+        labels: topRegions.map(function(e){ return e[0]; }),
+        datasets: [{ label: 'Facilities', data: topRegions.map(function(e){ return e[1].total; }), backgroundColor: '#c9a227', borderRadius: 4 }]
+      },
+      options: {
+        indexAxis: 'y', responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { x: { grid: { display: false } }, y: { grid: { display: false }, ticks: { font: { size: 11 } } } }
+      }
+    });
+
+    // Region table
+    var maxCount = regionEntries[0] ? regionEntries[0][1].total : 1;
+    var tbody = '';
+    regionEntries.forEach(function(e){
+      var pct  = e[1].total > 0 ? Math.round(e[1].pub / e[1].total * 100) : 0;
+      var barW = Math.round(e[1].total / maxCount * 100);
+      tbody += '<tr><td><strong>'+e[0]+'</strong></td><td>'+e[1].total.toLocaleString()+'</td><td>'+pct+'%</td>'+
+        '<td><div class="gi-bar"><div class="gi-bar-fill" style="width:'+barW+'%;background:#c9a227;"></div></div></td></tr>';
+    });
+    document.getElementById('gi-region-tbody').innerHTML = tbody;
   }
 
   function zoomToSelection(){
